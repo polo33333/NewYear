@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 4200;
+const PORT = process.env.PORT || 4100;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -59,7 +59,7 @@ app.get('/api/status', (req, res) => {
     const ip = getUserIp(req);
     const users = readJson(USERS_FILE);
     const user = users[ip] || { attempts: 0, rewards: [], claimed: false };
-    
+
     // Calculate best reward so far
     let bestReward = null;
     if (user.rewards.length > 0) {
@@ -97,7 +97,7 @@ app.post('/api/shake', (req, res) => {
 
     // Shake logic
     const reward = pickReward(rewards);
-    
+
     user.attempts += 1;
     user.rewards.push({ ...reward, timestamp: Date.now() });
 
@@ -121,21 +121,21 @@ app.post('/api/claim', (req, res) => {
     }
 
     const user = users[ip];
-    
+
     if (user.rewards.length === 0) {
         return res.status(400).json({ message: "No rewards to claim." });
     }
-    
+
     if (user.claimed) {
         return res.status(200).json({ message: "Already claimed." });
     }
 
     // Find best reward
     const bestReward = user.rewards.reduce((prev, current) => (prev.value > current.value) ? prev : current);
-    
+
     user.claimed = true;
     user.finalReward = bestReward;
-    
+
     users[ip] = user;
     writeJson(USERS_FILE, users);
 
