@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hái Lộc Đầu Năm</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-container">
+        <div class="overlay"></div>
+        <header>
+            <h1>Hái Lộc Đầu Năm</h1>
+            <div id="attempts-display">Lượt còn lại: <span id="attempts-count">3</span></div>
+        </header>
+
+        <main>
+            <div class="tree-container" id="tree-container">
+                <img src="images/tree_no_env.png" alt="Cây Mai" id="lucky-tree" class="tree">
+                <!-- Envelopes will be injected here by JS -->
+            </div>
+
+            <div class="controls">
+                <button id="shake-btn" class="shake-btn">Rung Cây</button>
+            </div>
+
+            <div class="music-control">
+                <button id="music-btn" class="btn-music">🔊 Tắt Nhạc</button>
+                <audio id="bgm" loop autoplay>
+                    <source src="audio/bgm.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </main>
+
+        <!-- Welcome Modal for New Users -->
+        <div id="welcome-modal" class="modal hidden">
+            <div class="modal-content welcome-content">
+                <h2>🎊 Chào Mừng Năm Mới! 🎊</h2>
+                <div class="welcome-message">
+                    <p>🎁 <strong>Bạn có 3 lượt rung cây may mắn!</strong></p>
+                    <p>🌟 Mỗi lần rung sẽ nhận được một phần thưởng ngẫu nhiên</p>
+                    <p>💰 <strong>Phần thưởng cao nhất</strong> sẽ được giữ lại để nhận</p>
+                    <p>🎯 Hãy thử vận may của bạn và săn phần thưởng lớn nhất!</p>
+                </div>
+                <button id="start-btn" class="btn-start">Bắt Đầu Ngay! 🎉</button>
+            </div>
+        </div>
+
+        <!-- Result Modal -->
+        <div id="reward-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Chúc Mừng!</h2>
+                <div class="reward-reveal">
+                    <p class="reward-value" id="modal-reward-value">0 VND</p>
+                    <p>Lì xì may mắn đầu năm</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Result Dashboard -->
+        <div id="dashboard" class="dashboard hidden">
+            <h2>Kết Quả Của Bạn</h2>
+            <div id="history-list" class="history-list"></div>
+            <div class="best-reward">
+                <h3>Phần Thưởng Lớn Nhất:</h3>
+                <p id="best-reward-value" class="highlight">0 VND</p>
+            </div>
+            <button id="claim-btn" class="btn-claim">Nhận Thưởng</button>
+            <p class="expiry-note">Vui lòng nhận thưởng trước khi hết hạn!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
