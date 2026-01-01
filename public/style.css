@@ -612,7 +612,25 @@ h1 {
 
 /* Media Query for Desktop/Larger Screens */
 @media (min-width: 481px) {
+    .background-container {
+        justify-content: flex-start;
+        /* Align content to top instead of center */
+    }
+
+    header {
+        margin-top: 40px;
+        /* Fixed distance from top */
+    }
+
     .tree-container {
-        margin-top: 40% !important;
+        margin-top: 20px !important;
+        /* Small gap between header and tree */
+        margin-bottom: 0;
+    }
+
+    .controls {
+        margin-top: 30px;
+        /* Fixed gap between tree and button */
+        margin-bottom: 40px;
     }
 }

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Lý Hái Lộc</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>🎯 Quản Lý Hái Lộc Đầu Năm</h1>
+            <div class="header-actions">
+                <span id="admin-username" class="admin-username"></span>
+                <button id="refresh-btn" class="btn btn-secondary">🔄 Làm Mới</button>
+                <button id="logout-btn" class="btn btn-danger">🚪 Đăng Xuất</button>
+                <a href="/" class="btn btn-primary">🏠 Về Trang Chủ</a>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <!-- Users Management Section -->
+            <section class="admin-section">
+                <div class="section-header">
+                    <h2>👥 Quản Lý Người Chơi</h2>
+                    <div class="stats">
+                        <span class="stat-item">Tổng số: <strong id="total-users">0</strong></span>
+                        <span class="stat-item">Đã chơi: <strong id="played-users">0</strong></span>
+                        <span class="stat-item">Đã nhận thưởng: <strong id="claimed-users">0</strong></span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>IP Address</th>
+                                <th>Lượt Chơi</th>
+                                <th>Phần Thưởng</th>
+                                <th>Tốt Nhất</th>
+                                <th>Đã Nhận</th>
+                                <th>Lần Đầu</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr>
+                                <td colspan="7" class="loading">Đang tải dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Rewards Configuration Section -->
+            <section class="admin-section">
+                <div class="section-header">
+                    <h2>🎁 Cấu Hình Phần Thưởng</h2>
+                    <div class="rewards-actions">
+                        <button id="reset-quantities-btn" class="btn btn-warning">🔄 Reset Số Lượng</button>
+                        <button id="add-reward-btn" class="btn btn-success">➕ Thêm Phần Thưởng</button>
+                        <button id="save-rewards-btn" class="btn btn-primary">💾 Lưu Cấu Hình</button>
+                    </div>
+                </div>
+
+                <div class="rewards-info">
+                    <p class="info-text">⚠️ Tổng xác suất phải bằng 1.0 (100%)</p>
+                    <p class="probability-sum">Tổng hiện tại: <strong id="total-probability">0.00</strong></p>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="rewards-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">ID</th>
+                                <th>Tên Phần Thưởng</th>
+                                <th>Giá Trị (VND)</th>
+                                <th>Link Nhận Thưởng</th>
+                                <th>Xác Suất</th>
+                                <th>Số Lượng</th>
+                                <th>Còn Lại</th>
+                                <th>Đã Phát</th>
+                                <th style="width: 100px;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rewards-tbody">
+                            <tr>
+                                <td colspan="9" class="loading">Đang tải dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="confirm-title">Xác Nhận</h3>
+            <p id="confirm-message">Bạn có chắc chắn muốn thực hiện thao tác này?</p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn btn-danger">Xác Nhận</button>
+                <button id="confirm-no" class="btn btn-secondary">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
