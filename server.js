@@ -4,13 +4,28 @@ const cors = require('cors');
 const session = require('express-session');
 const fs = require('fs');
 const path = require('path');
+const https = require("https");
+const http = require("http");
 
 const app = express();
 const PORT = process.env.PORT || 4100;
 
+// === Đường dẫn chứng chỉ SSL ===
+const keyPath = "/Users/kdone/dev/certs/privkey.pem";
+const certPath = "/Users/kdone/dev/certs/fullchain.pem";
+let sslOptions = null;
+
 // Admin credentials (in production, use environment variables and hashed passwords)
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '12345678.c';
+
+
+if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
+    sslOptions = {
+        key: fs.readFileSync(keyPath),
+        cert: fs.readFileSync(certPath),
+    };
+}
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -398,6 +413,19 @@ app.post('/api/admin/user/:ip/reset', requireAuth, (req, res) => {
     res.json({ message: "User attempts reset successfully", user: users[ip] });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Server is running on http://localhost:${PORT}`);
+// });
+
+// === SERVER START ===
+if (sslOptions) {
+    https.createServer(sslOptions, app).listen(PORT, "0.0.0.0", () => {
+        console.log(`✅ HTTPS Auto Deploy server running on port ${PORT}`);
+        console.log(`   Dashboard: https://your-domain:${PORT}`);
+    });
+} else {
+    http.createServer(app).listen(PORT, "0.0.0.0", () => {
+        console.log(`⚠️  HTTP Auto Deploy server running on port ${PORT} (SSL certs not found)`);
+        console.log(`   Dashboard: http://localhost:${PORT}`);
+    });
+}
