@@ -160,6 +160,13 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '12345678.c';
 
 const requireAuth = (req, res, next) => {
     if (req.session?.isAdmin) return next();
+
+    // If it's an HTML page request, redirect to login
+    if (req.path.startsWith('/admin') && !req.path.startsWith('/api/')) {
+        return res.redirect('/admin/login');
+    }
+
+    // For API requests, return JSON error
     res.status(401).json({ message: 'Unauthorized' });
 };
 
@@ -188,6 +195,107 @@ app.get('/admin/login', (req, res) =>
 app.get('/admin', requireAuth, (req, res) =>
     res.sendFile(path.join(publicDir, 'admin.html'))
 );
+
+/* ================== ADMIN API ================== */
+
+// Get all users
+app.get('/api/admin/users', requireAuth, (req, res) => {
+    const users = readJson(USERS_FILE);
+    const userArray = Object.entries(users).map(([ip, data]) => ({
+        ip,
+        attempts: data.attempts || 0,
+        rewards: data.rewards || [],
+        claimed: data.claimed || false,
+        firstSeen: data.firstSeen || Date.now()
+    }));
+    res.json(userArray);
+});
+
+// Get all rewards
+app.get('/api/admin/rewards', requireAuth, (req, res) => {
+    const rewards = readJson(REWARDS_FILE);
+    res.json(rewards);
+});
+
+// Delete a user
+app.delete('/api/admin/user/:ip', requireAuth, (req, res) => {
+    const { ip } = req.params;
+    const users = readJson(USERS_FILE);
+
+    if (!users[ip]) {
+        return res.status(404).json({ message: 'Người chơi không tồn tại' });
+    }
+
+    delete users[ip];
+    writeJson(USERS_FILE, users);
+    res.json({ message: 'Đã xóa người chơi thành công' });
+});
+
+// Reset a user's attempts
+app.post('/api/admin/user/:ip/reset', requireAuth, (req, res) => {
+    const { ip } = req.params;
+    const users = readJson(USERS_FILE);
+
+    if (!users[ip]) {
+        return res.status(404).json({ message: 'Người chơi không tồn tại' });
+    }
+
+    users[ip] = {
+        attempts: 0,
+        rewards: [],
+        claimed: false,
+        firstSeen: users[ip].firstSeen || Date.now()
+    };
+
+    writeJson(USERS_FILE, users);
+    res.json({ message: 'Đã reset lượt chơi thành công' });
+});
+
+// Update rewards configuration
+app.put('/api/admin/rewards', requireAuth, (req, res) => {
+    const { rewards } = req.body;
+
+    if (!Array.isArray(rewards)) {
+        return res.status(400).json({ message: 'Dữ liệu không hợp lệ' });
+    }
+
+    // Validate probability sum
+    const totalProb = rewards.reduce((sum, r) => sum + r.probability, 0);
+    if (Math.abs(totalProb - 1.0) > 0.01) {
+        return res.status(400).json({
+            message: `Tổng xác suất phải bằng 1.0 (hiện tại: ${totalProb.toFixed(2)})`
+        });
+    }
+
+    // Validate quantities
+    for (const reward of rewards) {
+        if (reward.remaining > reward.quantity) {
+            return res.status(400).json({
+                message: `"${reward.name}": Số lượng còn lại không thể lớn hơn tổng số lượng`
+            });
+        }
+    }
+
+    writeJson(REWARDS_FILE, rewards);
+    res.json({ message: 'Đã lưu cấu hình phần thưởng thành công', rewards });
+});
+
+// Reset reward quantities
+app.post('/api/admin/rewards/reset', requireAuth, (req, res) => {
+    const rewards = readJson(REWARDS_FILE);
+
+    if (!Array.isArray(rewards) || rewards.length === 0) {
+        return res.status(400).json({ message: 'Không có phần thưởng nào để reset' });
+    }
+
+    // Reset remaining to quantity for all rewards
+    rewards.forEach(reward => {
+        reward.remaining = reward.quantity;
+    });
+
+    writeJson(REWARDS_FILE, rewards);
+    res.json({ message: 'Đã reset số lượng phần thưởng thành công', rewards });
+});
 
 /* ================== START SERVER ================== */
 http.createServer(app).listen(PORT, "0.0.0.0", () => {
