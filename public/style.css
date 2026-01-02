@@ -14,7 +14,7 @@ html {
 }
 
 .background-container {
-    background: url('images/background.png') no-repeat center center;
+    /* background: url('images/background.png') no-repeat center center; */
     background-size: contain;
     /* Show full image without cropping or distortion */
     background-color: #a70b00;
