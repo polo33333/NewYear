@@ -73,7 +73,7 @@ header,
 main,
 .dashboard,
 .modal {
-    z-index: 10;
+    z-index: 9999;
 }
 
 header {
@@ -620,7 +620,7 @@ main {
     border: 2px solid #ffd700;
     box-sizing: border-box;
     overflow: hidden;
-    z-index: 1100;
+    z-index: 9999;
 }
 
 .history-list {
