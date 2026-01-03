@@ -1,7 +1,7 @@
 /* Reset & Base */
 :root {
     /* CSS Custom Property for dynamic viewport height */
-    --vh: 1vh;
+    --dvh: 1dvh;
 }
 
 body,
@@ -9,9 +9,9 @@ html {
     margin: 0;
     padding: 0;
     /* Use dynamic viewport height with fallback */
-    height: 100vh;
+    height: 100dvh;
     /* Fallback for older browsers */
-    height: calc(var(--vh, 1vh) * 100);
+    height: calc(var(--dvh, 1dvh) * 100);
     /* Dynamic height */
     height: 100dvh;
     /* Modern browsers with dynamic viewport */
@@ -36,9 +36,9 @@ html {
     background-color: #ad1e14;
     /* Brown color to match the background image borders */
     /* Use dynamic viewport height with fallback */
-    height: 100vh;
+    height: 100dvh;
     /* Fallback */
-    height: calc(var(--vh, 1vh) * 100);
+    height: calc(var(--dvh, 1dvh) * 100);
     /* Dynamic height via JS */
     height: 100dvh;
     /* Modern browsers */
