@@ -126,20 +126,28 @@ h1 {
     display: inline-block;
 }
 
+/* Main Content Area */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Add padding at bottom to prevent content being hidden by sticky button */
+    padding-bottom: 100px;
+}
+
 /* Tree Container */
 .tree-container {
     position: relative;
-    /* width: 100%; */
-    height: 100%;
-    /* Fill available space */
-    max-height: 500px;
-    /* Don't get too tall */
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-top: 0%;
+    max-height: 500px;
+    min-height: 300px;
+    padding: 20px;
 }
 
 .tree {
@@ -404,12 +412,17 @@ h1 {
 }
 
 .controls {
+    /* Sticky positioning for mobile - always visible at bottom */
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
     margin-top: 20px;
-    z-index: 10;
+    padding: 15px 20px 20px;
+    z-index: 100;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Center horizontally */
     gap: 15px;
 }
 
@@ -425,6 +438,9 @@ h1 {
     box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
     transition: transform 0.2s, box-shadow 0.2s;
     text-transform: uppercase;
+    /* Ensure button is always clickable */
+    position: relative;
+    z-index: 101;
 }
 
 .shake-btn:hover {
@@ -832,6 +848,11 @@ h1 {
         /* Fixed distance from top */
     }
 
+    main {
+        /* Remove bottom padding on desktop */
+        padding-bottom: 0;
+    }
+
     .tree-container {
         margin-top: 20px !important;
         /* Small gap between header and tree */
@@ -839,9 +860,14 @@ h1 {
     }
 
     .controls {
+        /* Disable sticky on desktop */
+        position: relative;
         margin-top: 30px;
-        /* Fixed gap between tree and button */
         margin-bottom: 40px;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 0;
     }
 }
 
@@ -1146,5 +1172,19 @@ h1 {
 
     .countdown-message {
         font-size: 1.1rem;
+    }
+
+    /* Adjust sticky button for small mobile screens */
+    .controls {
+        padding: 12px 15px 15px;
+    }
+
+    .shake-btn {
+        padding: 12px 30px;
+        font-size: 1.3rem;
+    }
+
+    main {
+        padding-bottom: 80px;
     }
 }
