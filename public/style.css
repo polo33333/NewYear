@@ -1,9 +1,20 @@
 /* Reset & Base */
+:root {
+    /* CSS Custom Property for dynamic viewport height */
+    --vh: 1vh;
+}
+
 body,
 html {
     margin: 0;
     padding: 0;
-    height: 100%;
+    /* Use dynamic viewport height with fallback */
+    height: 100vh;
+    /* Fallback for older browsers */
+    height: calc(var(--vh, 1vh) * 100);
+    /* Dynamic height */
+    height: 100dvh;
+    /* Modern browsers with dynamic viewport */
     font-family: 'Roboto', sans-serif;
     overflow: hidden;
     background-color: #f0f2f5;
@@ -11,6 +22,11 @@ html {
     display: flex;
     justify-content: center;
     background: #1a1a1a;
+    /* Prevent pull-to-refresh on mobile */
+    overscroll-behavior: none;
+    /* Prevent iOS bounce */
+    position: fixed;
+    width: 100%;
 }
 
 .background-container {
@@ -19,7 +35,13 @@ html {
     /* Show full image without cropping or distortion */
     background-color: #ad1e14;
     /* Brown color to match the background image borders */
+    /* Use dynamic viewport height with fallback */
     height: 100vh;
+    /* Fallback */
+    height: calc(var(--vh, 1vh) * 100);
+    /* Dynamic height via JS */
+    height: 100dvh;
+    /* Modern browsers */
     width: 100%;
     max-width: 480px;
     /* Force mobile width */
@@ -30,6 +52,10 @@ html {
     color: #fff;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
     /* Shadow to separate from desktop bg */
+    /* Prevent content overflow on mobile */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .overlay {

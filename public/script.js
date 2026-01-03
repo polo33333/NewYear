@@ -1,3 +1,27 @@
+// ============================================
+// Dynamic Viewport Height Fix for Mobile
+// ============================================
+// Fix for mobile browsers where 100vh doesn't account for address bar
+function setDynamicVH() {
+    // Calculate actual viewport height
+    const vh = window.innerHeight * 0.01;
+    // Set CSS custom property
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Set on load
+setDynamicVH();
+
+// Update on resize and orientation change
+window.addEventListener('resize', setDynamicVH);
+window.addEventListener('orientationchange', () => {
+    // Small delay to ensure browser has updated dimensions
+    setTimeout(setDynamicVH, 100);
+});
+
+// ============================================
+// Main App Variables
+// ============================================
 const shakeBtn = document.getElementById('shake-btn');
 const tree = document.getElementById('lucky-tree');
 const treeContainer = document.getElementById('tree-container');
