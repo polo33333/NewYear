@@ -1147,7 +1147,7 @@ main {
     }
 
     .countdown-message {
-        /* font-size: 1.3rem; */
+        font-size: 1.3rem;
         margin-top: 20px;
         padding: 0 10px;
     }
@@ -1182,7 +1182,7 @@ main {
     }
 
     .countdown-message {
-        /* font-size: 1.1rem; */
+        font-size: 1.1rem;
     }
 
     /* Adjust fixed button for small mobile screens */
