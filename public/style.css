@@ -134,8 +134,9 @@ main {
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    /* Add padding at bottom to prevent content being hidden by sticky button */
-    padding-bottom: 100px;
+    /* Add padding at bottom to prevent content being hidden by fixed button */
+    /* Account for button height (~70px) + padding + safe area */
+    padding-bottom: calc(120px + env(safe-area-inset-bottom));
 }
 
 /* Tree Container */
@@ -412,14 +413,19 @@ main {
 }
 
 .controls {
-    /* Sticky positioning for mobile - always visible at bottom */
-    position: sticky;
+    /* Fixed positioning for mobile - always visible at bottom, above browser UI */
+    position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
-    margin-top: 20px;
-    padding: 15px 20px 20px;
-    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    /* Match container width */
+    margin: 0;
+    padding: 15px 20px;
+    /* Add safe area inset for notch/browser UI */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 1000;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -860,14 +866,20 @@ main {
     }
 
     .controls {
-        /* Disable sticky on desktop */
+        /* Disable fixed positioning on desktop */
         position: relative;
+        transform: none;
+        left: auto;
+        width: auto;
+        max-width: none;
         margin-top: 30px;
         margin-bottom: 40px;
         background: transparent;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
+        box-shadow: none;
         padding: 0;
+        padding-bottom: 0;
     }
 }
 
@@ -1174,9 +1186,10 @@ main {
         font-size: 1.1rem;
     }
 
-    /* Adjust sticky button for small mobile screens */
+    /* Adjust fixed button for small mobile screens */
     .controls {
-        padding: 12px 15px 15px;
+        padding: 12px 15px;
+        padding-bottom: calc(15px + env(safe-area-inset-bottom));
     }
 
     .shake-btn {
@@ -1185,6 +1198,6 @@ main {
     }
 
     main {
-        padding-bottom: 80px;
+        padding-bottom: calc(100px + env(safe-area-inset-bottom));
     }
 }
