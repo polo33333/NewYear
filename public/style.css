@@ -757,9 +757,9 @@ main {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    /* Don't block interactions */
-    z-index: 99997;
-    /* Below overlay (99998) and dashboard (99999) */
+    /* Don't block interactions - safe to put on top */
+    z-index: 9999999;
+    /* Highest - above everything for spectacular fireworks effect */
     overflow: hidden;
 }
 
