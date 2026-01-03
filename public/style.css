@@ -62,21 +62,21 @@ h1 {
     color: #ffd700;
     /* Gold */
     margin-bottom: 5px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(255, 215, 0, 0.5);
 }
 
 .year-text {
     font-family: 'Dancing Script', cursive;
     font-size: 2.5rem;
-    background: linear-gradient(90deg, #ffd700, #fff, #ffd700);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffd700;
+    /* Solid gold color */
     margin: 0 0 10px 0;
     font-weight: bold;
     letter-spacing: 6px;
-    animation: shimmer 3s ease-in-out infinite;
-    text-shadow: none;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8),
+        0 0 25px rgba(255, 215, 0, 0.6),
+        0 0 40px rgba(255, 215, 0, 0.3);
 }
 
 @keyframes shimmer {
@@ -119,9 +119,11 @@ h1 {
 .tree {
     /* width: 100%; */
     height: auto;
-    /* Remove default drop-shadow if it conflicts, but glow is good */
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    /* Multiple shadow layers for depth and glow */
+    filter: drop-shadow(5px 8px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 40px rgba(255, 215, 0, 0.3));
     z-index: 1;
+    animation: gentle-wind-sway 6s ease-in-out infinite;
+    transform-origin: bottom center;
 }
 
 .envelope {
@@ -200,13 +202,84 @@ h1 {
     animation: swing-envelope 1.5s ease-in-out infinite;
 }
 
+/* Wind Animation for Tree */
+@keyframes gentle-wind-sway {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    15% {
+        transform: rotate(0.5deg);
+    }
+
+    30% {
+        transform: rotate(-0.3deg);
+    }
+
+    45% {
+        transform: rotate(0.7deg);
+    }
+
+    60% {
+        transform: rotate(-0.2deg);
+    }
+
+    75% {
+        transform: rotate(0.4deg);
+    }
+
+    90% {
+        transform: rotate(-0.5deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Enhanced Envelope Swaying with Wind */
 @keyframes sway-envelope {
     0% {
         transform: rotate(0deg);
     }
 
+    25% {
+        transform: rotate(6deg);
+    }
+
     50% {
-        transform: rotate(4deg);
+        transform: rotate(-4deg);
+    }
+
+    75% {
+        transform: rotate(5deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Wind Gust Effect - Stronger sway */
+@keyframes wind-gust-envelope {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(8deg);
+    }
+
+    40% {
+        transform: rotate(-6deg);
+    }
+
+    60% {
+        transform: rotate(7deg);
+    }
+
+    80% {
+        transform: rotate(-5deg);
     }
 
     100% {
@@ -218,8 +291,92 @@ h1 {
     animation: sway-envelope 3s ease-in-out infinite;
 }
 
+/* Touch/Click Shake Effect */
+@keyframes shake-envelope-touch {
 
-/* Controls */
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10% {
+        transform: rotate(15deg);
+    }
+
+    20% {
+        transform: rotate(-15deg);
+    }
+
+    30% {
+        transform: rotate(12deg);
+    }
+
+    40% {
+        transform: rotate(-12deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+
+    60% {
+        transform: rotate(-10deg);
+    }
+
+    70% {
+        transform: rotate(7deg);
+    }
+
+    80% {
+        transform: rotate(-7deg);
+    }
+
+    90% {
+        transform: rotate(3deg);
+    }
+}
+
+.envelope-touched {
+    animation: shake-envelope-touch 0.6s ease-in-out !important;
+}
+
+/* Tet Greeting Display */
+.greeting-display {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    z-index: 1500;
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.greeting-display.hidden {
+    display: none;
+}
+
+.greeting-display p {
+    margin: 0;
+    color: #fff;
+    font-size: 1.5rem;
+    display: inline-block;
+    padding-left: 100%;
+    animation: marqueeScroll 8s linear infinite;
+}
+
+@keyframes marqueeScroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
 .controls {
     margin-top: 20px;
     z-index: 10;

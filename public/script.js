@@ -35,10 +35,12 @@ function initEnvelopes() {
         img.classList.add('envelope');
         img.style.top = pos.top;
         img.style.left = pos.left;
+
         // Randomize initial slight rotation for natural look
         const randomRot = Math.random() * 10 - 5;
-        // Initial state is swaying (wind effect)
-        const duration = 2 + Math.random() * 2; // 2-4s duration for variety
+
+        // Initial state is swaying (wind effect) with varied durations
+        const duration = 2.5 + Math.random() * 2; // 2.5-4.5s duration for variety
         const delay = Math.random() * 2;
 
         img.style.transform = `rotate(${randomRot}deg)`;
@@ -47,7 +49,111 @@ function initEnvelopes() {
 
         img.id = `env-${index}`;
         treeContainer.appendChild(img);
+
+        // Randomly add wind gust effect to some envelopes
+        if (Math.random() > 0.5) {
+            addRandomWindGusts(img);
+        }
+
+        // Add touch/click shake effect
+        addTouchShakeEffect(img);
     });
+}
+
+// Tet Greeting Messages
+const tetGreetings = [
+    "🎊 Chúc Mừng Năm Mới - An Khang Thịnh Vượng! 🎊",
+    "🌸 Vạn Sự Như Ý - Phát Tài Phát Lộc! 🌸",
+    "🎉 Sức Khỏe Dồi Dào - Tài Lộc Đầy Nhà! 🎉",
+    "🏮 Xuân Về Muôn Phước - Lộc Đến Nghìn Vàng! 🏮",
+    "🎆 Năm Mới Bình An - Hạnh Phúc Tràn Đầy! 🎆",
+    "🌺 Tiền Vào Như Nước - Của Đến Như Mây! 🌺",
+    "✨ Phúc Lộc Thọ - Tài Danh Vượng! ✨",
+    "🎁 Cát Tường Như Ý - Vạn Sự Hanh Thông! 🎁",
+    "🌟 Tấn Tài Tấn Lộc - Phát Đạt Vượng Khí! 🌟",
+    "🎋 Xuân Sang Phúc Đến - Lộc Tới Tài Về! 🎋",
+    "💰 Tiền Tài Đầy Túi - Vàng Bạc Đầy Nhà! 💰",
+    "🌼 Năm Mới Sung Túc - Vui Vẻ Hạnh Phúc! 🌼",
+    "🎇 Đại Cát Đại Lợi - Vạn Sự Như Ý! 🎇",
+    "🧧 Lộc Phát Tài Sinh - Phúc Đức Dồi Dào! 🧧",
+    "🎊 Xuân Về Đất Ấm - Lộc Đến Nhà Giàu! 🎊"
+];
+
+let greetingTimeout = null;
+
+// Add touch/click shake effect to envelope
+function addTouchShakeEffect(envelope) {
+    const handleTouch = (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+
+        // Save current animation
+        const currentAnimation = envelope.style.animation;
+
+        // Add touched class to trigger shake
+        envelope.classList.add('envelope-touched');
+
+        // Show random Tet greeting
+        showRandomGreeting();
+
+        // Remove class and restore animation after shake completes
+        setTimeout(() => {
+            envelope.classList.remove('envelope-touched');
+            envelope.style.animation = currentAnimation;
+        }, 600); // Match animation duration
+    };
+
+    // Add both click and touch events for desktop and mobile
+    envelope.addEventListener('click', handleTouch);
+    envelope.addEventListener('touchstart', handleTouch);
+
+    // Add cursor pointer for desktop
+    envelope.style.cursor = 'pointer';
+}
+
+// Show random Tet greeting at bottom
+function showRandomGreeting() {
+    const greetingDisplay = document.getElementById('greeting-display');
+    const greetingText = document.getElementById('greeting-text');
+
+    // Pick random greeting
+    const randomGreeting = tetGreetings[Math.floor(Math.random() * tetGreetings.length)];
+
+    // Update text and show
+    greetingText.textContent = randomGreeting;
+    greetingDisplay.classList.remove('hidden');
+
+    // Clear existing timeout
+    if (greetingTimeout) {
+        clearTimeout(greetingTimeout);
+    }
+
+    // Auto-hide after 8 seconds (match marquee animation duration)
+    greetingTimeout = setTimeout(() => {
+        greetingDisplay.classList.add('hidden');
+    }, 8000);
+}
+
+// Add random wind gust effects
+function addRandomWindGusts(envelope) {
+    const triggerGust = () => {
+        const currentAnimation = envelope.style.animation;
+
+        // Temporarily switch to wind gust animation
+        envelope.style.animation = 'wind-gust-envelope 2s ease-in-out';
+
+        // Return to normal swaying after gust
+        setTimeout(() => {
+            envelope.style.animation = currentAnimation;
+        }, 2000);
+
+        // Schedule next random gust (between 8-15 seconds)
+        const nextGust = 8000 + Math.random() * 7000;
+        setTimeout(triggerGust, nextGust);
+    };
+
+    // Start first gust after random delay (3-10 seconds)
+    const initialDelay = 3000 + Math.random() * 7000;
+    setTimeout(triggerGust, initialDelay);
 }
 
 // Fetch initial status

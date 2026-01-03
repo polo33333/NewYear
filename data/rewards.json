@@ -15,7 +15,7 @@
     "linkReward": "https://cam-chon.ddns.net:5000/dashboard/",
     "probability": 0.25,
     "quantity": 50,
-    "remaining": 50
+    "remaining": 49
   },
   {
     "id": 3,
@@ -33,7 +33,7 @@
     "linkReward": "https://cam-chon.ddns.net:5000/dashboard/",
     "probability": 0.07,
     "quantity": 15,
-    "remaining": 15
+    "remaining": 14
   },
   {
     "id": 5,
