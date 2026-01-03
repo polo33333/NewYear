@@ -514,6 +514,23 @@ async function checkAndShowWelcome() {
 // Close welcome modal and start game
 startBtn.addEventListener('click', () => {
     welcomeModal.classList.add('hidden');
+
+    // Auto-play music when user clicks "Start" button
+    if (!isPlaying) {
+        bgm.play().then(() => {
+            musicBtn.innerText = '🔊';
+            musicBtn.title = "Tắt Nhạc";
+            isPlaying = true;
+            console.log("Music started from welcome modal");
+
+            // Remove global auto-start listeners since user has interacted
+            document.removeEventListener('click', startMusicOnInteraction);
+            document.removeEventListener('touchstart', startMusicOnInteraction);
+        }).catch(err => {
+            console.log("Music autoplay failed from welcome modal:", err);
+            // If it fails, the global listeners will still work
+        });
+    }
 });
 
 // Asset Preloader
