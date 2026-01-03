@@ -1071,7 +1071,6 @@ main {
     border-radius: 15px;
     min-width: 120px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    animation: pulse-countdown 2s ease-in-out infinite;
 }
 
 .time-label {
