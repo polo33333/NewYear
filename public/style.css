@@ -605,7 +605,8 @@ main {
 
 /* Dashboard */
 .dashboard {
-    position: absolute;
+    position: fixed;
+    /* Changed from absolute to fixed */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -621,6 +622,8 @@ main {
     box-sizing: border-box;
     overflow: hidden;
     z-index: 9999;
+    pointer-events: auto;
+    /* Ensure it can be interacted with */
 }
 
 .history-list {
