@@ -1,18 +1,1 @@
-{
-  "127.0.0.1": {
-    "attempts": 1,
-    "rewards": [
-      {
-        "id": 1,
-        "name": "10,000 VND",
-        "value": 10000,
-        "linkReward": "https://cam-chon.ddns.net:5000/dashboard/",
-        "probability": 0.5,
-        "quantity": 100,
-        "remaining": 100,
-        "timestamp": 1767363297911
-      }
-    ],
-    "claimed": false
-  }
-}
+{}

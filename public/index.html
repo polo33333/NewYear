@@ -13,10 +13,53 @@
 </head>
 
 <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-container">
+            <h2 class="loading-title">Hái Lộc Đầu Năm</h2>
+            <p class="loading-year">2026</p>
+            <div class="loading-spinner"></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p class="loading-text" id="loading-text">Đang tải... 0%</p>
+        </div>
+    </div>
+
+    <!-- Countdown Overlay -->
+    <div id="countdown-overlay" class="countdown-overlay hidden">
+        <div class="countdown-content">
+            <h2 class="countdown-title">Sự Kiện Sẽ Bắt Đầu Sau</h2>
+            <div class="countdown-timer">
+                <div class="time-unit">
+                    <div class="time-value" id="days">00</div>
+                    <div class="time-label">Ngày</div>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-unit">
+                    <div class="time-value" id="hours">00</div>
+                    <div class="time-label">Giờ</div>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-unit">
+                    <div class="time-value" id="minutes">00</div>
+                    <div class="time-label">Phút</div>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-unit">
+                    <div class="time-value" id="seconds">00</div>
+                    <div class="time-label">Giây</div>
+                </div>
+            </div>
+            <p class="countdown-message">🎊 Hãy quay lại vào thời gian sự kiện! 🎊</p>
+        </div>
+    </div>
+
     <div class="background-container">
         <div class="overlay"></div>
         <header>
             <h1>Hái Lộc Đầu Năm</h1>
+            <p class="year-text">2026</p>
             <div id="attempts-display">Lượt còn lại: <span id="attempts-count">3</span></div>
         </header>
 

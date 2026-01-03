@@ -1,0 +1,73 @@
+﻿
+/* Countdown Configuration Styles */
+.countdown-config {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.config-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.config-row label {
+    font-weight: 500;
+    min-width: 200px;
+}
+
+.datetime-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    min-width: 200px;
+}
+
+.countdown-status {
+    padding: 15px;
+    background: #fff;
+    border-radius: 5px;
+    border-left: 4px solid #007bff;
+}
+
+.countdown-status p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Toast Styles */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background: #333;
+    color: #fff;
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.toast.success {
+    background: #28a745;
+}
+
+.toast.error {
+    background: #dc3545;
+}
+
+.toast.info {
+    background: #17a2b8;
+}

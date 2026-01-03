@@ -53,6 +53,7 @@ app.use(express.static(publicDir, {
 const DATA_DIR = path.join(__dirname, 'data');
 const REWARDS_FILE = path.join(DATA_DIR, 'rewards.json');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
 
 const readJson = (file) => {
     if (!fs.existsSync(file)) return {};
@@ -104,6 +105,20 @@ app.get('/api/status', (req, res) => {
         rewards: user.rewards,
         bestReward,
         claimed: user.claimed
+    });
+});
+
+/* ---------- COUNTDOWN ---------- */
+app.get('/api/countdown', (req, res) => {
+    const config = readJson(CONFIG_FILE);
+    const countdownEndTime = config.countdownEndTime || 0;
+    const now = Date.now();
+    const remainingMs = Math.max(0, countdownEndTime - now);
+
+    res.json({
+        countdownEndTime,
+        remainingMs,
+        isActive: remainingMs > 0
     });
 });
 
@@ -297,7 +312,22 @@ app.post('/api/admin/rewards/reset', requireAuth, (req, res) => {
     res.json({ message: 'Đã reset số lượng phần thưởng thành công', rewards });
 });
 
+// Set countdown end time
+app.post('/api/admin/countdown', requireAuth, (req, res) => {
+    const { endTime } = req.body;
+
+    if (typeof endTime !== 'number' || endTime < 0) {
+        return res.status(400).json({ message: 'Thời gian không hợp lệ' });
+    }
+
+    const config = readJson(CONFIG_FILE);
+    config.countdownEndTime = endTime;
+    writeJson(CONFIG_FILE, config);
+
+    res.json({ message: 'Đã cập nhật thời gian đếm ngược', countdownEndTime: endTime });
+});
+
 /* ================== START SERVER ================== */
 http.createServer(app).listen(PORT, "0.0.0.0", () => {
-    console.log(`✅ Server running on http://127.0.0.1:${PORT}`);
+    console.log(`✅ Server running on http://localhost:${PORT}`);
 });

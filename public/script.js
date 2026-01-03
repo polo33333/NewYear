@@ -386,7 +386,132 @@ startBtn.addEventListener('click', () => {
     welcomeModal.classList.add('hidden');
 });
 
-// Initialize
-initEnvelopes();
-updateStatus();
-checkAndShowWelcome();
+// Asset Preloader
+function preloadAssets() {
+    return new Promise((resolve) => {
+        const loadingScreen = document.getElementById('loading-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const loadingText = document.getElementById('loading-text');
+
+        // List all assets to preload
+        const assets = [
+            'images/background.png',
+            'images/envelope.png',
+            'images/tree.png',
+            'images/tree_no_env.png',
+            'audio/bgm.mp3'
+        ];
+
+        let loadedCount = 0;
+        const totalAssets = assets.length;
+
+        function updateProgress() {
+            loadedCount++;
+            const progress = Math.round((loadedCount / totalAssets) * 100);
+            progressBar.style.width = progress + '%';
+            loadingText.textContent = `Đang tải... ${progress}%`;
+
+            if (loadedCount === totalAssets) {
+                // All assets loaded
+                setTimeout(() => {
+                    loadingScreen.classList.add('loaded');
+                    resolve();
+                }, 500); // Small delay to show 100%
+            }
+        }
+
+        // Preload images
+        assets.forEach(assetPath => {
+            if (assetPath.endsWith('.mp3')) {
+                // Preload audio
+                const audio = new Audio();
+                audio.addEventListener('canplaythrough', updateProgress, { once: true });
+                audio.addEventListener('error', () => {
+                    console.warn(`Failed to load audio: ${assetPath}`);
+                    updateProgress(); // Continue even if one asset fails
+                });
+                audio.src = assetPath;
+                audio.load();
+            } else {
+                // Preload image
+                const img = new Image();
+                img.onload = updateProgress;
+                img.onerror = () => {
+                    console.warn(`Failed to load image: ${assetPath}`);
+                    updateProgress(); // Continue even if one asset fails
+                };
+                img.src = assetPath;
+            }
+        });
+    });
+}
+
+// Initialize app after preloading
+preloadAssets().then(() => {
+    // Remove loading screen from DOM after fade out
+    setTimeout(() => {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.remove();
+        }
+    }, 500);
+
+    // Check countdown and initialize
+    checkCountdown();
+});
+
+// Countdown Timer Logic
+let countdownInterval = null;
+
+function updateCountdownDisplay(remainingMs) {
+    const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((remainingMs % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+}
+
+async function checkCountdown() {
+    try {
+        const res = await fetch('/api/countdown');
+        const data = await res.json();
+
+        const countdownOverlay = document.getElementById('countdown-overlay');
+
+        if (data.isActive && data.remainingMs > 0) {
+            countdownOverlay.classList.remove('hidden');
+            updateCountdownDisplay(data.remainingMs);
+
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            countdownInterval = setInterval(async () => {
+                const checkRes = await fetch('/api/countdown');
+                const checkData = await checkRes.json();
+
+                if (checkData.remainingMs <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownOverlay.classList.add('hidden');
+                    initializeGame();
+                } else {
+                    updateCountdownDisplay(checkData.remainingMs);
+                }
+            }, 1000);
+        } else {
+            countdownOverlay.classList.add('hidden');
+            initializeGame();
+        }
+    } catch (err) {
+        console.error('Error checking countdown:', err);
+        initializeGame();
+    }
+}
+
+function initializeGame() {
+    initEnvelopes();
+    updateStatus();
+    checkAndShowWelcome();
+}
