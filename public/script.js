@@ -439,11 +439,14 @@ let isPlaying = true; // Default to true since we added autoplay
 
 // Attempt to play on load (may be blocked by browser)
 window.addEventListener('load', () => {
+    alert('[DEBUG] Window loaded, attempting autoplay...');
     bgm.play().then(() => {
+        alert('[DEBUG] ✅ Autoplay SUCCESS on load!');
         musicBtn.innerText = '🔊';
         musicBtn.title = "Tắt Nhạc";
         isPlaying = true;
     }).catch(err => {
+        alert('[DEBUG] ❌ Autoplay BLOCKED on load: ' + err.message);
         console.log("Autoplay blocked, waiting for interaction");
         musicBtn.innerText = '🔇';
         musicBtn.title = "Bật Nhạc";
@@ -454,14 +457,19 @@ window.addEventListener('load', () => {
 // Fallback: Start music on FIRST interaction (click/touch) if it's not playing
 function startMusicOnInteraction() {
     if (!isPlaying) {
+        // alert('[DEBUG] Fallback interaction detected, playing music...');
         bgm.play().then(() => {
+            // alert('[DEBUG] ✅ Fallback music play SUCCESS!');
             musicBtn.innerText = '🔊';
             musicBtn.title = "Tắt Nhạc";
             isPlaying = true;
             // Remove listener once successful
             document.removeEventListener('click', startMusicOnInteraction);
             document.removeEventListener('touchstart', startMusicOnInteraction);
-        }).catch(err => console.log("Still blocked or failed"));
+        }).catch(err => {
+            // alert('[DEBUG] ❌ Fallback music play FAILED: ' + err.message);
+            console.log("Still blocked or failed");
+        });
     }
 }
 
@@ -473,16 +481,19 @@ musicBtn.addEventListener('click', (e) => {
     e.stopPropagation();
 
     if (isPlaying) {
+        alert('[DEBUG] Music button clicked - PAUSING music');
         bgm.pause();
         musicBtn.innerText = '🔇';
         musicBtn.title = "Bật Nhạc";
     } else {
+        alert('[DEBUG] Music button clicked - PLAYING music...');
         bgm.play().then(() => {
+            alert('[DEBUG] ✅ Manual play SUCCESS!');
             musicBtn.innerText = '🔊';
             musicBtn.title = "Tắt Nhạc";
         }).catch(err => {
+            alert('[DEBUG] ❌ Manual play FAILED: ' + err.message);
             console.error("Audio play failed:", err);
-            alert("Không tìm thấy nhạc hoặc trình duyệt chặn tự phát. Vui lòng thử lại!");
         });
     }
     isPlaying = !isPlaying;
@@ -517,7 +528,9 @@ startBtn.addEventListener('click', () => {
 
     // Auto-play music when user clicks "Start" button
     if (!isPlaying) {
+        //alert('[DEBUG] Welcome modal - "Bắt Đầu Ngay" clicked, isPlaying=' + isPlaying + ', attempting to play...');
         bgm.play().then(() => {
+            //alert('[DEBUG] ✅ Welcome modal music play SUCCESS!');
             musicBtn.innerText = '🔊';
             musicBtn.title = "Tắt Nhạc";
             isPlaying = true;
@@ -527,9 +540,12 @@ startBtn.addEventListener('click', () => {
             document.removeEventListener('click', startMusicOnInteraction);
             document.removeEventListener('touchstart', startMusicOnInteraction);
         }).catch(err => {
+            //alert('[DEBUG] ❌ Welcome modal music play FAILED: ' + err.message);
             console.log("Music autoplay failed from welcome modal:", err);
             // If it fails, the global listeners will still work
         });
+    } else {
+        //alert('[DEBUG] Welcome modal - Music already playing (isPlaying=' + isPlaying + ')');
     }
 });
 
