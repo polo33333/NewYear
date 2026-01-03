@@ -436,6 +436,7 @@ closeModal.addEventListener('click', async () => {
 const musicBtn = document.getElementById('music-btn');
 const bgm = document.getElementById('bgm');
 let isPlaying = true; // Default to true since we added autoplay
+let isProcessing = false; // Prevent multiple simultaneous play() calls
 
 // Attempt to play on load (may be blocked by browser)
 window.addEventListener('load', () => {
@@ -480,23 +481,39 @@ musicBtn.addEventListener('click', (e) => {
     // Prevent the global listener from firing double logic if clicking the button itself
     e.stopPropagation();
 
+    // Debounce: Ignore clicks while processing
+    if (isProcessing) {
+        alert('[DEBUG] Music button - Already processing, ignoring click');
+        return;
+    }
+
     if (isPlaying) {
-        alert('[DEBUG] Music button clicked - PAUSING music');
+        alert('[DEBUG] Music button clicked - PAUSING music, current isPlaying=' + isPlaying);
         bgm.pause();
         musicBtn.innerText = '🔇';
         musicBtn.title = "Bật Nhạc";
+        isPlaying = false; // Update immediately for pause
     } else {
-        alert('[DEBUG] Music button clicked - PLAYING music...');
+        alert('[DEBUG] Music button clicked - PLAYING music, current isPlaying=' + isPlaying);
+        isProcessing = true; // Lock to prevent multiple play() calls
+
+        // Don't update isPlaying yet - wait for play() to succeed
         bgm.play().then(() => {
             alert('[DEBUG] ✅ Manual play SUCCESS!');
             musicBtn.innerText = '🔊';
             musicBtn.title = "Tắt Nhạc";
+            isPlaying = true; // Only update after successful play
+            isProcessing = false; // Unlock
         }).catch(err => {
             alert('[DEBUG] ❌ Manual play FAILED: ' + err.message);
             console.error("Audio play failed:", err);
+            // Keep isPlaying as false since play failed
+            musicBtn.innerText = '🔇';
+            musicBtn.title = "Bật Nhạc";
+            isPlaying = false;
+            isProcessing = false; // Unlock
         });
     }
-    isPlaying = !isPlaying;
 
     // If user manually toggles, we can remove the global auto-start listeners as they have made a choice
     document.removeEventListener('click', startMusicOnInteraction);
