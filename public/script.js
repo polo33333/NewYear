@@ -142,16 +142,22 @@ function showRandomGreeting() {
     // Pick random greeting
     const randomGreeting = tetGreetings[Math.floor(Math.random() * tetGreetings.length)];
 
-    // Update text and show
-    greetingText.textContent = randomGreeting;
-    greetingDisplay.classList.remove('hidden');
-
     // Clear existing timeout
     if (greetingTimeout) {
         clearTimeout(greetingTimeout);
     }
 
-    // Auto-hide after 8 seconds (match marquee animation duration)
+    // Hide first to reset animation
+    greetingDisplay.classList.add('hidden');
+
+    // Force reflow to reset animation
+    void greetingDisplay.offsetWidth;
+
+    // Update text and show
+    greetingText.textContent = randomGreeting;
+    greetingDisplay.classList.remove('hidden');
+
+    // Auto-hide after 8 seconds (match animation duration)
     greetingTimeout = setTimeout(() => {
         greetingDisplay.classList.add('hidden');
     }, 8000);
