@@ -159,12 +159,15 @@ app.post('/api/claim', (req, res) => {
     if (idx === -1 || rewards[idx].remaining <= 0)
         return res.status(400).json({ message: "Reward out of stock" });
 
-    rewards[idx].remaining--;
-    users[ip].claimed = true;
-    users[ip].finalReward = best;
+    if(!users[ip].claimed){
+            rewards[idx].remaining--;
+            users[ip].claimed = true;
+            users[ip].finalReward = best;
+        
+            writeJson(REWARDS_FILE, rewards);
+            writeJson(USERS_FILE, users);
+    }
 
-    writeJson(REWARDS_FILE, rewards);
-    writeJson(USERS_FILE, users);
 
     res.json({ reward: best });
 });
