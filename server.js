@@ -150,7 +150,7 @@ app.post('/api/claim', (req, res) => {
     const users = readJson(USERS_FILE);
     const rewards = readJson(REWARDS_FILE);
 
-    if (!users[ip] || users[ip].claimed)
+    if (!users[ip])
         return res.status(400).json({ message: "Invalid claim" });
 
     const best = users[ip].rewards.reduce((a, b) => a.value > b.value ? a : b);
