@@ -15,7 +15,9 @@ function openFullscreen() {
 }
 
 function connect() {
-  ws = new WebSocket(`ws://${location.host}/ws/control`);
+  const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+  ws = new WebSocket(`${protocol}//${location.host}/ws/control`);
+  //ws = new WebSocket(`ws://${location.host}/ws/control`);
   ws.onopen = () => { document.getElementById('conn-dot').className = 'status-dot online'; document.getElementById('conn-text').textContent = 'CONNECTED'; };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
   ws.onclose = () => { document.getElementById('conn-dot').className = 'status-dot'; document.getElementById('conn-text').textContent = 'OFFLINE'; setTimeout(connect, 2000); };
