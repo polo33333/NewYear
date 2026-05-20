@@ -1,0 +1,347 @@
+{
+  "isLive": false,
+  "scene": "stats",
+  "overlays": {
+    "scoreboard": true,
+    "ticker": false,
+    "rosterA": false,
+    "rosterB": false
+  },
+  "rosters": {
+    "teamA": {
+      "round1": {
+        "heroes": [
+          "Sanhua",
+          "Baizhi",
+          "Lingyang"
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "Solsworn Ciphers",
+          "Daybreaker's Spine",
+          "Everbright Polestar"
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 7000,
+        "deduction": 3000,
+        "buyPoints": 1000
+      },
+      "round2": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round3": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round4": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round5": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round6": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      }
+    },
+    "teamB": {
+      "round1": {
+        "heroes": [
+          "Youhu",
+          "Carlotta",
+          "Chixia"
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "Lux & Umber",
+          "Moongazer’s Sigil",
+          "Thunderflare Dominion"
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 6770,
+        "deduction": 4000,
+        "buyPoints": 2000
+      },
+      "round2": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round3": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round4": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round5": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      },
+      "round6": {
+        "heroes": [
+          "",
+          "",
+          ""
+        ],
+        "heroRcs": [
+          "0",
+          "0",
+          "0"
+        ],
+        "weapons": [
+          "",
+          "",
+          ""
+        ],
+        "weaponRs": [
+          "1",
+          "1",
+          "1"
+        ],
+        "points": 0,
+        "deduction": 0,
+        "buyPoints": 0
+      }
+    }
+  },
+  "score": {
+    "teamA": {
+      "name": "Team A",
+      "logo": "🐉",
+      "color": "#00aaff",
+      "score": 3000
+    },
+    "teamB": {
+      "name": "Team B",
+      "logo": "👻",
+      "color": "#ff4444",
+      "score": 770
+    }
+  },
+  "tournament": {
+    "name": "MATRIX CUP 2026",
+    "game": "Wuthering Waves",
+    "format": "Double Elimination",
+    "bracketLabel": "GRAND FINALS — MATRIX CUP 2026"
+  },
+  "break": {
+    "duration": 300
+  },
+  "ticker": {
+    "items": [
+      "🏆 Grand Finals — Team A vs Team B",
+      "🎮 Game 3 Underway — Best of 5 Series",
+      "📡 Streaming LIVE on Twitch • YouTube • Facebook",
+      "🔥 Join us next week for the grand prize ceremony"
+    ]
+  }
+}

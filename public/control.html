@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATRIX HUB - Control</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/control.css?v=14">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/character-editor.css">
+  <link rel="stylesheet" href="css/history.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="icon" type="image/webp" href="images/icon/Yangyang.webp?v=2">
+  <link rel="manifest" href="manifest.json">
+  <script src="js/auth.js"></script>
+</head>
+
+<body>
+  <div class="app-container">
+    <aside class="sidebar mini" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="logo sidebar-logo">MATRIX HUB</div>
+        <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+      </div>
+      <nav>
+        <a href="/" class="nav-link" data-tab="control">
+          <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
+          <span class="nav-text">Control</span>
+        </a>
+        <a href="/character-editor" class="nav-link" data-tab="character-editor">
+          <span class="nav-icon"><i class="fas fa-user"></i></span>
+          <span class="nav-text">Character</span>
+        </a>
+        <a href="/weapon-editor" class="nav-link" data-tab="weapon-editor">
+          <span class="nav-icon"><i class="fas fa-gavel"></i></span>
+          <span class="nav-text">Weapon</span>
+        </a>
+        <a href="/history" class="nav-link" data-tab="history">
+          <span class="nav-icon"><i class="fas fa-history"></i></span>
+          <span class="nav-text">History</span>
+        </a>
+        <a href="/settings" class="nav-link" data-tab="settings">
+          <span class="nav-icon"><i class="fas fa-cog"></i></span>
+          <span class="nav-text">Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="main-content" style="padding: 0;">
+
+      <!-- TAB 1: MAIN CONTROL PANEL -->
+      <div class="main-content-tab" id="tab-control" style="padding: 0px;">
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="brand">
+            <h1>Control</h1>
+            <p id="stats-summary">Control overlays for stream</p>
+          </div>
+          <div class="header-right">
+            <div class="status-badge">
+              <div id="conn-dot" class="status-dot"></div> <span id="conn-text">OFFLINE</span>
+            </div>
+            <button class="btn-logout" onclick="logout()" title="Logout"><i class="fas fa-power-off"></i></button>
+          </div>
+        </header>
+
+        <main>
+          <!-- LEFT: SCENES & OVERLAYS -->
+          <div class="panel scenes-panel custom-scroll">
+            <!-- SCENES -->
+            <div class="sp-section">
+              <div class="sp-section-title"><i class="fas fa-layer-group"></i> SCENES</div>
+              <div class="scene-grid">
+                <button onclick="setScene('gameplay')" data-scene="gameplay" class="scene-btn">
+                  <i class="fas fa-gamepad"></i><span>Gameplay</span>
+                </button>
+                <button onclick="setScene('bracket')" data-scene="bracket" class="scene-btn">
+                  <i class="fas fa-trophy"></i><span>Bracket</span>
+                </button>
+                <button onclick="setScene('break')" data-scene="break" class="scene-btn">
+                  <i class="fas fa-mug-hot"></i><span>Break</span>
+                </button>
+                <button onclick="setScene('stats')" data-scene="stats" class="scene-btn">
+                  <i class="fas fa-chart-bar"></i><span>Stats</span>
+                </button>
+                <button onclick="setScene('end')" data-scene="end" class="scene-btn scene-btn-end">
+                  <span>End</span>
+                </button>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <!-- OVERLAYS -->
+            <div class="sp-section">
+              <div class="sp-section-title"><i class="fas fa-toggle-on"></i> OVERLAYS</div>
+              <div class="sp-overlays">
+                <div class="sp-overlay-row">
+                  <span>Scoreboard</span>
+                  <div class="switch" onclick="toggleOverlay('scoreboard')" id="tog-scoreboard"></div>
+                </div>
+                <div class="sp-overlay-row">
+                  <span>Ticker</span>
+                  <div class="switch" onclick="toggleOverlay('ticker')" id="tog-ticker"></div>
+                </div>
+                <div class="sp-overlay-row" style="display:none;">
+                  <span><i class="fas fa-users sp-ov-icon"></i>Roster L</span>
+                  <div class="switch" onclick="toggleOverlay('rosterA')" id="tog-rosterA"></div>
+                </div>
+                <div class="sp-overlay-row" style="display:none;">
+                  <span><i class="fas fa-users sp-ov-icon"></i>Roster R</span>
+                  <div class="switch" onclick="toggleOverlay('rosterB')" id="tog-rosterB"></div>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <!-- OBS LINKS -->
+            <div class="sp-section">
+              <div class="sp-section-title"><i class="fas fa-link"></i> OBS LINKS</div>
+              <div class="sp-links">
+                <div class="sp-link-row">
+                  <span class="sp-link-name">Full Overlay</span>
+                  <code id="url-full" style="display: none;">...</code>
+                  <button class="sp-copy-link-btn" onclick="copyUrl('url-full', this)"><i class="fas fa-copy"></i>
+                    COPY</button>
+                </div>
+                <div class="sp-link-row">
+                  <span class="sp-link-name">Scoreboard</span>
+                  <code id="url-sb" style="display: none;">...</code>
+                  <button class="sp-copy-link-btn" onclick="copyUrl('url-sb', this)"><i class="fas fa-copy"></i>
+                    COPY</button>
+                </div>
+                <div class="sp-link-row">
+                  <span class="sp-link-name">Ticker</span>
+                  <code id="url-ticker" style="display: none;">...</code>
+                  <button class="sp-copy-link-btn" onclick="copyUrl('url-ticker', this)"><i class="fas fa-copy"></i>
+                    COPY</button>
+                </div>
+                <div class="sp-link-row">
+                  <span class="sp-link-name">Stats Overlay</span>
+                  <code id="url-stats" style="display: none;">...</code>
+                  <button class="sp-copy-link-btn" onclick="copyUrl('url-stats', this)"><i class="fas fa-copy"></i>
+                    COPY</button>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <!-- MUSIC PLAYER -->
+            <div class="sp-section">
+              <div class="sp-section-title" id="sp-music-title">
+                <span><i class="fas fa-music"></i> MUSIC PLAYER</span>
+              </div>
+              <div class="music-player-panel">
+                <label class="btn-pick-folder" title="Chọn các tệp nhạc từ máy tính">
+                  <i class="fas fa-folder-open"></i> Chọn Tệp Nhạc
+                  <input type="file" id="music-folder-input" accept="audio/*" multiple style="display:none;"
+                    onchange="musicPlayerLoadFiles(this.files)">
+                </label>
+
+                <div class="music-now-playing" id="music-now-playing">
+                  <div class="music-marquee-wrap">
+                    <span class="music-track-name" id="music-track-name">— Chưa chọn bài —</span>
+                  </div>
+                  <div class="music-visualizer" id="music-visualizer"></div>
+                  <div class="music-time-row">
+                    <span id="music-current-time">0:00</span>
+                    <input type="range" id="music-progress" class="music-progress" value="0" min="0" step="0.1"
+                      oninput="musicPlayerSeek(this.value)">
+                    <span id="music-duration">0:00</span>
+                  </div>
+                </div>
+
+                <div class="music-controls">
+                  <button class="music-btn" onclick="musicPlayerPrev()" title="Bài trước"><i
+                      class="fas fa-backward-step"></i></button>
+                  <button class="music-btn music-btn-play" id="music-play-btn" onclick="musicPlayerToggle()"
+                    title="Play/Pause">
+                    <i class="fas fa-play" id="music-play-icon"></i>
+                  </button>
+                  <button class="music-btn" onclick="musicPlayerNext()" title="Bài tiếp"><i
+                      class="fas fa-forward-step"></i></button>
+                  <button class="music-btn" id="music-shuffle-btn" onclick="musicPlayerToggleShuffle()"
+                    title="Shuffle"><i class="fas fa-shuffle"></i></button>
+                  <button class="music-btn" id="music-repeat-btn" onclick="musicPlayerToggleRepeat()" title="Lặp lại"><i
+                      class="fas fa-repeat"></i></button>
+                  <div class="music-volume-wrap">
+                    <i class="fas fa-volume-high music-vol-icon"></i>
+                    <input type="range" id="music-volume" class="music-volume" value="80" min="0" max="100"
+                      oninput="musicPlayerSetVolume(this.value)">
+                    <span id="music-volume-pct" class="music-volume-pct">80%</span>
+                  </div>
+                </div>
+
+                <div class="music-playlist custom-scroll" id="music-playlist">
+                  <div class="music-playlist-empty"><i class="fas fa-music"></i><span>Chọn tệp nhạc để hiện danh sách
+                      phát</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDDLE: PREVIEW & CONTROLS -->
+          <div class="panel main-panel">
+            <div class="match-control-container">
+              <!-- TOP ROW: MONITOR & CONTROLS (Compact) -->
+              <div class="top-row-controls">
+                <!-- Left: Preview Block -->
+                <div class="preview-section">
+                  <div class="pv-header">
+                    <span class="pv-title"><i class="fas fa-display"></i> LIVE PREVIEW</span>
+                    <button onclick="openFullscreen()" class="pv-fullscreen-btn" title="Fullscreen">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  </div>
+                  <div class="preview-box" id="preview-container">
+                    <iframe id="preview-iframe"></iframe>
+                  </div>
+                </div>
+
+                <!-- Right: Match Controls -->
+                <div class="match-controls-box">
+                  <!-- Header -->
+                  <div class="mcb-header">
+                    <span class="mcb-title"><i class="fas fa-sliders"></i> MATCH CONTROL</span>
+                    <button onclick="resetMatch()" class="mcb-reset-btn" title="Reset Match">
+                      <i class="fas fa-arrow-rotate-right"></i>
+                    </button>
+                  </div>
+
+                  <!-- Team Score Cards -->
+                  <div class="mcb-teams">
+                    <!-- Team A -->
+                    <div class="mcb-team mcb-team-a">
+                      <div class="mcb-team-label">TEAM A</div>
+                      <input type="text" id="nameA" onchange="updateMatch()" placeholder="Team Name"
+                        class="mcb-name-input">
+                      <div class="mcb-score-row">
+                        <button onclick="adjScore('teamA',-1)" class="mcb-score-btn mcb-minus"><i
+                            class="fas fa-minus"></i></button>
+                        <input type="number" class="mcb-score-val" id="scoreA" value="0"
+                          onchange="updateScoreInput('teamA')">
+                        <button onclick="adjScore('teamA',1)" class="mcb-score-btn mcb-plus"><i
+                            class="fas fa-plus"></i></button>
+                      </div>
+                    </div>
+
+                    <!-- VS Divider -->
+                    <div class="mcb-vs">
+                      <div class="mcb-vs-line"></div>
+                      <span class="mcb-vs-badge">VS</span>
+                      <div class="mcb-vs-line"></div>
+                    </div>
+
+                    <!-- Team B -->
+                    <div class="mcb-team mcb-team-b">
+                      <div class="mcb-team-label">TEAM B</div>
+                      <input type="text" id="nameB" onchange="updateMatch()" placeholder="Team Name"
+                        class="mcb-name-input">
+                      <div class="mcb-score-row">
+                        <button onclick="adjScore('teamB',-1)" class="mcb-score-btn mcb-minus"><i
+                            class="fas fa-minus"></i></button>
+                        <input type="number" class="mcb-score-val" id="scoreB" value="0"
+                          onchange="updateScoreInput('teamB')">
+                        <button onclick="adjScore('teamB',1)" class="mcb-score-btn mcb-plus"><i
+                            class="fas fa-plus"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Subtitle + Break inline -->
+                  <div class="mcb-meta-row">
+                    <div class="mcb-meta-field mcb-meta-flex">
+                      <label class="mcb-meta-label">Subtitle</label>
+                      <input type="text" id="bracket-label" placeholder="GRAND FINALS — 2026" onchange="updateMatch()"
+                        class="mcb-meta-input">
+                    </div>
+                    <div class="mcb-meta-field mcb-meta-break">
+                      <label class="mcb-meta-label">Break</label>
+                      <div class="mcb-break-wrap">
+                        <input type="number" id="break-duration" onchange="updateMatch()"
+                          class="mcb-meta-input text-center">
+                        <span class="mcb-break-unit">min</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Ticker -->
+                  <div class="mcb-ticker">
+                    <div class="mcb-ticker-header">
+                      <span class="mcb-meta-label">Ticker Content</span>
+                      <button onclick="updateTicker()" class="mcb-ticker-btn">
+                        <i class="fas fa-paper-plane"></i> Update
+                      </button>
+                    </div>
+                    <textarea id="ticker-input" class="mcb-ticker-textarea" onchange="updateTicker()"
+                      placeholder="Mỗi dòng là 1 ticker item..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BOTTOM ROW: ROSTER -->
+              <div class="roster-panel">
+                <!-- Roster Header -->
+                <div class="rp-header">
+                  <span class="rp-title"><i class="fas fa-users"></i> SQUAD &amp; WEAPON</span>
+                  <div class="rp-actions">
+                    <button onclick="saveRoster()" class="rp-action-btn rp-save-btn" title="Lưu Kết Quả">
+                      <i class="fas fa-save"></i><span>Save</span>
+                    </button>
+                    <button onclick="clearRoster()" class="rp-action-btn rp-clear-btn" title="Xóa tất cả">
+                      <i class="fas fa-arrow-rotate-right"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Team Column Labels -->
+                <div class="rp-team-bar">
+                  <div class="rp-team-tag rp-tag-a" id="label-teamA">TEAM A</div>
+                  <div class="rp-divider-space"></div>
+                  <span class="mcb-vs-badge">VS</span>
+                  <div class="rp-divider-space"></div>
+                  <div class="rp-team-tag rp-tag-b" id="label-teamB">TEAM B</div>
+                </div>
+
+                <!-- Rounds (Scrollable) -->
+                <div class="roster-rounds-container custom-scroll">
+                  <div class="rounds-col" id="roundsA-container"></div>
+                  <div class="divider-v bg-light"></div>
+                  <div class="rounds-col" id="roundsB-container"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- TAB 2: CHARACTER EDITOR -->
+      <div class="main-content-tab" id="tab-character-editor" style="display: none;"></div>
+
+      <!-- TAB 3: WEAPON EDITOR -->
+      <div class="main-content-tab" id="tab-weapon-editor" style="display: none;"></div>
+
+      <!-- TAB 4: MATCH HISTORY -->
+      <div class="main-content-tab" id="tab-history" style="display: none;"></div>
+
+      <!-- TAB 5: SYSTEM CONFIG SETTINGS -->
+      <div class="main-content-tab" id="tab-settings" style="display: none;"></div>
+
+      <!-- FLOATING MINI MUSIC PLAYER (Visible on other tabs) -->
+      <div id="mini-music-player" class="mini-music-player" style="display: none;"
+        onclick="window.switchTab('control')">
+        <div class="mini-music-disc-wrap">
+          <div class="mini-music-disc" id="mini-music-disc">
+            <i class="fas fa-music"></i>
+          </div>
+        </div>
+        <div class="mini-music-info">
+          <div class="mini-music-marquee">
+            <span id="mini-track-name">Chưa phát nhạc</span>
+          </div>
+          <div class="mini-music-status">Now Playing</div>
+        </div>
+        <div class="mini-music-controls" onclick="event.stopPropagation()">
+          <button onclick="musicPlayerPrev()" class="mini-control-btn"><i class="fas fa-backward-step"></i></button>
+          <button id="mini-play-btn" onclick="musicPlayerToggle()" class="mini-control-btn play-btn">
+            <i class="fas fa-play" id="mini-play-icon"></i>
+          </button>
+          <button onclick="musicPlayerNext()" class="mini-control-btn"><i class="fas fa-forward-step"></i></button>
+        </div>
+      </div>
+
+      <!-- Modal Chọn Character / Weapon (Global) -->
+      <div id="selection-modal" class="modal-overlay">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="modal-title" class="modal-title">Select Item</h3>
+            <button onclick="closeSelectionModal()" class="modal-close">&times;</button>
+          </div>
+          <div class="modal-body-top">
+            <input type="text" id="modal-search" placeholder="Search..." oninput="filterModalItems()"
+              class="modal-search-input">
+
+            <div class="filter-group" id="modal-filter-rank-group">
+              <div class="filter-label">RANK:</div>
+              <div class="filter-btn active" onclick="setFilter('rank', '', this)">All</div>
+              <div class="filter-btn" onclick="setFilter('rank', '5', this)">5★</div>
+              <div class="filter-btn" onclick="setFilter('rank', '4', this)">4★</div>
+              <div class="filter-btn" id="filter-rank-3" onclick="setFilter('rank', '3', this)">3★</div>
+              <div class="filter-btn" id="filter-rank-2" onclick="setFilter('rank', '2', this)">2★</div>
+              <div class="filter-btn" id="filter-rank-1" onclick="setFilter('rank', '1', this)">1★</div>
+            </div>
+
+            <div class="filter-group" id="modal-filter-element-group">
+              <div class="filter-label">ELEMENT:</div>
+              <div class="filter-btn active" onclick="setFilter('element', '', this)">All</div>
+              <div class="filter-btn" onclick="setFilter('element', '1', this)">Glacio</div>
+              <div class="filter-btn" onclick="setFilter('element', '2', this)">Fusion</div>
+              <div class="filter-btn" onclick="setFilter('element', '3', this)">Electro</div>
+              <div class="filter-btn" onclick="setFilter('element', '4', this)">Aero</div>
+              <div class="filter-btn" onclick="setFilter('element', '5', this)">Spectro</div>
+              <div class="filter-btn" onclick="setFilter('element', '6', this)">Havoc</div>
+            </div>
+
+            <div class="filter-group" id="modal-filter-weapon-group">
+              <div class="filter-label">WEAPON:</div>
+              <div class="filter-btn active" id="filter-weapon-smart" onclick="setFilter('weapon', 'smart', this)">Smart
+              </div>
+              <div class="filter-btn" onclick="setFilter('weapon', '', this)">All</div>
+              <div class="filter-btn" onclick="setFilter('weapon', '1', this)">Broadblade</div>
+              <div class="filter-btn" onclick="setFilter('weapon', '2', this)">Sword</div>
+              <div class="filter-btn" onclick="setFilter('weapon', '3', this)">Pistols</div>
+              <div class="filter-btn" onclick="setFilter('weapon', '4', this)">Gauntlets</div>
+              <div class="filter-btn" onclick="setFilter('weapon', '5', this)">Rectifier</div>
+            </div>
+          </div>
+          <div id="modal-grid" class="custom-scroll modal-grid">
+            <!-- Items sẽ render ở đây -->
+          </div>
+          <div class="modal-footer">
+            <button onclick="clearSquare()" class="btn-clear">CLEAR</button>
+            <button onclick="confirmMultiSelection()" class="btn-confirm">CONFIRM (0/3)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core SPA Scripts -->
+      <script src="js/toast.js?v=3"></script>
+      <script src="js/music-player.js?v=3"></script>
+      <script src="js/sidebar.js?v=3"></script>
+
+      <!-- Tab Modules (Properly scoped inside IIFEs) -->
+      <script src="js/control.js?v=4"></script>
+    </div> <!-- end main-content -->
+  </div> <!-- end app-container -->
+</body>
+
+</html>

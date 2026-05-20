@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATRIX HUB — OBS Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/overlay.css">
+</head>
+
+<body>
+
+  <div id="scene-overlay"></div>
+
+  <div id="scoreboard" class="hidden">
+    <div class="sb-main-bar">
+      <div class="sb-team left" id="teamA">
+        <div class="sb-info">
+          <div class="sb-name" id="nameA">DRAGONS</div>
+          <div class="sb-label">TEAM</div>
+        </div>
+        <div class="sb-diff" id="scoreDiffA"></div>
+      </div>
+      <div class="sb-center">
+        <div class="sb-scores">
+          <span class="sb-score-a" id="scoreA">0</span>
+          <span class="sb-sep">:</span>
+          <span class="sb-score-b" id="scoreB">0</span>
+        </div>
+      </div>
+      <div class="sb-team right" id="teamB">
+        <div class="sb-info">
+          <div class="sb-name" id="nameB">PHANTOMS</div>
+          <div class="sb-label">TEAM</div>
+        </div>
+        <div class="sb-diff" id="scoreDiffB"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="roster-left" class="roster-panel left hidden">
+    <div class="roster-title" id="rosterNameA">TEAM A</div>
+    <div class="hero-list" id="heroListA"></div>
+    <div class="roster-points"><span class="roster-points-label">ROUND POINTS</span><span id="rosterPointsA">0</span>
+    </div>
+  </div>
+
+  <div id="roster-right" class="roster-panel right hidden">
+    <div class="roster-title" id="rosterNameB">TEAM B</div>
+    <div class="hero-list" id="heroListB"></div>
+    <div class="roster-points"><span class="roster-points-label">ROUND POINTS</span><span id="rosterPointsB">0</span>
+    </div>
+  </div>
+
+  <div id="ticker" class="hidden">
+    <div class="ticker-badge">◉ LIVE</div>
+    <div class="ticker-track">
+      <div class="ticker-inner" id="tickerInner"></div>
+    </div>
+  </div>
+
+  <div id="stats-scene">
+    <div class="stats-card">
+      <div class="stats-title" id="statsLabel">MATCH STATISTICS</div>
+      <div class="stats-container" id="statsContainer">
+        <!-- Render from JS -->
+      </div>
+    </div>
+  </div>
+
+  <div id="bracket-scene">
+    <div class="bracket-card">
+      <div class="bracket-title" id="bracketLabel">TOURNAMENT</div>
+      <div class="bracket-matchup">
+        <div class="bm-team">
+          <div class="bm-name" id="bName1">DRAGONS</div>
+        </div>
+        <div class="bm-vs">VS</div>
+        <div class="bm-team">
+          <div class="bm-name" id="bName2">PHANTOMS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="break-scene">
+    <div class="break-content">
+      <div class="break-title">SHORT BREAK</div>
+      <div class="break-timer" id="breakTimer">0:00</div>
+    </div>
+  </div>
+
+  <script src="js/overlay.js"></script>
+</body>
+
+</html>

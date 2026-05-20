@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATRIX HUB - Match History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Exo+2:wght@600;800&family=Inter:wght@400;500;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/character-editor.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/history.css">
+    <script src="js/auth.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar mini" id="app-sidebar">
+            <div class="sidebar-header">
+                <div class="logo sidebar-logo">MATRIX HUB</div>
+                <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+            <nav>
+                <a href="/" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
+                    <span class="nav-text">Control</span>
+                </a>
+                <a href="/character-editor" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-user"></i></span>
+                    <span class="nav-text">Character</span>
+                </a>
+                <a href="/weapon-editor" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-gavel"></i></span>
+                    <span class="nav-text">Weapon</span>
+                </a>
+                <a href="/history" class="nav-link active">
+                    <span class="nav-icon"><i class="fas fa-history"></i></span>
+                    <span class="nav-text">History</span>
+                </a>
+                <a href="/settings" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-cog"></i></span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px;">
+                <div class="brand">
+                    <h1>Match History</h1>
+                    <p id="hist-stats-summary">Lịch sử kết quả các trận đấu đã lưu</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-logout" onclick="logout()" title="Logout"><i
+                            class="fas fa-power-off"></i></button>
+                </div>
+            </header>
+
+            <div id="char-editor-container">
+                <div class="controls" style="margin-bottom: 24px;">
+                    <div class="search-box" style="max-width: 400px; flex: unset;">
+                        <input type="text" id="hist-search-input"
+                            placeholder="Tìm kiếm trận đấu (tên đội, giải đấu)...">
+                    </div>
+                </div>
+
+                <div class="history-grid" id="hist-grid">
+                    <!-- Loading State -->
+                    <div class="history-empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Đang tải danh sách lịch sử trận đấu...</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Match Details Modal -->
+            <div id="hist-details-modal" class="modal-overlay" style="display: none; z-index: 100000;">
+                <div class="modal-content"
+                    style="width: 1200px; max-width: 95vw; background: #0f172a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: flex; flex-direction: column;">
+                    <div class="modal-header"
+                        style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="modal-title" id="hist-modal-match-title"
+                            style="font-family: 'Outfit', sans-serif; font-weight: 700; color: #fff; margin: 0; font-size: 18px;">
+                        </h3>
+                        <button class="modal-close" onclick="closeDetailsModal()"
+                            style="background: none; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; transition: 0.2s;">&times;</button>
+                    </div>
+
+                    <div class="modal-body custom-scroll"
+                        style="padding: 20px; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; gap: 15px;">
+                        <!-- Header Team Names -->
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                            <div style="flex: 1; text-align: left;">
+                                <span id="hist-modal-team-a-label"
+                                    style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 16px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;">TEAM
+                                    A</span>
+                            </div>
+                            <div
+                                style="font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 900; color: rgba(255,255,255,0.15); margin: 0 30px; letter-spacing: 2px;">
+                                ROSTER ROUNDS</div>
+                            <div style="flex: 1; text-align: right;">
+                                <span id="hist-modal-team-b-label"
+                                    style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 16px; color: var(--success); text-transform: uppercase; letter-spacing: 1px;">TEAM
+                                    B</span>
+                            </div>
+                        </div>
+
+                        <!-- Side by Side Scrollable Rounds -->
+                        <div class="roster-rounds-container custom-scroll"
+                            style="display: flex; gap: 20px; padding: 0; overflow-y: visible;">
+                            <div class="rounds-col" id="hist-roundsA-detail-container"
+                                style="flex: 1; display: flex; flex-direction: column; gap: 10px;"></div>
+                            <div class="divider-v"
+                                style="width: 1px; background: rgba(255,255,255,0.08); flex-shrink: 0;"></div>
+                            <div class="rounds-col" id="hist-roundsB-detail-container"
+                                style="flex: 1; display: flex; flex-direction: column; gap: 10px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer"
+                        style="border-top: 1px solid rgba(255,255,255,0.05); padding: 16px 20px; display: flex; justify-content: flex-end; gap: 12px; background: rgba(0,0,0,0.1);">
+                        <button class="page-btn" onclick="closeDetailsModal()"
+                            style="padding: 8px 24px; font-weight: 600; cursor: pointer;">Đóng</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="toast" class="save-toast" style="display: none;">✓ Thao tác thành công!</div>
+
+            <script src="js/sidebar.js?v=3"></script>
+            <script src="js/toast.js?v=3"></script>
+            <script src="js/history.js?v=3"></script>
+        </div>
+    </div>
+</body>
+
+</html>

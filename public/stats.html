@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATRIX HUB — Stats Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  <style>
+    body {
+      background: transparent !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #stats-scene {
+      display: flex !important;
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: transparent !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      animation: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="stats-scene">
+    <div class="stats-card">
+      <div class="stats-title" id="statsLabel">MATCH STATISTICS</div>
+      <div class="stats-container" id="statsContainer">
+        <!-- Rendered from JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/stats.js?v=2"></script>
+</body>
+
+</html>

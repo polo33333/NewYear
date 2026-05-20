@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATRIX HUB - Character Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Exo+2:wght@600;800&family=Inter:wght@400;500;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/character-editor.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <script src="js/auth.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar mini" id="app-sidebar">
+            <div class="sidebar-header">
+                <div class="logo sidebar-logo">MATRIX HUB</div>
+                <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+            <nav>
+                <a href="/" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
+                    <span class="nav-text">Control</span>
+                </a>
+                <a href="/character-editor" class="nav-link active">
+                    <span class="nav-icon"><i class="fas fa-user"></i></span>
+                    <span class="nav-text">Character</span>
+                </a>
+                <a href="/weapon-editor" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-gavel"></i></span>
+                    <span class="nav-text">Weapon</span>
+                </a>
+                <a href="/history" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-history"></i></span>
+                    <span class="nav-text">History</span>
+                </a>
+                <a href="/settings" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-cog"></i></span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <header style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="brand">
+                    <h1>Character Editor</h1>
+                    <p id="char-stats-summary">Loading data...</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-logout" onclick="logout()" title="Logout"><i
+                            class="fas fa-power-off"></i></button>
+                </div>
+            </header>
+
+            <div id="char-editor-container">
+                <div class="controls">
+                    <div class="search-box">
+                        <input type="text" id="char-search-input" placeholder="Search by name...">
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Element:</span>
+                        <div id="char-element-filters" class="filter-group">
+                            <button class="filter-btn active" data-element="0">All</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Rank:</span>
+                        <div id="char-rank-filters" class="filter-group">
+                            <button class="filter-btn active" data-rank="0">All</button>
+                            <button class="filter-btn rank5" data-rank="5">5★</button>
+                            <button class="filter-btn rank4" data-rank="4">4★</button>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn-outline-danger" id="char-reset-btn">Reset All RC</button>
+                        <button class="btn btn-primary" id="char-save-server-btn"
+                            style="background: var(--success); color: var(--bg-body);">Save to Server</button>
+                        <!-- <button class="btn btn-primary" id="char-export-btn">Export JSON</button> -->
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="char-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Name</th>
+                                <th class="text-center">Rank</th>
+                                <th>Element</th>
+                                <th>Weapon</th>
+                                <th class="text-center">Energy</th>
+                                <th class="text-center">RC0</th>
+                                <th class="text-center">RC1</th>
+                                <th class="text-center">RC2</th>
+                                <th class="text-center">RC3</th>
+                                <th class="text-center">RC4</th>
+                                <th class="text-center">RC5</th>
+                                <th class="text-center">RC6</th>
+                                <th class="text-center">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody id="char-table-body">
+                            <!-- Rows will be injected here -->
+                        </tbody>
+                    </table>
+                    <div id="char-empty-message" class="empty-state" style="display: none;">
+                        No resonance found in the current frequency...
+                    </div>
+                </div>
+
+                <div class="pagination" id="char-pagination-controls">
+                    <button class="page-btn" id="char-prev-page" disabled>Previous</button>
+                    <span class="page-info" id="char-page-display">Page 1 of 1</span>
+                    <button class="page-btn" id="char-next-page" disabled>Next</button>
+                </div>
+            </div>
+
+
+
+            <footer>
+                <div id="char-footer-stats">Total: 0 | Filtered: 0</div>
+                <div>Created for project-livebox</div>
+            </footer>
+
+            <div id="toast" class="save-toast">JSON Exported Successfully!</div>
+
+            <script src="js/toast.js"></script>
+            <script src="js/character-editor.js?v=3"></script>
+            <script src="js/sidebar.js"></script>
+        </div>
+    </div>
+</body>
+
+</html>

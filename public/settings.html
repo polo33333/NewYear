@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATRIX HUB - Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Exo+2:wght@600;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/character-editor.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <script src="js/auth.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar mini" id="app-sidebar">
+            <div class="sidebar-header">
+                <div class="logo sidebar-logo">MATRIX HUB</div>
+                <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+            <nav>
+                <a href="/" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
+                    <span class="nav-text">Control</span>
+                </a>
+                <a href="/character-editor" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-user"></i></span>
+                    <span class="nav-text">Character</span>
+                </a>
+                <a href="/weapon-editor" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-gavel"></i></span>
+                    <span class="nav-text">Weapon</span>
+                </a>
+                <a href="/history" class="nav-link">
+                    <span class="nav-icon"><i class="fas fa-history"></i></span>
+                    <span class="nav-text">History</span>
+                </a>
+                <a href="/settings" class="nav-link active">
+                    <span class="nav-icon"><i class="fas fa-cog"></i></span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px;">
+                <div class="brand">
+                    <h1>Settings</h1>
+                    <p id="sett-stats-summary">Configuration for MATRIX HUB</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-logout" onclick="logout()" title="Logout"><i
+                            class="fas fa-power-off"></i></button>
+                </div>
+            </header>
+
+            <div class="settings-grid">
+                <!-- LEFT COLUMN: Main Configurations -->
+                <div class="settings-col">
+                    <!-- OBS Security Card -->
+                    <div class="settings-card">
+                        <div class="settings-title"><i class="fas fa-shield-alt"></i> OBS Security Token</div>
+
+                        <div class="form-group">
+                            <label class="form-label">Overlay Token URL</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <div style="position: relative; flex: 1;">
+                                    <input type="text" id="sett-token-input" class="form-input"
+                                        placeholder="Enter new token (e.g. kdstream2026)"
+                                        style="padding-right: 40px; width: 100%; -webkit-text-security: disc;">
+                                    <button type="button" id="sett-btn-toggle-token"
+                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 5px; font-size: 14px; transition: 0.2s;"
+                                        title="Ẩn/Hiện Token">
+                                        <i class="fas fa-eye-slash" id="sett-toggle-token-icon"></i>
+                                    </button>
+                                </div>
+                                <button class="btn" id="sett-btn-generate"
+                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px; padding: 0 20px; height: 40px; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: 0.2s;"
+                                    onmouseover="this.style.background='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                    <i class="fas fa-sync-alt"></i> Random
+                                </button>
+                            </div>
+                            <div class="form-desc">
+                                Thay đổi token này sẽ bắt buộc bạn phải cập nhật lại link trên OBS.<br>
+                                Link cũ (với token cũ) sẽ bị từ chối truy cập <b>ngay lập tức</b>.
+                            </div>
+                        </div>
+
+                        <button id="sett-btn-save-settings" class="btn-save"><i class="fas fa-save"></i> Save</button>
+                    </div>
+
+                    <!-- Google Sheets Card -->
+                    <div class="settings-card">
+                        <div class="settings-title">
+                            <i class="fab fa-google-drive" style="color: #10b981;"></i> Google Sheet Sync
+                        </div>
+
+                        <!-- Match Result Apps Script Sync -->
+                        <div class="form-group">
+                            <label class="form-label">Google Apps Script Web App URL (Match Result Sync)</label>
+                            <div style="position: relative;">
+                                <input type="text" id="sett-apps-script-url-input" class="form-input"
+                                    placeholder="https://script.google.com/macros/s/.../exec"
+                                    style="padding-right: 40px; width: 100%; -webkit-text-security: disc;">
+                                <button type="button" id="sett-btn-toggle-apps-script"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 5px; font-size: 14px; transition: 0.2s;"
+                                    title="Ẩn/Hiện Web App URL">
+                                    <i class="fas fa-eye-slash" id="sett-toggle-apps-script-icon"></i>
+                                </button>
+                            </div>
+                            <div class="form-desc">
+                                Đường dẫn dùng để đồng bộ trực tiếp kết quả trận đấu từ trang lịch sử sang Google
+                                Sheet.<br>
+                                <a href="#" onclick="showAppsScriptGuide(event)"
+                                    style="color: var(--accent); text-decoration: underline; font-weight: 600;">Xem
+                                    hướng dẫn tạo mã Apps Script & Cách thiết lập nhanh</a>
+                            </div>
+                        </div>
+
+                        <button id="sett-btn-save-sheets" class="btn-save"
+                            style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: 1px solid rgba(16, 185, 129, 0.2);"><i
+                                class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: App Info & Support -->
+                <div class="settings-col">
+                    <!-- App Info Card -->
+                    <div class="settings-card">
+                        <div class="settings-title">
+                            <i class="fas fa-gamepad" style="color: var(--accent); font-size: 18px;"></i> MATRIX HUB
+                            Info
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 16px; font-size: 14px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-dim);">Phiên bản</span>
+                                <span style="color: #fff; font-weight: 500;">1.1.0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-dim);">Nhà phát triển</span>
+                                <span style="color: #fff; font-weight: 500;">KDONE</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-dim);">Ngày cập nhật</span>
+                                <span style="color: #fff; font-weight: 500;">18/05/2026</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-dim);">Server Node.js</span>
+                                <span style="color: var(--success); font-weight: 600;">ACTIVE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Support Card -->
+                    <div class="settings-card">
+                        <div class="settings-title">
+                            <i class="fas fa-heart" style="color: #ef4444; font-size: 18px;"></i> Hỗ Trợ & Góp ý
+                        </div>
+
+                        <div style="color: var(--text-dim); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                            Cảm ơn bạn đã sử dụng ứng dụng! Nếu bạn gặp vấn đề hoặc có đề xuất, vui lòng liên hệ với
+                            chúng tôi.
+                        </div>
+
+                        <a href="https://github.com/trandang14/project-livebox" target="_blank"
+                            style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; text-decoration: none; font-weight: 500; font-size: 14px; transition: 0.2s;"
+                            onmouseover="this.style.background='rgba(255,255,255,0.1)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                            <i class="fab fa-github" style="font-size: 18px;"></i> GitHub Repository
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div id="toast" class="save-toast" style="display: none;">✓ Settings Saved Successfully!</div>
+
+            <script src="js/sidebar.js?v=3"></script>
+            <script src="js/toast.js?v=3"></script>
+            <script src="js/settings.js?v=3"></script>
+        </div>
+    </div>
+</body>
+
+</html>

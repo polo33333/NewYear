@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATRIX HUB — Scoreboard Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/scoreboard.css">
+</head>
+
+<body>
+
+  <div id="scoreboard" class="hidden">
+    <div class="sb-main-bar">
+      <div class="sb-team left" id="teamA" style="--color:#00aaff">
+        <div class="sb-info">
+          <div class="sb-name" id="nameA">DRAGONS</div>
+          <div class="sb-label">TEAM A</div>
+        </div>
+        <div class="sb-diff" id="scoreDiffA"></div>
+      </div>
+      <div class="sb-center">
+        <div class="sb-scores">
+          <span class="sb-score-a" id="scoreA">0</span>
+          <span class="sb-sep">:</span>
+          <span class="sb-score-b" id="scoreB">0</span>
+        </div>
+        <div class="sb-timer" id="matchTimer">12:47</div>
+      </div>
+      <div class="sb-team right" id="teamB" style="--color:#ff4444">
+        <div class="sb-info">
+          <div class="sb-name" id="nameB">PHANTOMS</div>
+          <div class="sb-label">TEAM B</div>
+        </div>
+        <div class="sb-diff" id="scoreDiffB"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/scoreboard.js"></script>
+</body>
+
+</html>

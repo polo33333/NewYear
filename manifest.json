@@ -1,0 +1,16 @@
+{
+  "short_name": "MATRIX HUB",
+  "name": "MATRIX HUB",
+  "icons": [
+    {
+      "src": "images/icon/Yangyang.webp",
+      "type": "image/webp",
+      "sizes": "256x256"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0a0e1a",
+  "theme_color": "#00f5ff",
+  "display": "standalone",
+  "orientation": "landscape"
+}

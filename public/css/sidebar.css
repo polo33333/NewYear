@@ -1,0 +1,124 @@
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 190px;
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    z-index: 1000;
+}
+
+.sidebar.mini {
+    width: 60px;
+}
+
+.sidebar-header {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 15px;
+}
+
+.sidebar-logo {
+    white-space: normal;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.sidebar-toggle {
+    background: transparent;
+    border: none;
+    color: var(--accent, #00f5ff);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar.mini .sidebar-header {
+    justify-content: center;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    color: var(--text-dim, #94a3b8);
+    text-decoration: none;
+    border-radius: 6px;
+    margin: 0 10px 5px 10px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.nav-icon {
+    min-width: 24px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.sidebar.mini .nav-text,
+.sidebar.mini .sidebar-logo {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+.sidebar.mini .nav-link {
+    justify-content: center;
+}
+
+.sidebar.mini .nav-icon {
+    margin-right: 0;
+}
+
+.nav-text {
+    transition: opacity 0.3s;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    /* Adjust for each page's specific layout */
+}
+
+/* Global sleek scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent, #00f5ff);
+}
