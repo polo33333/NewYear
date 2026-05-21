@@ -44,12 +44,31 @@ router.post('/login', (req, res) => {
     const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
+      // Tự động dọn sạch state trong RAM và trên file state_save.json khi đăng nhập thành công
+      try {
+        const stateService = require('../services/stateService');
+        stateService.resetState();
+      } catch (errReset) {
+        console.error('[SYSTEM] Error resetting state during login:', errReset.message);
+      }
+
       res.json({ success: true, token: 'nexus-token-' + Date.now() });
     } else {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// API dọn sạch dữ liệu thủ công hoặc khi đăng xuất
+router.post('/reset-state', (req, res) => {
+  try {
+    const stateService = require('../services/stateService');
+    stateService.resetState();
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reset state: ' + err.message });
   }
 });
 

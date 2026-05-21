@@ -238,8 +238,7 @@
                       <div class="mcb-score-row">
                         <button onclick="adjScore('teamA',-1)" class="mcb-score-btn mcb-minus"><i
                             class="fas fa-minus"></i></button>
-                        <input type="number" class="mcb-score-val" id="scoreA" value="0"
-                          onchange="updateScoreInput('teamA')">
+                        <input type="number" class="mcb-score-val" id="scoreA" value="0" readonly>
                         <button onclick="adjScore('teamA',1)" class="mcb-score-btn mcb-plus"><i
                             class="fas fa-plus"></i></button>
                       </div>
@@ -260,8 +259,7 @@
                       <div class="mcb-score-row">
                         <button onclick="adjScore('teamB',-1)" class="mcb-score-btn mcb-minus"><i
                             class="fas fa-minus"></i></button>
-                        <input type="number" class="mcb-score-val" id="scoreB" value="0"
-                          onchange="updateScoreInput('teamB')">
+                        <input type="number" class="mcb-score-val" id="scoreB" value="0" readonly>
                         <button onclick="adjScore('teamB',1)" class="mcb-score-btn mcb-plus"><i
                             class="fas fa-plus"></i></button>
                       </div>
@@ -316,11 +314,17 @@
 
                 <!-- Team Column Labels -->
                 <div class="rp-team-bar">
-                  <div class="rp-team-tag rp-tag-a" id="label-teamA">TEAM A</div>
+                  <div class="rp-team-wrapper rp-wrapper-a">
+                    <div class="rp-team-tag rp-tag-a" id="label-teamA">TEAM A</div>
+                    <div class="rp-team-score rp-score-a" id="scoreA-display">0</div>
+                  </div>
                   <div class="rp-divider-space"></div>
                   <span class="mcb-vs-badge">VS</span>
                   <div class="rp-divider-space"></div>
-                  <div class="rp-team-tag rp-tag-b" id="label-teamB">TEAM B</div>
+                  <div class="rp-team-wrapper rp-wrapper-b">
+                    <div class="rp-team-score rp-score-b" id="scoreB-display">0</div>
+                    <div class="rp-team-tag rp-tag-b" id="label-teamB">TEAM B</div>
+                  </div>
                 </div>
 
                 <!-- Rounds (Scrollable) -->

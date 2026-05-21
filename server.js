@@ -1,8 +1,8 @@
 /**
  * MATRIX HUD — Server
  * Chạy: node server.js
- * OBS trỏ vào: http://localhost:4100/live?token=kdstream2026
- * Control panel: http://localhost:4100
+ * OBS trỏ vào: http://localhost:3000/live?token=kdstream2026
+ * Control panel: http://localhost:3000
  */
 
 const express = require('express');

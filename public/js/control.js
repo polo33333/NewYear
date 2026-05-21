@@ -1,4 +1,5 @@
 let ws, state = null;
+const clientId = 'control_' + Math.random().toString(36).substring(2, 9);
 
 function resizePreview() {
   const c = document.getElementById('preview-container'), f = document.getElementById('preview-iframe');
@@ -17,7 +18,6 @@ function openFullscreen() {
 function connect() {
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   ws = new WebSocket(`${protocol}//${location.host}/ws/control`);
-  //ws = new WebSocket(`ws://${location.host}/ws/control`);
   ws.onopen = () => { document.getElementById('conn-dot').className = 'status-dot online'; document.getElementById('conn-text').textContent = 'CONNECTED'; };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
   ws.onclose = () => { document.getElementById('conn-dot').className = 'status-dot'; document.getElementById('conn-text').textContent = 'OFFLINE'; setTimeout(connect, 2000); };
@@ -28,7 +28,12 @@ function handleMessage(msg) {
   else if (msg.type === 'score') { state.score = msg.data; syncScoreUI(); }
   else if (msg.type === 'scene') { state.scene = msg.value; syncSceneUI(); }
   else if (msg.type === 'overlays') { state.overlays = msg.data; syncOverlayUI(); }
-  else if (msg.type === 'rosters') { state.rosters = msg.data; syncRosterUI(); }
+  else if (msg.type === 'rosters') {
+    state.rosters = msg.data;
+    if (msg.senderId !== clientId) {
+      syncRosterUI();
+    }
+  }
 }
 
 function syncUI() {
@@ -65,8 +70,14 @@ function syncUI() {
 }
 
 function syncScoreUI() {
-  document.getElementById('scoreA').value = state.score.teamA.score;
-  document.getElementById('scoreB').value = state.score.teamB.score;
+  const sA = state.score.teamA.score;
+  const sB = state.score.teamB.score;
+  document.getElementById('scoreA').value = sA;
+  document.getElementById('scoreB').value = sB;
+  const displayA = document.getElementById('scoreA-display');
+  const displayB = document.getElementById('scoreB-display');
+  if (displayA) displayA.textContent = sA;
+  if (displayB) displayB.textContent = sB;
 }
 
 function syncRosterUI() {
@@ -122,13 +133,31 @@ function syncRosterUI() {
         netDiv.innerText = net;
         netDiv.style.color = net < 0 ? '#ff4444' : (net > 0 ? '#00f5ff' : '#fff');
       }
+
+      // Disable the submit button if the round is already synced/submitted on server
+      const hasSyncedData = !!teamData['round' + r];
+      const btnSubmit = document.getElementById(`btn-submit-${teamCode}r${r}`);
+      if (btnSubmit) {
+        if (hasSyncedData) {
+          btnSubmit.disabled = true;
+          btnSubmit.classList.add('disabled');
+        } else {
+          btnSubmit.disabled = false;
+          btnSubmit.classList.remove('disabled');
+        }
+      }
     });
   }
 }
 
 function syncSceneUI() { document.querySelectorAll('.scene-btn').forEach(b => b.classList.toggle('active', b.dataset.scene === state.scene)); }
 function syncOverlayUI() { for (let k in state.overlays) { let el = document.getElementById('tog-' + k); if (el) el.classList.toggle('on', state.overlays[k]); } }
-function send(m) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(m)); }
+function send(m) {
+  if (ws && ws.readyState === 1) {
+    m.senderId = clientId;
+    ws.send(JSON.stringify(m));
+  }
+}
 function setScene(s) { send({ type: 'set_scene', value: s }); }
 function toggleOverlay(k) { send({ type: 'toggle_overlay', key: k }); }
 function adjScore(t, v) {
@@ -199,6 +228,9 @@ function updateSq(id) {
   const match = id.match(/([AB])r(\d+)/);
   if (match) {
     window.calculateAllDeductions(match[1]);
+    if (window.markRowDirty) {
+      window.markRowDirty(match[1], parseInt(match[2], 10));
+    }
   }
 
   if (window.updateRosterLocal) {
@@ -252,8 +284,6 @@ window.calculateAllDeductions = function (team) {
 
 function updateRoster() {
   const rosterData = { teamA: {}, teamB: {} };
-  let totalScoreA = 0;
-  let totalScoreB = 0;
 
   for (let r = 1; r <= 6; r++) {
     ['A', 'B'].forEach(teamCode => {
@@ -293,22 +323,7 @@ function updateRoster() {
         deduction: d,
         buyPoints: buy
       };
-
-      if (teamCode === 'A') totalScoreA += net;
-      if (teamCode === 'B') totalScoreB += net;
     });
-  }
-
-  // Cập nhật điểm số tổng lên bảng Match Control
-  document.getElementById('scoreA').value = totalScoreA;
-  document.getElementById('scoreB').value = totalScoreB;
-
-  if (state && state.score) {
-    const scoreData = {
-      teamA: { ...state.score.teamA, score: totalScoreA },
-      teamB: { ...state.score.teamB, score: totalScoreB }
-    };
-    send({ type: 'update_score', data: scoreData });
   }
 
   send({ type: 'update_roster', data: rosterData });
@@ -330,9 +345,59 @@ window.updateRosterLocal = function () {
   }
 };
 
+window.syncSingleRow = function (teamCode, r) {
+  const p = parseInt(document.getElementById(`t${teamCode}r${r}p`)?.value) || 0;
+  const d = parseInt(document.getElementById(`t${teamCode}r${r}d`)?.value) || 0;
+  const buy = parseInt(document.getElementById(`t${teamCode}r${r}buy`)?.value) || 0;
+  const net = p - d - buy;
+  const netDiv = document.getElementById(`t${teamCode}r${r}net`);
+  if (netDiv) {
+    netDiv.innerText = net;
+    netDiv.style.color = net < 0 ? '#ff4444' : (net > 0 ? '#00f5ff' : '#fff');
+  }
+
+  const teamKey = 'team' + teamCode;
+  const singleRosterData = {};
+  singleRosterData[teamKey] = {};
+  singleRosterData[teamKey]['round' + r] = {
+    heroes: [
+      document.getElementById(`t${teamCode}r${r}h1`)?.value || '',
+      document.getElementById(`t${teamCode}r${r}h2`)?.value || '',
+      document.getElementById(`t${teamCode}r${r}h3`)?.value || ''
+    ],
+    heroRcs: [
+      document.getElementById(`sl${teamCode}r${r}h1`)?.value || '0',
+      document.getElementById(`sl${teamCode}r${r}h2`)?.value || '0',
+      document.getElementById(`sl${teamCode}r${r}h3`)?.value || '0'
+    ],
+    weapons: [
+      document.getElementById(`t${teamCode}r${r}w1`)?.value || '',
+      document.getElementById(`t${teamCode}r${r}w2`)?.value || '',
+      document.getElementById(`t${teamCode}r${r}w3`)?.value || ''
+    ],
+    weaponRs: [
+      document.getElementById(`sl${teamCode}r${r}w1`)?.value || '1',
+      document.getElementById(`sl${teamCode}r${r}w2`)?.value || '1',
+      document.getElementById(`sl${teamCode}r${r}w3`)?.value || '1'
+    ],
+    points: p,
+    deduction: d,
+    buyPoints: buy
+  };
+
+  send({ type: 'update_roster', data: singleRosterData });
+
+  // Disable the submit button immediately upon successful sync
+  const btn = document.getElementById(`btn-submit-${teamCode}r${r}`);
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.add('disabled');
+  }
+};
+
 window.submitRow = function (teamCode, r, event) {
   if (event) event.stopPropagation();
-  updateRoster();
+  window.syncSingleRow(teamCode, r);
   showToast(`Đã cập nhật và đồng bộ kết quả Vòng ${r} của Team ${teamCode}!`, 'success');
 };
 
@@ -755,7 +820,7 @@ function generateRounds() {
   <div class="round-heroes-container">
     ${[1, 2, 3].map(i => `
       <div class="char-col">
-        <div class="char-square weapon-square" id="sq${team}r${r}w${i}" onclick="openSelectionModal('${team}r${r}w${i}', 'weapon')"><i class="fas fa-gavel" style="font-size: 20px;opacity:0.4;"></i><input type="hidden" id="t${team}r${r}w${i}" onchange="updateSq('${team}r${r}w${i}')"></div>
+        <div class="char-square weapon-square" id="sq${team}r${r}w${i}" onclick="openSelectionModal('${team}r${r}w${i}', 'weapon')"><i class="fas fa-gavel" style="font-size: 20px;opacity:0.4;"></i><input type="hidden" id="t${team}r${r}w${i}" onchange="updateSq('${team}r${r}w${i}'); window.markRowDirty('${team}', ${r})"></div>
         <div class="r-label">R</div>
         <div class="step-container step-container-wp">
           <button class="step-btn" onclick="stepValue('sl${team}r${r}w${i}', -1, 1, 5, '${team}', ${r})"><i class="fas fa-minus"></i></button>
@@ -771,7 +836,7 @@ function generateRounds() {
      <div class="score-input-col">
        <div class="score-input-row">
          <span class="score-sign-plus">+</span>
-         <input type="number" id="t${team}r${r}p" placeholder="0" onchange="updateRosterLocal()" class="score-pt-input" title="Điểm cộng">
+         <input type="number" id="t${team}r${r}p" placeholder="0" onchange="updateRosterLocal()" oninput="window.markRowDirty('${team}', ${r})" class="score-pt-input" title="Điểm cộng">
        </div>
        <div class="score-input-row">
          <span class="score-sign-minus">&minus;</span>
@@ -779,7 +844,7 @@ function generateRounds() {
        </div>
        <div class="score-input-row">
          <span class="score-sign-minus" style="color: #ff9f43;">&minus;</span>
-         <input type="number" id="t${team}r${r}buy" placeholder="Buy" onchange="updateRosterLocal()" class="score-buy-input" title="Điểm mua lượt">
+         <input type="number" id="t${team}r${r}buy" placeholder="0" onchange="updateRosterLocal()" oninput="window.markRowDirty('${team}', ${r})" class="score-buy-input" title="Điểm mua lượt">
        </div>
      </div>
      <div class="score-net-wrapper">
@@ -787,7 +852,7 @@ function generateRounds() {
        <div id="t${team}r${r}net" class="score-net-box" title="Tổng điểm">0</div>
      </div>
      <div class="score-actions-col">
-        <button class="btn-submit-row" onclick="submitRow('${team}', ${r}, event)" title="Đồng bộ Round ${r}"><i class="fas fa-paper-plane"></i></button>
+        <button class="btn-submit-row" id="btn-submit-${team}r${r}" onclick="submitRow('${team}', ${r}, event)" title="Đồng bộ Round ${r}"><i class="fas fa-paper-plane"></i></button>
         <button class="btn-clear-row" onclick="clearRow('${team}', ${r}, event)" title="Clear Round ${r}"><i class="fas fa-arrow-rotate-right"></i></button>
       </div>
   </div>
@@ -799,6 +864,14 @@ function generateRounds() {
     containerB.appendChild(createRow('B', r));
   }
 }
+
+window.markRowDirty = function (teamCode, r) {
+  const btn = document.getElementById(`btn-submit-${teamCode}r${r}`);
+  if (btn) {
+    btn.disabled = false;
+    btn.classList.remove('disabled');
+  }
+};
 
 window.stepValue = function (id, delta, min, max, team, r) {
   const input = document.getElementById(id);
@@ -816,6 +889,7 @@ window.stepValue = function (id, delta, min, max, team, r) {
   if (window.updateRosterLocal) {
     window.updateRosterLocal();
   }
+  window.markRowDirty(team, r);
 };
 
 generateRounds();
@@ -882,9 +956,10 @@ window.clearRow = async function (teamCode, r, event) {
     if (wRLbl) wRLbl.innerText = '1';
   }
 
-  if (window.updateRoster) {
-    window.updateRoster();
+  if (window.syncSingleRow) {
+    window.syncSingleRow(teamCode, r);
   }
+  window.markRowDirty(teamCode, r);
 };
 
 window.saveRoster = async function () {
