@@ -87,7 +87,9 @@ function handleWSMessage(msg, userId) {
   switch (msg.type) {
     case 'set_scene':
       uState.scene = msg.value;
+      uState.overlays.scoreboard = (uState.scene === 'gameplay');
       broadcast({ type: 'scene', value: uState.scene, senderId: msg.senderId }, userId);
+      broadcast({ type: 'overlays', data: uState.overlays, senderId: msg.senderId }, userId);
       stateChanged = true;
       break;
 

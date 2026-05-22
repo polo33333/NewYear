@@ -754,7 +754,7 @@ window.renderModalItems = function (items) {
     // Hiển thị Energy (nếu là character)
     let energyHtml = '';
     if (currentSelectionType === 'character' && item._remainingEnergy !== null) {
-      const eColor = item._remainingEnergy > 0 ? '#00f5ff' : '#ff4444';
+      const eColor = item._remainingEnergy > 0 ? '#fcfcfcff' : '#ff4444';
       energyHtml = `<div class="modal-item-energy" style="color:${eColor}">⚡ ${item._remainingEnergy}</div>`;
     }
 
@@ -814,33 +814,33 @@ function createSparkles(element) {
   for (let i = 0; i < 24; i++) {
     const particle = document.createElement('div');
     particle.className = 'sparkle-particle';
-    
+
     // Randomize size between 3px and 7px
     const size = Math.random() * 5 + 3;
     particle.style.width = `${size}px`;
     particle.style.height = `${size}px`;
-    
+
     // Randomize color
     particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    
+
     // Set start position at center of element
     particle.style.left = `${centerX - size / 2}px`;
     particle.style.top = `${centerY - size / 2}px`;
-    
+
     // Randomize travel distance and angle (within a radius of ~50-100px)
     const angle = Math.random() * Math.PI * 2;
     const distance = Math.random() * 80 + 40;
     const tx = Math.cos(angle) * distance;
     const ty = Math.sin(angle) * distance - (Math.random() * 30 + 10); // Slight bias upwards
-    
+
     particle.style.setProperty('--tx', `${tx}px`);
     particle.style.setProperty('--ty', `${ty}px`);
-    
+
     // Set a random delay to make the burst look more organic
     particle.style.animationDelay = `${Math.random() * 0.15}s`;
-    
+
     document.body.appendChild(particle);
-    
+
     // Clean up particle DOM element after animation ends
     particle.addEventListener('animationend', () => {
       particle.remove();
