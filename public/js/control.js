@@ -1,4 +1,5 @@
 let ws, state = null;
+let currentObsToken = null;
 const clientId = 'control_' + Math.random().toString(36).substring(2, 9);
 
 function resizePreview() {
@@ -34,6 +35,9 @@ function handleMessage(msg) {
       syncRosterUI();
     }
   }
+  else if (msg.type === 'settings_update') {
+    syncUI();
+  }
 }
 
 function syncUI() {
@@ -52,12 +56,16 @@ function syncUI() {
 
   const host = location.origin;
   fetch('/api/settings').then(r => r.json()).then(s => {
-    const token = '?token=' + (s.obsToken || 'kdstream2026');
+    const tokenVal = s.obsToken || 'kdstream2026';
+    const token = '?token=' + tokenVal;
     document.getElementById('url-full').textContent = host + '/live' + token;
     document.getElementById('url-sb').textContent = host + '/scoreboard' + token;
     document.getElementById('url-ticker').textContent = host + '/ticker' + token;
     document.getElementById('url-stats').textContent = host + '/stats' + token;
-    if (!document.getElementById('preview-iframe').src || document.getElementById('preview-iframe').src === window.location.href) {
+    
+    // Only reload/update preview iframe if token actually changed
+    if (currentObsToken !== tokenVal) {
+      currentObsToken = tokenVal;
       document.getElementById('preview-iframe').src = host + '/live' + token + '&t=' + Date.now();
     }
   }).catch(err => {

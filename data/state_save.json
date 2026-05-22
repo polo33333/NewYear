@@ -1,6 +1,6 @@
 {
   "isLive": false,
-  "scene": "gameplay",
+  "scene": "stats",
   "overlays": {
     "scoreboard": true,
     "ticker": false,

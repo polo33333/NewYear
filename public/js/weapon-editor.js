@@ -157,6 +157,21 @@
         if (pageDisplay) pageDisplay.textContent = `Page ${currentPage} of ${totalPages}`;
         if (prevPageBtn) prevPageBtn.disabled = currentPage === 1;
         if (nextPageBtn) nextPageBtn.disabled = currentPage === totalPages;
+
+        // Apply non-admin restrictions to Reset and Save buttons
+        const isAdmin = localStorage.getItem('kdone_is_admin') === 'true';
+        if (!isAdmin) {
+            if (resetBtn) {
+                resetBtn.style.opacity = '0.35';
+                resetBtn.style.pointerEvents = 'none';
+                resetBtn.disabled = true;
+            }
+            if (saveServerBtn) {
+                saveServerBtn.style.opacity = '0.35';
+                saveServerBtn.style.pointerEvents = 'none';
+                saveServerBtn.disabled = true;
+            }
+        }
     }
 
     if (prevPageBtn) {

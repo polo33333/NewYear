@@ -6,12 +6,18 @@ const fs = require('fs');
 const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
 
 /**
- * Lấy token OBS hiện tại từ settings
+ * Lấy token OBS của một user (mặc định user ID 1) để tương thích hiển thị thông báo khởi động server
  */
-const getObsToken = () => {
+const getObsToken = (userId = '1') => {
   try {
     if (fs.existsSync(SETTINGS_FILE)) {
-      return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8')).obsToken || 'kdstream2026';
+      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
+      if (!content.trim()) return 'kdstream2026';
+      const allSettings = JSON.parse(content);
+      if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
+        return allSettings.obsToken || 'kdstream2026';
+      }
+      return (allSettings[userId] && allSettings[userId].obsToken) || 'kdstream2026';
     }
     return 'kdstream2026';
   } catch (e) {
@@ -20,10 +26,43 @@ const getObsToken = () => {
 };
 
 /**
+ * Kiểm tra xem token OBS có hợp lệ với bất kỳ user nào trong settings hay không
+ */
+const isValidObsToken = (token) => {
+  try {
+    if (!token) return false;
+    if (!fs.existsSync(SETTINGS_FILE)) {
+      return token === 'kdstream2026';
+    }
+    const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
+    if (!content.trim()) {
+      return token === 'kdstream2026';
+    }
+    const allSettings = JSON.parse(content);
+    
+    // Legacy check
+    if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
+      return token === (allSettings.obsToken || 'kdstream2026');
+    }
+    
+    // Quét qua tất cả user
+    for (const userId in allSettings) {
+      if (allSettings[userId] && allSettings[userId].obsToken === token) {
+        return true;
+      }
+    }
+    
+    return token === 'kdstream2026';
+  } catch (e) {
+    return token === 'kdstream2026';
+  }
+};
+
+/**
  * Middleware kiểm tra token bảo mật cho OBS Overlays
  */
 const requireObsToken = (req, res, next) => {
-  if (req.query.token === getObsToken()) {
+  if (isValidObsToken(req.query.token)) {
     next();
   } else {
     res.status(403).send('Forbidden: Missing or invalid token');

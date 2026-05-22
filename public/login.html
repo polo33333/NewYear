@@ -458,7 +458,7 @@
 
   <script>
     // Redirect if already authenticated
-    if (localStorage.getItem('nexus_auth_token')) {
+    if (localStorage.getItem('kdone_auth_token')) {
       window.location.href = '/';
     }
 
@@ -510,7 +510,10 @@
         const data = await res.json();
 
         if (data.success) {
-          localStorage.setItem('nexus_auth_token', data.token);
+          localStorage.setItem('kdone_auth_token', data.token);
+          localStorage.setItem('kdone_user_id', data.user.id);
+          localStorage.setItem('kdone_username', data.user.username);
+          localStorage.setItem('kdone_is_admin', data.user.isAdmin ? 'true' : 'false');
           // Small success delay for animation feel
           setTimeout(() => {
             window.location.href = '/';

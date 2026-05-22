@@ -60,12 +60,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         const doc = parser.parseFromString(htmlText, 'text/html');
                         const mainContent = doc.querySelector('.main-content');
                         
-                        let scriptSrc = 'js/' + tabName + '.js';
+                        let scriptSrc = '/js/' + tabName + '.js';
                         if (mainContent) {
                             // Find original script source to preserve cache busting (e.g. ?v=2)
                             const origScript = mainContent.querySelector(`script[src*="${tabName}.js"]`);
                             if (origScript && origScript.getAttribute('src')) {
                                 scriptSrc = origScript.getAttribute('src');
+                                if (!scriptSrc.startsWith('/')) {
+                                    scriptSrc = '/' + scriptSrc;
+                                }
                             }
                             
                             // Strip any inner scripts from being executed immediately in HTML
@@ -73,6 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             targetTab.innerHTML = mainContent.innerHTML;
                         } else {
                             targetTab.innerHTML = htmlText;
+                        }
+
+                        // Render user welcome message for the new page template
+                        if (typeof window.updateUserWelcome === 'function') {
+                            window.updateUserWelcome();
                         }
                         
                         // Dynamically append the scoped module script

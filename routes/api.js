@@ -12,25 +12,178 @@ const WEAPON_FILE = path.join(__dirname, '../data-local/weapons_local.json');
 const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
 
 /**
- * Lọc danh sách trận đấu đã lưu
+ * Trích xuất User ID từ Request (Header X-User-Id hoặc Authorization token hoặc Query param)
  */
-function getSaves() {
+function getUserIdFromRequest(req) {
+  if (req.headers['x-user-id']) {
+    return String(req.headers['x-user-id']);
+  }
+  
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    const parts = token.split('-');
+    if (parts.length >= 3 && parts[0] === 'kdone' && parts[1] === 'token') {
+      return String(parts[2]);
+    }
+  }
+
+  if (req.query.userId) {
+    return String(req.query.userId);
+  }
+
+  return '1';
+}
+
+/**
+ * Kiểm tra xem user hiện tại có quyền Admin hay không
+ */
+function checkIfAdmin(req) {
+  const userId = getUserIdFromRequest(req);
+  try {
+    const usersPath = path.join(__dirname, '../data/users.json');
+    if (!fs.existsSync(usersPath)) return false;
+    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+    const user = users.find(u => String(u.id) === String(userId));
+    return user && user.isAdmin === true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Middleware yêu cầu quyền Admin
+ */
+function requireAdmin(req, res, next) {
+  if (checkIfAdmin(req)) {
+    next();
+  } else {
+    res.status(403).json({ error: 'Quyền truy cập bị từ chối: Chỉ Admin mới có thể thực hiện hành động này.' });
+  }
+}
+
+
+/**
+ * Lọc cấu hình cài đặt theo User ID (Single-File)
+ */
+function getSettings(userId) {
+  try {
+    if (!fs.existsSync(SETTINGS_FILE)) {
+      const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
+      const def = { "1": { "obsToken": "kdstream2026" } };
+      if (userId !== '1') {
+        def[userId] = { "obsToken": defToken };
+      }
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
+      return def[userId] || { "obsToken": "kdstream2026" };
+    }
+    const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
+    if (!content.trim()) {
+      const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
+      const def = {};
+      def[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
+      return def[userId];
+    }
+    const allSettings = JSON.parse(content);
+    
+    // Legacy migration
+    if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
+      if (userId === '1') {
+        return allSettings;
+      } else {
+        const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
+        const migrated = { '1': allSettings };
+        migrated[userId] = { "obsToken": defToken };
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(migrated, null, 2), 'utf8');
+        return migrated[userId];
+      }
+    }
+    
+    // Generate obsToken if not exists for the user
+    if (!allSettings[userId]) {
+      const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
+      allSettings[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
+    } else if (!allSettings[userId].obsToken) {
+      allSettings[userId].obsToken = userId === '1' ? 'kdstream2026' : ('kdone_' + Math.random().toString(36).substring(2, 10));
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
+    }
+    
+    return allSettings[userId];
+  } catch (e) {
+    return { "obsToken": "kdstream2026" };
+  }
+}
+
+/**
+ * Lưu cấu hình cài đặt theo User ID (Single-File)
+ */
+function saveSettings(userId, userSettings) {
+  try {
+    let allSettings = {};
+    if (fs.existsSync(SETTINGS_FILE)) {
+      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
+      if (content.trim()) {
+        const parsed = JSON.parse(content);
+        if (parsed && !parsed['1'] && (parsed.obsToken || parsed.googleAppsScriptUrl)) {
+          allSettings = { '1': parsed };
+        } else {
+          allSettings = parsed;
+        }
+      }
+    }
+    allSettings[userId] = { ...allSettings[userId], ...userSettings };
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
+  } catch (e) {
+    console.error('[SYSTEM] Error saving settings:', e);
+  }
+}
+
+/**
+ * Lọc danh sách trận đấu đã lưu theo User ID (Single-File)
+ */
+function getSaves(userId) {
   try {
     if (!fs.existsSync(SAVES_LIST_FILE)) {
-      fs.writeFileSync(SAVES_LIST_FILE, '[]', 'utf8');
+      fs.writeFileSync(SAVES_LIST_FILE, '{}', 'utf8');
       return [];
     }
-    return JSON.parse(fs.readFileSync(SAVES_LIST_FILE, 'utf8')) || [];
+    const content = fs.readFileSync(SAVES_LIST_FILE, 'utf8');
+    if (!content.trim()) return [];
+    const allSaves = JSON.parse(content);
+    if (Array.isArray(allSaves)) {
+      // Legacy format migration
+      return userId === '1' ? allSaves : [];
+    }
+    return allSaves[userId] || [];
   } catch (e) {
     return [];
   }
 }
 
 /**
- * Lưu danh sách trận đấu đã lưu xuống ổ đĩa
+ * Lưu danh sách trận đấu đã lưu xuống ổ đĩa theo User ID (Single-File)
  */
-function saveSaves(saves) {
-  fs.writeFileSync(SAVES_LIST_FILE, JSON.stringify(saves, null, 2), 'utf8');
+function saveSaves(userId, userSaves) {
+  try {
+    let allSaves = {};
+    if (fs.existsSync(SAVES_LIST_FILE)) {
+      const content = fs.readFileSync(SAVES_LIST_FILE, 'utf8');
+      if (content.trim()) {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          allSaves = { '1': parsed };
+        } else {
+          allSaves = parsed;
+        }
+      }
+    }
+    allSaves[userId] = userSaves;
+    fs.writeFileSync(SAVES_LIST_FILE, JSON.stringify(allSaves, null, 2), 'utf8');
+  } catch (e) {
+    console.error('[SYSTEM] Error saving saves:', e);
+  }
 }
 
 // ── Auth Endpoint ──
@@ -52,7 +205,15 @@ router.post('/login', (req, res) => {
         console.error('[SYSTEM] Error resetting state during login:', errReset.message);
       }
 
-      res.json({ success: true, token: 'nexus-token-' + Date.now() });
+      res.json({
+        success: true,
+        token: `kdone-token-${user.id}-${Date.now()}`,
+        user: {
+          id: user.id,
+          username: user.username,
+          isAdmin: !!user.isAdmin
+        }
+      });
     } else {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
@@ -93,12 +254,14 @@ router.post('/save-state', (req, res) => {
 
 // ── Saves List API (Multi-Save Slot Support) ──
 router.get('/saves', (req, res) => {
-  res.json(getSaves());
+  const userId = getUserIdFromRequest(req);
+  res.json(getSaves(userId));
 });
 
 router.post('/saves', (req, res) => {
   try {
-    const saves = getSaves();
+    const userId = getUserIdFromRequest(req);
+    const saves = getSaves(userId);
     const newSave = {
       id: 'save_' + Date.now(),
       name: `${state.score.teamA.name} vs ${state.score.teamB.name} (${new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })})`,
@@ -108,7 +271,7 @@ router.post('/saves', (req, res) => {
       tournament: JSON.parse(JSON.stringify(state.tournament))
     };
     saves.push(newSave);
-    saveSaves(saves);
+    saveSaves(userId, saves);
     res.json({ ok: true, save: newSave });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -117,7 +280,8 @@ router.post('/saves', (req, res) => {
 
 router.post('/saves/:id/load', (req, res) => {
   try {
-    const saves = getSaves();
+    const userId = getUserIdFromRequest(req);
+    const saves = getSaves(userId);
     const save = saves.find(s => s.id === req.params.id);
     if (!save) {
       return res.status(404).json({ error: 'Roster save slot not found' });
@@ -144,9 +308,10 @@ router.post('/saves/:id/load', (req, res) => {
 
 router.delete('/saves/:id', (req, res) => {
   try {
-    const saves = getSaves();
+    const userId = getUserIdFromRequest(req);
+    const saves = getSaves(userId);
     const filtered = saves.filter(s => s.id !== req.params.id);
-    saveSaves(filtered);
+    saveSaves(userId, filtered);
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -156,12 +321,13 @@ router.delete('/saves/:id', (req, res) => {
 router.post('/saves/:id/sync-sheets', async (req, res) => {
   try {
     const { tabName } = req.body;
-    const settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+    const userId = getUserIdFromRequest(req);
+    const settings = getSettings(userId);
     if (!settings.googleAppsScriptUrl) {
       return res.status(400).json({ error: 'Vui lòng cấu hình Google Apps Script Web App URL trong Cài đặt (Settings) trước khi đồng bộ!' });
     }
 
-    const saves = getSaves();
+    const saves = getSaves(userId);
     const save = saves.find(s => s.id === req.params.id);
     if (!save) {
       return res.status(404).json({ error: 'Không tìm thấy dữ liệu lưu trữ trận đấu!' });
@@ -290,7 +456,7 @@ router.post('/saves/:id/sync-sheets', async (req, res) => {
     if (!save.syncedTabs.includes(tabName)) {
       save.syncedTabs.push(tabName);
     }
-    saveSaves(saves);
+    saveSaves(userId, saves);
 
     let result = { ok: true };
     try {
@@ -314,7 +480,7 @@ router.get('/characters', (req, res) => {
   });
 });
 
-router.post('/characters', (req, res) => {
+router.post('/characters', requireAdmin, (req, res) => {
   const data = JSON.stringify(req.body, null, 2);
   fs.writeFile(CHAR_FILE, data, (err) => {
     if (err) return res.status(500).json({ error: 'Failed to save character data' });
@@ -330,7 +496,7 @@ router.get('/weapons', (req, res) => {
   });
 });
 
-router.post('/weapons', (req, res) => {
+router.post('/weapons', requireAdmin, (req, res) => {
   const data = JSON.stringify(req.body, null, 2);
   fs.writeFile(WEAPON_FILE, data, (err) => {
     if (err) return res.status(500).json({ error: 'Failed to save weapon data' });
@@ -341,11 +507,8 @@ router.post('/weapons', (req, res) => {
 // ── Settings API ──
 router.get('/settings', (req, res) => {
   try {
-    if (!fs.existsSync(SETTINGS_FILE)) {
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify({ obsToken: 'kdstream2026' }));
-    }
-    const data = fs.readFileSync(SETTINGS_FILE, 'utf8');
-    res.json(JSON.parse(data));
+    const userId = getUserIdFromRequest(req);
+    res.json(getSettings(userId));
   } catch (err) {
     res.status(500).json({ error: 'Failed to read settings' });
   }
@@ -353,12 +516,9 @@ router.get('/settings', (req, res) => {
 
 router.post('/settings', (req, res) => {
   try {
-    let currentSettings = {};
-    if (fs.existsSync(SETTINGS_FILE)) {
-      currentSettings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-    }
-    const updatedSettings = { ...currentSettings, ...req.body };
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updatedSettings, null, 2));
+    const userId = getUserIdFromRequest(req);
+    saveSettings(userId, req.body);
+    broadcast({ type: 'settings_update', userId: userId });
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save settings' });
