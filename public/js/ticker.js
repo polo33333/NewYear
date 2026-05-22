@@ -1,4 +1,4 @@
-const WS_URL = `ws://${location.host}/ws/overlay`;
+const WS_URL = `ws://${location.host}/ws/overlay${location.search}`;
 let ws;
 
 function connect() {

@@ -1,5 +1,5 @@
 const WS_PROTOCOL = location.protocol === 'https:' ? 'wss:' : 'ws:';
-const WS_URL = `${WS_PROTOCOL}//${location.host}/ws/overlay`;
+const WS_URL = `${WS_PROTOCOL}//${location.host}/ws/overlay${location.search}`;
 let ws, state = null;
 let breakSeconds = 0, breakInterval = null;
 let allCharacters = [];

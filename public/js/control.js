@@ -18,7 +18,8 @@ function openFullscreen() {
 
 function connect() {
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-  ws = new WebSocket(`${protocol}//${location.host}/ws/control`);
+  const currentToken = localStorage.getItem('kdone_auth_token') || '';
+  ws = new WebSocket(`${protocol}//${location.host}/ws/control?token=${currentToken}`);
   ws.onopen = () => { document.getElementById('conn-dot').className = 'status-dot online'; document.getElementById('conn-text').textContent = 'CONNECTED'; };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
   ws.onclose = () => { document.getElementById('conn-dot').className = 'status-dot'; document.getElementById('conn-text').textContent = 'OFFLINE'; setTimeout(connect, 2000); };
@@ -111,6 +112,13 @@ function syncRosterUI() {
           else sq.classList.remove('filled');
           applyImageToSquare(sq, val, false);
         }
+
+        // Sync RC values
+        const rcVal = (roundData.heroRcs && roundData.heroRcs[h - 1]) || '0';
+        const rcInput = document.getElementById('sl' + id);
+        const rcLbl = document.getElementById('lbl-sl' + id);
+        if (rcInput) rcInput.value = rcVal;
+        if (rcLbl) rcLbl.innerText = rcVal;
       }
 
       // Sync Weapons
@@ -125,6 +133,13 @@ function syncRosterUI() {
           else sq.classList.remove('filled');
           applyImageToSquare(sq, val, true);
         }
+
+        // Sync R values
+        const rVal = (roundData.weaponRs && roundData.weaponRs[w - 1]) || '1';
+        const rInput = document.getElementById('sl' + id);
+        const rLbl = document.getElementById('lbl-sl' + id);
+        if (rInput) rInput.value = rVal;
+        if (rLbl) rLbl.innerText = rVal;
       }
 
       // Sync Points & Deduction
@@ -424,10 +439,34 @@ function copyUrl(id, btn) {
   });
 }
 
+// --- INITIALIZATION ---
+// Generate the round input DOM elements first
+generateRounds();
+
 window.addEventListener('resize', () => resizePreview());
-document.getElementById('preview-iframe').addEventListener('load', () => resizePreview());
-connect();
-resizePreview();
+const previewIframe = document.getElementById('preview-iframe');
+if (previewIframe) {
+  previewIframe.addEventListener('load', () => resizePreview());
+}
+
+// Fetch initial state via REST API to ensure it loads instantly and reliably on page load/refresh
+fetch('/api/state')
+  .then(res => {
+    if (!res.ok) throw new Error('HTTP status ' + res.status);
+    return res.json();
+  })
+  .then(data => {
+    state = data;
+    syncUI();
+  })
+  .catch(err => {
+    console.error('[API] Error fetching initial state:', err);
+  })
+  .finally(() => {
+    // Connect WebSocket for real-time updates after initial load
+    connect();
+    resizePreview();
+  });
 
 // --- MODAL SELECTION LOGIC ---
 let allCharacters = [];
@@ -899,8 +938,6 @@ window.stepValue = function (id, delta, min, max, team, r) {
   }
   window.markRowDirty(team, r);
 };
-
-generateRounds();
 
 window.clearRoster = async function () {
   const confirmed = await showConfirm("Xoá Đội Hình", "Bạn có chắc chắn muốn xoá toàn bộ dữ liệu đội hình và vũ khí?");

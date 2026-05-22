@@ -60,7 +60,7 @@ const wsService = require('./services/wsService');
 const stateService = require('./services/stateService');
 
 // Initialize services
-wsService.init(server, state, stateService.handleWSMessage);
+wsService.init(server, state.states, stateService.handleWSMessage);
 stateService.init();
 
 // ── Router Modules ──

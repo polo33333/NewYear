@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const state = require('../services/state');
+const { states, createDefaultState } = require('../services/state');
 const { broadcast } = require('../services/wsService');
 
 const STATE_SAVE_FILE = path.join(__dirname, '../data/state_save.json');
@@ -197,13 +197,7 @@ router.post('/login', (req, res) => {
     const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
-      // Tự động dọn sạch state trong RAM và trên file state_save.json khi đăng nhập thành công
-      try {
-        const stateService = require('../services/stateService');
-        stateService.resetState();
-      } catch (errReset) {
-        console.error('[SYSTEM] Error resetting state during login:', errReset.message);
-      }
+      // Cho phép duy trì phiên làm việc của user khi đăng nhập lại mà không tự động xóa sạch
 
       res.json({
         success: true,
@@ -225,8 +219,9 @@ router.post('/login', (req, res) => {
 // API dọn sạch dữ liệu thủ công hoặc khi đăng xuất
 router.post('/reset-state', (req, res) => {
   try {
+    const userId = getUserIdFromRequest(req);
     const stateService = require('../services/stateService');
-    stateService.resetState();
+    stateService.resetState(userId);
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to reset state: ' + err.message });
@@ -234,18 +229,30 @@ router.post('/reset-state', (req, res) => {
 });
 
 // ── REST API State ──
-router.get('/state', (req, res) => res.json(state));
+router.get('/state', (req, res) => {
+  const userId = getUserIdFromRequest(req);
+  if (!states[userId]) {
+    states[userId] = createDefaultState();
+  }
+  res.json(states[userId]);
+});
 
 router.post('/state', (req, res) => {
-  Object.assign(state, req.body);
-  broadcast({ type: 'init', data: state });
+  const userId = getUserIdFromRequest(req);
+  if (!states[userId]) {
+    states[userId] = createDefaultState();
+  }
+  Object.assign(states[userId], req.body);
+  broadcast({ type: 'init', data: states[userId] }, userId);
   res.json({ ok: true });
 });
 
 // Lưu toàn bộ tournament state vào ổ đĩa để duy trì phiên
 router.post('/save-state', (req, res) => {
   try {
-    fs.writeFileSync(STATE_SAVE_FILE, JSON.stringify(state, null, 2), 'utf8');
+    const userId = getUserIdFromRequest(req);
+    const stateService = require('../services/stateService');
+    stateService.saveStateToDisk(userId);
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to write state save file: ' + err.message });
@@ -262,13 +269,17 @@ router.post('/saves', (req, res) => {
   try {
     const userId = getUserIdFromRequest(req);
     const saves = getSaves(userId);
+    if (!states[userId]) {
+      states[userId] = createDefaultState();
+    }
+    const uState = states[userId];
     const newSave = {
       id: 'save_' + Date.now(),
-      name: `${state.score.teamA.name} vs ${state.score.teamB.name} (${new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })})`,
+      name: `${uState.score.teamA.name} vs ${uState.score.teamB.name} (${new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })})`,
       timestamp: Date.now(),
-      rosters: JSON.parse(JSON.stringify(state.rosters)),
-      score: JSON.parse(JSON.stringify(state.score)),
-      tournament: JSON.parse(JSON.stringify(state.tournament))
+      rosters: JSON.parse(JSON.stringify(uState.rosters)),
+      score: JSON.parse(JSON.stringify(uState.score)),
+      tournament: JSON.parse(JSON.stringify(uState.tournament))
     };
     saves.push(newSave);
     saveSaves(userId, saves);
@@ -287,18 +298,24 @@ router.post('/saves/:id/load', (req, res) => {
       return res.status(404).json({ error: 'Roster save slot not found' });
     }
 
+    if (!states[userId]) {
+      states[userId] = createDefaultState();
+    }
+    const uState = states[userId];
+
     // Cập nhật live state trong RAM
-    state.rosters = JSON.parse(JSON.stringify(save.rosters));
-    state.score = JSON.parse(JSON.stringify(save.score));
+    uState.rosters = JSON.parse(JSON.stringify(save.rosters));
+    uState.score = JSON.parse(JSON.stringify(save.score));
     if (save.tournament) {
-      state.tournament = JSON.parse(JSON.stringify(save.tournament));
+      uState.tournament = JSON.parse(JSON.stringify(save.tournament));
     }
 
     // Phát broadcast cập nhật ngay lập tức đến toàn bộ giao diện điều khiển & overlay
-    broadcast({ type: 'init', data: state });
+    broadcast({ type: 'init', data: uState }, userId);
 
     // Đồng thời đồng bộ lưu trữ tệp trạng thái active
-    fs.writeFileSync(STATE_SAVE_FILE, JSON.stringify(state, null, 2), 'utf8');
+    const stateService = require('../services/stateService');
+    stateService.saveStateToDisk(userId);
 
     res.json({ ok: true });
   } catch (err) {
