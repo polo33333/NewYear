@@ -81,21 +81,30 @@
                 display: flex;
                 align-items: flex-end;
                 gap: 2px;
-                height: 38px;
+                height: 32px;
+                max-height: 32px;
                 flex-shrink: 0;
                 overflow: hidden;
-                border-radius: 10px;
+                border-radius: 8px;
                 background: rgba(0, 0, 0, 0.25);
                 padding: 0 4px;
                 box-sizing: border-box;
+                /* Bars mọc từ dưới lên, container clip cứng */
+                position: relative;
             }
 
             .vis-bar {
                 flex: 1;
                 min-width: 3px;
-                max-height: 100%;
+                height: 2px;
+                /* default khi im lặng */
+                max-height: 32px;
+                /* không bao giờ vượt container */
                 border-radius: 2px 2px 0 0;
+                align-self: flex-end;
+                /* luôn dính đáy */
                 transition: height 0.05s linear;
+                flex-shrink: 0;
             }
         </style>
 

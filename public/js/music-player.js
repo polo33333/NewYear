@@ -276,7 +276,7 @@ function updateVisualizer() {
 
   if (mp.audio.paused) {
     bars.forEach((bar, idx) => {
-      smoothedBars[idx] = Math.max(2, smoothedBars[idx] - 2.5);
+      smoothedBars[idx] = Math.max(2, smoothedBars[idx] - 3);
       bar.style.height = smoothedBars[idx] + 'px';
     });
     return;
@@ -292,7 +292,7 @@ function updateVisualizer() {
       // ── Tăng độ nhạy ──────────────────────────────────────────────
       const normalized = val / 255;
       const boosted = Math.pow(normalized, 0.35); // khuếch đại tín hiệu yếu hơn nữa
-      const target = Math.max(2, boosted * 38); // max ~42px, khớp container 44px
+      const target = Math.max(2, Math.min(boosted * 32 + 2, 32)); // hard cap 34px < container 36px
 
       // Smoothing thủ công: lên nhanh, xuống chậm
       if (target > smoothedBars[idx]) {
