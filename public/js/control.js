@@ -62,9 +62,9 @@ function syncUI() {
     const token = '?token=' + tokenVal;
     document.getElementById('url-full').textContent = host + '/live' + token;
     document.getElementById('url-sb').textContent = host + '/scoreboard' + token;
-    document.getElementById('url-ticker').textContent = host + '/ticker' + token;
+    // document.getElementById('url-ticker').textContent = host + '/ticker' + token;
     document.getElementById('url-stats').textContent = host + '/stats' + token;
-    
+
     // Only reload/update preview iframe if token actually changed
     if (currentObsToken !== tokenVal) {
       currentObsToken = tokenVal;
@@ -74,7 +74,7 @@ function syncUI() {
     const token = '?token=kdstream2026';
     document.getElementById('url-full').textContent = host + '/live' + token;
     document.getElementById('url-sb').textContent = host + '/scoreboard' + token;
-    document.getElementById('url-ticker').textContent = host + '/ticker' + token;
+    // document.getElementById('url-ticker').textContent = host + '/ticker' + token;
     document.getElementById('url-stats').textContent = host + '/stats' + token;
   });
 }
@@ -803,6 +803,120 @@ window.clearSquare = function () {
   closeSelectionModal();
 };
 
+function createSparkles(element) {
+  if (!element) return;
+  const rect = element.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2 + window.scrollX;
+  const centerY = rect.top + rect.height / 2 + window.scrollY;
+
+  const colors = ['#00f5ff', '#bd00ff', '#ffd700', '#ff007f', '#ffffff'];
+
+  for (let i = 0; i < 24; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'sparkle-particle';
+    
+    // Randomize size between 3px and 7px
+    const size = Math.random() * 5 + 3;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Randomize color
+    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Set start position at center of element
+    particle.style.left = `${centerX - size / 2}px`;
+    particle.style.top = `${centerY - size / 2}px`;
+    
+    // Randomize travel distance and angle (within a radius of ~50-100px)
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 80 + 40;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance - (Math.random() * 30 + 10); // Slight bias upwards
+    
+    particle.style.setProperty('--tx', `${tx}px`);
+    particle.style.setProperty('--ty', `${ty}px`);
+    
+    // Set a random delay to make the burst look more organic
+    particle.style.animationDelay = `${Math.random() * 0.15}s`;
+    
+    document.body.appendChild(particle);
+    
+    // Clean up particle DOM element after animation ends
+    particle.addEventListener('animationend', () => {
+      particle.remove();
+    });
+  }
+}
+
+function getSubmittedVal(team, type, name) {
+  const rosters = state.rosters || state.roster;
+  if (!rosters) return null;
+  const teamKey = 'team' + team;
+  const teamData = rosters[teamKey];
+  if (!teamData) return null;
+
+  for (let r = 1; r <= 6; r++) {
+    const roundData = teamData['round' + r];
+    if (roundData) {
+      if (type === 'h') { // Character
+        const heroes = roundData.heroes || [];
+        const index = heroes.indexOf(name);
+        if (index !== -1) {
+          return (roundData.heroRcs && roundData.heroRcs[index]) !== undefined ? String(roundData.heroRcs[index]) : '0';
+        }
+      } else if (type === 'w') { // Weapon
+        const weapons = roundData.weapons || [];
+        const index = weapons.indexOf(name);
+        if (index !== -1) {
+          return (roundData.weaponRs && roundData.weaponRs[index]) !== undefined ? String(roundData.weaponRs[index]) : '1';
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function applyAutoFill(targetId, name) {
+  const targetMatch = targetId.match(/^([AB])r(\d+)([hw])\d+$/);
+  if (!targetMatch) return false;
+  const team = targetMatch[1];
+  const type = targetMatch[3];
+
+  const submittedVal = getSubmittedVal(team, type, name);
+  const slId = 'sl' + targetId;
+  const slInput = document.getElementById(slId);
+  const slLbl = document.getElementById('lbl-' + slId);
+
+  if (slInput && slLbl) {
+    if (submittedVal !== null) {
+      slInput.value = submittedVal;
+      slLbl.innerText = submittedVal;
+
+      // Apply magic animation class to the square
+      const sqId = 'sq' + targetId;
+      const sqElement = document.getElementById(sqId);
+      if (sqElement) {
+        sqElement.classList.remove('magic-filled');
+        void sqElement.offsetWidth; // Trigger reflow
+        sqElement.classList.add('magic-filled');
+        setTimeout(() => {
+          sqElement.classList.remove('magic-filled');
+        }, 1500);
+
+        // Spawn particle sparkles!
+        createSparkles(sqElement);
+      }
+      return true;
+    } else {
+      // Reset to default values if not auto-filled
+      const defaultVal = type === 'h' ? '0' : '1';
+      slInput.value = defaultVal;
+      slLbl.innerText = defaultVal;
+    }
+  }
+  return false;
+}
+
 window.confirmMultiSelection = function () {
   // Lấy ra tiền tố (ví dụ 'Ar1h' hoặc 'Br2w') và vị trí bắt đầu
   const match = currentSelectionTarget.match(/^(.*[hw])(\d+)$/);
@@ -820,17 +934,56 @@ window.confirmMultiSelection = function () {
     }
   }
 
+  const targetMatch = currentSelectionTarget.match(/^([AB])r(\d+)([hw])\d+$/);
+  const team = targetMatch ? targetMatch[1] : '';
+  const currentRound = targetMatch ? parseInt(targetMatch[2], 10) : 1;
+
+  let magicTriggered = false;
+
   multiSelection.forEach((name, idx) => {
     const targetIdx = 1 + idx;
     if (targetIdx <= 3) {
-      const inputId = 't' + prefix + targetIdx;
+      const targetId = prefix + targetIdx;
+      const inputId = 't' + targetId;
       const input = document.getElementById(inputId);
       if (input) {
         input.value = name;
-        updateSq(prefix + targetIdx);
+        updateSq(targetId);
+
+        // Check and apply auto-fill
+        if (applyAutoFill(targetId, name)) {
+          magicTriggered = true;
+        }
       }
     }
   });
+
+  // Calculate deductions and local update
+  if (team && window.calculateAllDeductions) {
+    window.calculateAllDeductions(team);
+  }
+  if (window.updateRosterLocal) {
+    window.updateRosterLocal();
+  }
+  if (team) {
+    window.markRowDirty(team, currentRound);
+  }
+
+  // If magic was triggered, flash the round row
+  if (magicTriggered) {
+    const firstSq = document.getElementById('sq' + prefix + '1');
+    if (firstSq) {
+      const roundRow = firstSq.closest('.round-row');
+      if (roundRow) {
+        roundRow.classList.remove('magic-row');
+        void roundRow.offsetWidth; // Trigger reflow
+        roundRow.classList.add('magic-row');
+        setTimeout(() => {
+          roundRow.classList.remove('magic-row');
+        }, 1500);
+      }
+    }
+  }
 
   closeSelectionModal();
 };
@@ -841,6 +994,37 @@ window.selectItem = function (name) {
   if (input) {
     input.value = name;
     updateSq(currentSelectionTarget);
+
+    const targetMatch = currentSelectionTarget.match(/^([AB])r(\d+)([hw])\d+$/);
+    const team = targetMatch ? targetMatch[1] : '';
+    const currentRound = targetMatch ? parseInt(targetMatch[2], 10) : 1;
+
+    let magicTriggered = applyAutoFill(currentSelectionTarget, name);
+
+    if (team && window.calculateAllDeductions) {
+      window.calculateAllDeductions(team);
+    }
+    if (window.updateRosterLocal) {
+      window.updateRosterLocal();
+    }
+    if (team) {
+      window.markRowDirty(team, currentRound);
+    }
+
+    if (magicTriggered) {
+      const sq = document.getElementById('sq' + currentSelectionTarget);
+      if (sq) {
+        const roundRow = sq.closest('.round-row');
+        if (roundRow) {
+          roundRow.classList.remove('magic-row');
+          void roundRow.offsetWidth;
+          roundRow.classList.add('magic-row');
+          setTimeout(() => {
+            roundRow.classList.remove('magic-row');
+          }, 1500);
+        }
+      }
+    }
   }
   closeSelectionModal();
 };

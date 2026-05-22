@@ -1,4 +1,5 @@
-const WS_URL = `ws://${location.host}/ws/overlay${location.search}`;
+const WS_PROTOCOL = location.protocol === 'https:' ? 'wss:' : 'ws:';
+const WS_URL = `${WS_PROTOCOL}//${location.host}/ws/overlay${location.search}`;
 let ws;
 
 function connect() {

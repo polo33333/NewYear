@@ -479,8 +479,8 @@ input[type=number] {
   border: 2px solid transparent !important;
   color: #fff !important;
   box-shadow: 0 0 15px rgba(0, 245, 255, 0.4), 0 0 5px rgba(189, 0, 255, 0.2), inset 0 0 8px rgba(0, 245, 255, 0.2) !important;
-  animation: ai-pulse 2s infinite ease-in-out, rainbow-border 6s linear infinite;
-  font-weight: 700;
+  animation: ai-pulse 1s infinite ease-in-out, rainbow-border 4s linear infinite;
+  /* font-weight: 700; */
   letter-spacing: 0.5px;
   display: inline-flex;
   align-items: center;
@@ -2828,4 +2828,99 @@ span#music-duration {
 .weapon-square.filled.rank-1 {
   background-color: rgba(179, 179, 179, 0.15) !important;
   border-color: rgba(179, 179, 179, 0.8) !important;
+}
+
+/* Magic auto-fill animation styles */
+@property --a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-rotate {
+  0% {
+    --a: 0deg;
+  }
+
+  100% {
+    --a: 360deg;
+  }
+}
+
+@keyframes magic-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes magic-row-flash {
+  0% {
+    background: rgba(15, 23, 42, 0.85);
+  }
+
+  20% {
+    background: linear-gradient(90deg, rgba(0, 245, 255, 0.25), rgba(189, 0, 255, 0.25));
+    box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.2);
+  }
+
+  100% {
+    background: rgba(15, 23, 42, 0.85);
+  }
+}
+
+.magic-filled {
+  position: relative;
+  z-index: 10;
+  animation: magic-pop 0.5s ease-out;
+}
+
+.magic-filled::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#080c16, #080c16), conic-gradient(from var(--a), #00f5ff, #bd00ff, #ffd700, #ff007f, #00f5ff);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: border-rotate 1s linear infinite;
+  z-index: 5;
+}
+
+.magic-row {
+  animation: magic-row-flash 1s ease-out;
+}
+
+/* Sparkle/Particle Effect */
+.sparkle-particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 9999;
+  animation: fly-and-fade 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes fly-and-fade {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
 }

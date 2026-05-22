@@ -60,7 +60,8 @@
             <p id="stats-summary">Control overlays for stream</p>
           </div>
           <div class="header-right">
-            <div class="header-status-group" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-right: 8px;">
+            <div class="header-status-group"
+              style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-right: 8px;">
               <div class="status-badge">
                 <div id="conn-dot" class="status-dot"></div> <span id="conn-text">OFFLINE</span>
               </div>
@@ -102,10 +103,10 @@
                   <span>Scoreboard</span>
                   <div class="switch" onclick="toggleOverlay('scoreboard')" id="tog-scoreboard"></div>
                 </div>
-                <div class="sp-overlay-row">
+                <!-- <div class="sp-overlay-row">
                   <span>Ticker</span>
                   <div class="switch" onclick="toggleOverlay('ticker')" id="tog-ticker"></div>
-                </div>
+                </div> -->
                 <div class="sp-overlay-row" style="display:none;">
                   <span><i class="fas fa-users sp-ov-icon"></i>Roster L</span>
                   <div class="switch" onclick="toggleOverlay('rosterA')" id="tog-rosterA"></div>
@@ -128,17 +129,17 @@
                     COPY</button>
                 </div>
                 <div class="sp-link-row">
-                  <span class="sp-link-name">Scoreboard</span>
+                  <span class="sp-link-name">Scoreboard Overlay</span>
                   <code id="url-sb" style="display: none;">...</code>
                   <button class="sp-copy-link-btn" onclick="copyUrl('url-sb', this)"><i class="fas fa-copy"></i>
                     COPY</button>
                 </div>
-                <div class="sp-link-row">
+                <!-- <div class="sp-link-row">
                   <span class="sp-link-name">Ticker</span>
                   <code id="url-ticker" style="display: none;">...</code>
                   <button class="sp-copy-link-btn" onclick="copyUrl('url-ticker', this)"><i class="fas fa-copy"></i>
                     COPY</button>
-                </div>
+                </div> -->
                 <div class="sp-link-row">
                   <span class="sp-link-name">Stats Overlay</span>
                   <code id="url-stats" style="display: none;">...</code>

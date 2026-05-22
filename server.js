@@ -14,6 +14,9 @@ const server = http.createServer(app);
 
 app.use(express.json());
 
+// Handle favicon requests to avoid 404 console errors
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // Clean URLs Middleware: Redirect any request ending in .html to clean version
 app.use((req, res, next) => {
   if (req.path.endsWith('.html')) {
