@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MATRIX HUB - Standalone Music Player</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/control.css">
     <style>
@@ -19,6 +22,7 @@
             display: flex;
             flex-direction: column;
         }
+
         .music-player-panel {
             flex: 1;
             display: flex;
@@ -26,10 +30,13 @@
             gap: 12px;
             height: 100%;
         }
+
         .music-playlist {
             flex: 1;
-            max-height: unset !important; /* Allow it to fill the height */
+            max-height: unset !important;
+            /* Allow it to fill the height */
         }
+
         /* Custom sleek title bar */
         .popout-header {
             display: flex;
@@ -39,6 +46,7 @@
             padding-bottom: 8px;
             margin-bottom: 4px;
         }
+
         .popout-title {
             font-family: 'Outfit', sans-serif;
             font-size: 13px;
@@ -50,18 +58,48 @@
     </style>
     <script src="js/auth.js"></script>
 </head>
+
 <body>
     <div class="music-player-panel">
         <div class="popout-header">
             <span class="popout-title"><i class="fas fa-music"></i> Standalone Player</span>
-            <span style="font-size: 9px; color: rgba(255,255,255,0.4); font-family: 'Inter', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Matrix System</span>
+            <span
+                style="font-size: 9px; color: rgba(255,255,255,0.4); font-family: 'Inter', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Matrix
+                System</span>
         </div>
 
         <label class="btn-pick-folder" title="Chọn các tệp nhạc từ máy tính">
             <i class="fas fa-folder-open"></i> Chọn Tệp Nhạc
-            <input type="file" id="music-folder-input" accept="audio/*" multiple
-                style="display:none;" onchange="musicPlayerLoadFiles(this.files)">
+            <input type="file" id="music-folder-input" accept="audio/*" multiple style="display:none;"
+                onchange="musicPlayerLoadFiles(this.files)">
         </label>
+
+
+        <style>
+            /* ── Visualizer container ── */
+            #music-visualizer {
+                display: flex;
+                align-items: flex-end;
+                gap: 2px;
+                height: 38px;
+                flex-shrink: 0;
+                overflow: hidden;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.25);
+                padding: 0 4px;
+                box-sizing: border-box;
+            }
+
+            .vis-bar {
+                flex: 1;
+                min-width: 3px;
+                max-height: 100%;
+                border-radius: 2px 2px 0 0;
+                transition: height 0.05s linear;
+            }
+        </style>
+
+        <div id="music-visualizer"></div>
 
         <div class="music-now-playing" id="music-now-playing">
             <div class="music-marquee-wrap">
@@ -77,17 +115,17 @@
 
         <div class="music-controls">
             <button class="music-btn" onclick="musicPlayerPrev()" title="Bài trước"><i
-                class="fas fa-backward-step"></i></button>
+                    class="fas fa-backward-step"></i></button>
             <button class="music-btn music-btn-play" id="music-play-btn" onclick="musicPlayerToggle()"
                 title="Play/Pause">
                 <i class="fas fa-play" id="music-play-icon"></i>
             </button>
             <button class="music-btn" onclick="musicPlayerNext()" title="Bài tiếp"><i
-                class="fas fa-forward-step"></i></button>
+                    class="fas fa-forward-step"></i></button>
             <button class="music-btn" id="music-shuffle-btn" onclick="musicPlayerToggleShuffle()" title="Shuffle"><i
-                class="fas fa-shuffle"></i></button>
+                    class="fas fa-shuffle"></i></button>
             <button class="music-btn" id="music-repeat-btn" onclick="musicPlayerToggleRepeat()" title="Lặp lại"><i
-                class="fas fa-repeat"></i></button>
+                    class="fas fa-repeat"></i></button>
             <div class="music-volume-wrap">
                 <i class="fas fa-volume-high music-vol-icon"></i>
                 <input type="range" id="music-volume" class="music-volume" value="80" min="0" max="100"
@@ -97,11 +135,13 @@
         </div>
 
         <div class="music-playlist custom-scroll" id="music-playlist">
-            <div class="music-playlist-empty"><i class="fas fa-music"></i><span>Chọn tệp nhạc để hiện danh sách phát</span></div>
+            <div class="music-playlist-empty"><i class="fas fa-music"></i><span>Chọn tệp nhạc để hiện danh sách
+                    phát</span></div>
         </div>
     </div>
 
     <script src="js/toast.js"></script>
     <script src="js/music-player.js"></script>
 </body>
+
 </html>

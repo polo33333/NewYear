@@ -24,7 +24,6 @@ function mpEl(id) { return document.getElementById(id); }
 
 // ── Load files from folder input ─────────────────────────────────────────────
 window.musicPlayerLoadFiles = function (files) {
-  // Revoke old blob URLs to free memory
   mp.playlist.forEach(t => URL.revokeObjectURL(t.url));
   mp.playlist = [];
   mp.currentIndex = -1;
@@ -37,22 +36,19 @@ window.musicPlayerLoadFiles = function (files) {
     return;
   }
 
-  // Sort alphabetically
   tracks.sort((a, b) => a.name.localeCompare(b.name));
 
   mp.playlist = tracks.map(f => ({
-    name: f.name.replace(/\.[^.]+$/, ''), // strip extension
+    name: f.name.replace(/\.[^.]+$/, ''),
     url: URL.createObjectURL(f),
     duration: 0
   }));
 
-  // Pre-fetch durations
   mp.playlist.forEach((track, i) => {
     const tmp = new Audio();
     tmp.src = track.url;
     tmp.addEventListener('loadedmetadata', () => {
       mp.playlist[i].duration = tmp.duration;
-      // Re-render to update duration label
       const row = mpEl(`mp-row-${i}`);
       if (row) row.querySelector('.mp-dur').textContent = mpFmt(tmp.duration);
     });
@@ -85,7 +81,6 @@ function mpLoad(index) {
   mp.audio.volume = (parseInt(localStorage.getItem('music-player-volume') ?? '80', 10)) / 100;
   mp.audio.load();
 
-  // UI update
   const nameEl = mpEl('music-track-name');
   if (nameEl) {
     nameEl.textContent = track.name;
@@ -165,17 +160,12 @@ window.musicPlayerSetVolume = function (val) {
   localStorage.setItem('music-player-volume', numVal);
   mp.audio.volume = numVal / 100;
 
-  // Sync all sliders in DOM
   document.querySelectorAll('#music-volume').forEach(el => {
     el.value = numVal;
   });
-
-  // Sync all percentage texts in DOM
   document.querySelectorAll('#music-volume-pct').forEach(el => {
     el.textContent = numVal + '%';
   });
-
-  // Sync all icons in DOM
   document.querySelectorAll('.music-vol-icon').forEach(icon => {
     if (numVal == 0) { icon.className = 'fas fa-volume-xmark music-vol-icon'; }
     else if (numVal < 50) { icon.className = 'fas fa-volume-low music-vol-icon'; }
@@ -254,13 +244,17 @@ let analyser = null;
 let dataArray = null;
 let visualizerActive = false;
 
+// Smoothing buffer để tránh giật
+const smoothedBars = new Float32Array(60).fill(2);
+
 function initVisualizer() {
   if (audioCtx) return;
   try {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const source = audioCtx.createMediaElementSource(mp.audio);
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256; // 128 frequency bins
+    analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.75; // ← smoothing giữa các frame (0=tắt, 1=rất mượt)
     source.connect(analyser);
     analyser.connect(audioCtx.destination);
 
@@ -281,12 +275,9 @@ function updateVisualizer() {
   if (!bars.length) return;
 
   if (mp.audio.paused) {
-    bars.forEach(bar => {
-      let h = parseFloat(bar.style.height) || 2;
-      if (h > 2) {
-        h = Math.max(2, h - 1.2);
-        bar.style.height = h + 'px';
-      }
+    bars.forEach((bar, idx) => {
+      smoothedBars[idx] = Math.max(2, smoothedBars[idx] - 2.5);
+      bar.style.height = smoothedBars[idx] + 'px';
     });
     return;
   }
@@ -295,16 +286,26 @@ function updateVisualizer() {
     analyser.getByteFrequencyData(dataArray);
 
     bars.forEach((bar, idx) => {
-      // Map 60 bars smoothly to bins 2 to 82 (rich range covering bass to high treble)
       const binIdx = Math.floor(2 + (idx / 60) * 80);
       const val = dataArray[binIdx] || 0;
-      
-      // Calculate height (from 2px to 18px to fit 20px visualizer box)
-      const h = Math.max(2, (val / 255) * 18 + 2);
-      bar.style.height = h + 'px';
+
+      // ── Tăng độ nhạy ──────────────────────────────────────────────
+      const normalized = val / 255;
+      const boosted = Math.pow(normalized, 0.35); // khuếch đại tín hiệu yếu hơn nữa
+      const target = Math.max(2, boosted * 38); // max ~42px, khớp container 44px
+
+      // Smoothing thủ công: lên nhanh, xuống chậm
+      if (target > smoothedBars[idx]) {
+        smoothedBars[idx] = smoothedBars[idx] * 0.3 + target * 0.7; // lên nhanh
+      } else {
+        smoothedBars[idx] = smoothedBars[idx] * 0.75 + target * 0.25; // xuống chậm
+      }
+
+      bar.style.height = smoothedBars[idx] + 'px';
     });
   }
 }
+
 mp.audio.addEventListener('timeupdate', () => {
   const prog = mpEl('music-progress');
   const cur = mpEl('music-current-time');
@@ -321,7 +322,6 @@ mp.audio.addEventListener('loadedmetadata', () => {
   if (dur) dur.textContent = mpFmt(mp.audio.duration);
   if (prog) { prog.max = mp.audio.duration; prog.value = 0; }
 
-  // Update duration in playlist array & row label
   if (mp.currentIndex >= 0) {
     mp.playlist[mp.currentIndex].duration = mp.audio.duration;
     const row = mpEl(`mp-row-${mp.currentIndex}`);
@@ -338,7 +338,6 @@ mp.audio.addEventListener('play', () => {
 
   const icon = mpEl('music-play-icon');
   if (icon) { icon.className = 'fas fa-pause'; }
-  // Pulse animation on now-playing
   mpEl('music-now-playing')?.classList.add('mp-playing');
 
   const miniIcon = mpEl('mini-play-icon');
@@ -371,7 +370,6 @@ mp.audio.addEventListener('ended', () => {
   } else if (mp.repeatMode === 'all' || mp.currentIndex < mp.playlist.length - 1) {
     musicPlayerNext();
   } else {
-    // stop at end
     mpEl('music-now-playing')?.classList.remove('mp-playing');
     const icon = mpEl('music-play-icon');
     if (icon) icon.className = 'fas fa-play';
@@ -386,7 +384,7 @@ mp.audio.addEventListener('ended', () => {
   }
 });
 
-// ── Keyboard shortcut: Space to play/pause when not in input ─────────────────
+// ── Keyboard shortcut ─────────────────────────────────────────────────────────
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
     e.preventDefault();
@@ -401,23 +399,24 @@ document.addEventListener('keydown', (e) => {
   mp.audio.volume = val / 100;
 
   const applyInitialVolume = () => {
-    // Generate 60 dense rounded bars dynamically
     const vis = mpEl('music-visualizer');
     if (vis) {
       vis.innerHTML = '';
-      for (let i = 0; i < 60; i++) {
+      const BAR_COUNT = 60;
+      for (let i = 0; i < BAR_COUNT; i++) {
         const bar = document.createElement('div');
         bar.className = 'vis-bar';
+        // Rainbow: đỏ → cam → vàng → xanh lá → xanh dương → tím
+        const hue = Math.round((i / BAR_COUNT) * 280);
+        const color = `hsl(${hue}, 100%, 60%)`;
+        bar.style.background = color;
+        bar.style.boxShadow = `0 0 6px ${color}, 0 0 12px ${color}40`;
         vis.appendChild(bar);
       }
     }
 
-    document.querySelectorAll('#music-volume').forEach(el => {
-      el.value = val;
-    });
-    document.querySelectorAll('#music-volume-pct').forEach(el => {
-      el.textContent = val + '%';
-    });
+    document.querySelectorAll('#music-volume').forEach(el => { el.value = val; });
+    document.querySelectorAll('#music-volume-pct').forEach(el => { el.textContent = val + '%'; });
     document.querySelectorAll('.music-vol-icon').forEach(icon => {
       if (val == 0) { icon.className = 'fas fa-volume-xmark music-vol-icon'; }
       else if (val < 50) { icon.className = 'fas fa-volume-low music-vol-icon'; }
