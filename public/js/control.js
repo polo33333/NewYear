@@ -1,6 +1,7 @@
 let ws, state = null;
 let currentObsToken = null;
 const clientId = 'control_' + Math.random().toString(36).substring(2, 9);
+window.dirtyRows = new Set();
 
 function resizePreview() {
   const c = document.getElementById('preview-container'), f = document.getElementById('preview-iframe');
@@ -96,6 +97,10 @@ function syncRosterUI() {
 
   for (let r = 1; r <= 6; r++) {
     ['A', 'B'].forEach(teamCode => {
+      if (window.dirtyRows && window.dirtyRows.has(`${teamCode}-${r}`)) {
+        // Bỏ qua cập nhật hàng này từ server để giữ lại thay đổi chưa submit của người dùng
+        return;
+      }
       const teamKey = 'team' + teamCode;
       const teamData = rosters[teamKey] || {};
       const roundData = teamData['round' + r] || { heroes: [], weapons: [], points: '', deduction: '' };
@@ -369,6 +374,9 @@ window.updateRosterLocal = function () {
 };
 
 window.syncSingleRow = function (teamCode, r) {
+  if (window.dirtyRows) {
+    window.dirtyRows.delete(`${teamCode}-${r}`);
+  }
   const p = parseInt(document.getElementById(`t${teamCode}r${r}p`)?.value) || 0;
   const d = parseInt(document.getElementById(`t${teamCode}r${r}d`)?.value) || 0;
   const buy = parseInt(document.getElementById(`t${teamCode}r${r}buy`)?.value) || 0;
@@ -913,6 +921,9 @@ function generateRounds() {
 }
 
 window.markRowDirty = function (teamCode, r) {
+  if (window.dirtyRows) {
+    window.dirtyRows.add(`${teamCode}-${r}`);
+  }
   const btn = document.getElementById(`btn-submit-${teamCode}r${r}`);
   if (btn) {
     btn.disabled = false;
@@ -968,6 +979,9 @@ window.clearRoster = async function () {
         if (wRLbl) wRLbl.innerText = '1';
       }
     });
+  }
+  if (window.dirtyRows) {
+    window.dirtyRows.clear();
   }
   updateRoster();
 };

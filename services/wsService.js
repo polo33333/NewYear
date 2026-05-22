@@ -63,6 +63,11 @@ function init(server, states, handleMessage) {
     const userId = getUserIdFromToken(token);
     
     ws.userId = String(userId);
+    ws.isAlive = true;
+
+    ws.on('pong', () => {
+      ws.isAlive = true;
+    });
 
     const isOverlay = parsedUrl.pathname === '/ws/overlay';
     const isControl = parsedUrl.pathname === '/ws/control';
@@ -88,6 +93,23 @@ function init(server, states, handleMessage) {
     ws.on('close', () => {
       console.log(`[WS] Disconnected | User ID: ${ws.userId}`);
     });
+  });
+
+  // Gửi ping định kỳ 30 giây một lần để giữ kết nối không bị đóng bởi proxy/host (Heroku, Render, Cloudflare, etc.)
+  const interval = setInterval(() => {
+    if (!wss) return;
+    wss.clients.forEach(ws => {
+      if (ws.isAlive === false) {
+        console.log(`[WS] Terminating dead connection for User ID: ${ws.userId}`);
+        return ws.terminate();
+      }
+      ws.isAlive = false;
+      ws.ping();
+    });
+  }, 30000);
+
+  wss.on('close', () => {
+    clearInterval(interval);
   });
 
   return wss;
