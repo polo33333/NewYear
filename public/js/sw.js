@@ -16,9 +16,19 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+  // Only intercept GET requests from HTTP/HTTPS protocols
+  if (e.request.method !== 'GET' || !e.request.url.startsWith('http')) {
+    return;
+  }
+
   e.respondWith(
-    fetch(e.request).catch(() => {
-      return caches.match(e.request);
+    fetch(e.request).catch((err) => {
+      return caches.match(e.request).then((response) => {
+        if (response) {
+          return response;
+        }
+        throw err;
+      });
     })
   );
 });

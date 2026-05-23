@@ -8,7 +8,7 @@ const states = {};
 function createDefaultState() {
   return {
     isLive: false,
-    scene: 'gameplay',         // gameplay | bracket | stats | break | end
+    scene: 'end',         // gameplay | bracket | stats | break | end
     overlays: {
       scoreboard: true,
       ticker: false,

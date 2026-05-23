@@ -68,7 +68,7 @@ function syncUI() {
     const isSync = !!s.isSync;
     const tokenVal = isSync ? (s.obsToken || 'kdstream2026') : (localStorage.getItem('kdone_auth_token') || 'kdstream2026');
     let token = '?token=' + tokenVal;
-    
+
     // Nếu là chế độ độc lập (isSync == false), nối thêm roomId động để OBS kết nối đúng phòng
     if (!isSync) {
       const currentRoomId = sessionStorage.getItem('kdone_current_room_id') || '';
@@ -76,7 +76,7 @@ function syncUI() {
         token += '&roomId=' + currentRoomId;
       }
     }
-    
+
     document.getElementById('url-full').textContent = host + '/live' + token;
     document.getElementById('url-sb').textContent = host + '/scoreboard' + token;
     // document.getElementById('url-ticker').textContent = host + '/ticker' + token;
