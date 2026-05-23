@@ -468,23 +468,115 @@ function copyUrl(id, btn) {
   });
 }
 
-function updateSystemStats(data) {
-  if (!data) return;
+const startTime = Date.now();
+const pingHistory = [];
+const maxPingPoints = 20;
 
-  const cpuVal = document.getElementById('sys-cpu-val');
-  const cpuBar = document.getElementById('sys-cpu-bar');
-  if (cpuVal) cpuVal.textContent = `${data.cpu}%`;
-  if (cpuBar) cpuBar.style.width = `${data.cpu}%`;
-
-  const ramVal = document.getElementById('sys-ram-val');
-  const ramBar = document.getElementById('sys-ram-bar');
-  if (ramVal) ramVal.textContent = `${data.ram}% (${data.ramUsed} / ${data.ramTotal} GB)`;
-  if (ramBar) ramBar.style.width = `${data.ram}%`;
-
-  const clientsVal = document.getElementById('sys-clients-val');
-  if (clientsVal) {
-    clientsVal.textContent = `${data.clientsCount} Connected Client${data.clientsCount !== 1 ? 's' : ''}`;
+function initClientTelemetry() {
+  const ramVal = document.getElementById('client-ram-val');
+  if (ramVal) {
+    const ram = navigator.deviceMemory || 'N/A';
+    ramVal.textContent = ram !== 'N/A' ? `~${ram} GB` : 'N/A';
   }
+
+  const resVal = document.getElementById('client-res-val');
+  if (resVal) {
+    resVal.textContent = `${window.screen.width} x ${window.screen.height}`;
+  }
+
+  setInterval(updateUptime, 1000);
+  updateUptime();
+
+  window.addEventListener('resize', drawPingChart);
+}
+
+function updateUptime() {
+  const uptimeVal = document.getElementById('client-uptime-val');
+  if (!uptimeVal) return;
+  const diffMs = Date.now() - startTime;
+  const diffSecs = Math.floor(diffMs / 1000);
+  const hrs = Math.floor(diffSecs / 3600);
+  const mins = Math.floor((diffSecs % 3600) / 60);
+  const secs = diffSecs % 60;
+  const pad = (num) => String(num).padStart(2, '0');
+  uptimeVal.textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+}
+
+function addPingToChart(ping) {
+  pingHistory.push(ping);
+  if (pingHistory.length > maxPingPoints) {
+    pingHistory.shift();
+  }
+  drawPingChart();
+}
+
+function drawPingChart() {
+  const canvas = document.getElementById('sys-ping-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return;
+  
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = rect.height * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const w = rect.width;
+  const h = rect.height;
+  
+  ctx.clearRect(0, 0, w, h);
+  if (pingHistory.length < 2) return;
+  
+  let maxVal = Math.max(...pingHistory);
+  let minVal = Math.min(...pingHistory);
+  if (maxVal === minVal) {
+    maxVal = minVal + 10;
+    minVal = Math.max(0, minVal - 10);
+  }
+  
+  const range = maxVal - minVal;
+  const padding = range * 0.1;
+  const min = Math.max(0, minVal - padding);
+  const max = maxVal + padding;
+  
+  const points = pingHistory.map((val, idx) => {
+    const x = (idx / (maxPingPoints - 1)) * w;
+    const y = h - ((val - min) / (max - min)) * (h - 4) - 2;
+    return { x, y };
+  });
+
+  const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
+  fillGrad.addColorStop(0, 'rgba(0, 245, 255, 0.2)');
+  fillGrad.addColorStop(1, 'rgba(0, 245, 255, 0.0)');
+  
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, h);
+  points.forEach(pt => ctx.lineTo(pt.x, pt.y));
+  ctx.lineTo(points[points.length - 1].x, h);
+  ctx.closePath();
+  ctx.fillStyle = fillGrad;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  points.forEach(pt => ctx.lineTo(pt.x, pt.y));
+  
+  ctx.strokeStyle = '#00f5ff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  const lastPt = points[points.length - 1];
+  ctx.beginPath();
+  ctx.arc(lastPt.x, lastPt.y, 2.5, 0, 2 * Math.PI);
+  ctx.fillStyle = '#00f5ff';
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(lastPt.x, lastPt.y, 4, 0, 2 * Math.PI);
+  ctx.strokeStyle = 'rgba(0, 245, 255, 0.4)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
 }
 
 function measurePing() {
@@ -502,12 +594,23 @@ function measurePing() {
           badge.classList.add('warning');
         }
       }
+
+      const chartPingVal = document.getElementById('chart-ping-val');
+      if (chartPingVal) {
+        chartPingVal.textContent = `${ping} ms`;
+      }
+
+      addPingToChart(ping);
     })
     .catch(() => {
       const badge = document.getElementById('sys-ping-badge');
       if (badge) {
         badge.textContent = 'ERR';
         badge.className = 'sys-badge-ping danger';
+      }
+      const chartPingVal = document.getElementById('chart-ping-val');
+      if (chartPingVal) {
+        chartPingVal.textContent = 'ERR';
       }
     });
 }
@@ -517,6 +620,7 @@ function measurePing() {
 generateRounds();
 measurePing();
 setInterval(measurePing, 5000);
+initClientTelemetry();
 
 window.addEventListener('resize', () => resizePreview());
 const previewIframe = document.getElementById('preview-iframe');

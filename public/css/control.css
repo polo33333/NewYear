@@ -1226,11 +1226,32 @@ input[type=number] {
 
 .system-monitor-box .sys-stats-grid {
   flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  min-height: 0;
+}
+
+.sys-client-card {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 0;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.sys-client-card:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(0, 245, 255, 0.15);
 }
 
 .sys-badge-ping {
@@ -1258,31 +1279,8 @@ input[type=number] {
   color: #ef4444;
 }
 
-.sys-stats-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.sys-stat-card {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.sys-stat-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-}
-
 .sys-stat-name {
-  color: #a3a4a9;
+  color: #8c8e97;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1300,34 +1298,41 @@ input[type=number] {
 
 .sys-stat-val {
   font-family: 'DM Mono', monospace;
-  /* font-weight: 700; */
   color: #fff;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
-.sys-progress-bar {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 2px;
-  overflow: hidden;
+/* Network Latency Sparkline Card */
+.sys-network-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between !important;
+  align-items: stretch;
+  padding: 6px 8px !important;
 }
 
-.sys-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent) 0%, #10b981 100%);
-  border-radius: 2px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sys-stat-row {
+.sys-network-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-  padding-top: 6px;
-  margin-top: 2px;
+}
+
+.sys-canvas-wrapper {
+  flex: 1;
+  width: 100%;
+  height: 28px;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sys-canvas-wrapper canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Preserve old roster-header-actions */
