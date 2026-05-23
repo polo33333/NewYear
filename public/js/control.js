@@ -20,14 +20,21 @@ function openFullscreen() {
 function connect() {
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   const currentToken = localStorage.getItem('kdone_auth_token') || '';
-  ws = new WebSocket(`${protocol}//${location.host}/ws/control?token=${currentToken}`);
+  const currentRoomId = sessionStorage.getItem('kdone_current_room_id') || '';
+  ws = new WebSocket(`${protocol}//${location.host}/ws/control?token=${currentToken}&roomId=${currentRoomId}`);
   ws.onopen = () => { document.getElementById('conn-dot').className = 'status-dot online'; document.getElementById('conn-text').textContent = 'CONNECTED'; };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
   ws.onclose = () => { document.getElementById('conn-dot').className = 'status-dot'; document.getElementById('conn-text').textContent = 'OFFLINE'; setTimeout(connect, 2000); };
 }
 
 function handleMessage(msg) {
-  if (msg.type === 'init') { state = msg.data; syncUI(); }
+  if (msg.type === 'init') {
+    state = msg.data;
+    if (msg.roomId) {
+      sessionStorage.setItem('kdone_current_room_id', msg.roomId);
+    }
+    syncUI();
+  }
   else if (msg.type === 'score') { state.score = msg.data; syncScoreUI(); }
   else if (msg.type === 'scene') { state.scene = msg.value; syncSceneUI(); }
   else if (msg.type === 'overlays') { state.overlays = msg.data; syncOverlayUI(); }
@@ -58,17 +65,28 @@ function syncUI() {
 
   const host = location.origin;
   fetch('/api/settings').then(r => r.json()).then(s => {
-    const tokenVal = s.obsToken || 'kdstream2026';
-    const token = '?token=' + tokenVal;
+    const isSync = !!s.isSync;
+    const tokenVal = isSync ? (s.obsToken || 'kdstream2026') : (localStorage.getItem('kdone_auth_token') || 'kdstream2026');
+    let token = '?token=' + tokenVal;
+    
+    // Nếu là chế độ độc lập (isSync == false), nối thêm roomId động để OBS kết nối đúng phòng
+    if (!isSync) {
+      const currentRoomId = sessionStorage.getItem('kdone_current_room_id') || '';
+      if (currentRoomId) {
+        token += '&roomId=' + currentRoomId;
+      }
+    }
+    
     document.getElementById('url-full').textContent = host + '/live' + token;
     document.getElementById('url-sb').textContent = host + '/scoreboard' + token;
     // document.getElementById('url-ticker').textContent = host + '/ticker' + token;
     document.getElementById('url-stats').textContent = host + '/stats' + token;
 
-    // Only reload/update preview iframe if token actually changed
-    if (currentObsToken !== tokenVal) {
-      currentObsToken = tokenVal;
-      document.getElementById('preview-iframe').src = host + '/live' + token + '&t=' + Date.now();
+    // Only reload/update preview iframe if preview URL actually changed
+    const previewUrl = host + '/live' + token;
+    if (document.getElementById('preview-iframe').getAttribute('data-current-url') !== previewUrl) {
+      document.getElementById('preview-iframe').setAttribute('data-current-url', previewUrl);
+      document.getElementById('preview-iframe').src = previewUrl + '&t=' + Date.now();
     }
   }).catch(err => {
     const token = '?token=kdstream2026';

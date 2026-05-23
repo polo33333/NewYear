@@ -2,7 +2,7 @@ const { WebSocketServer } = require('ws');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
-const { createDefaultState } = require('./state');
+const { createDefaultState, getRoomId } = require('./state');
 
 const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
 let wss = null;
@@ -60,9 +60,13 @@ function init(server, states, handleMessage) {
   wss.on('connection', (ws, req) => {
     const parsedUrl = url.parse(req.url, true);
     const token = parsedUrl.query.token || '';
+    const queryRoomId = parsedUrl.query.roomId || '';
     const userId = getUserIdFromToken(token);
+    const roomId = getRoomId(userId, token, queryRoomId);
     
     ws.userId = String(userId);
+    ws.roomId = String(roomId);
+    ws.isControl = parsedUrl.pathname === '/ws/control';
     ws.isAlive = true;
 
     ws.on('pong', () => {
@@ -71,27 +75,27 @@ function init(server, states, handleMessage) {
 
     const isOverlay = parsedUrl.pathname === '/ws/overlay';
     const isControl = parsedUrl.pathname === '/ws/control';
-    console.log(`[WS] Connected: ${isOverlay ? 'OBS Overlay' : 'Control Panel'} | User ID: ${userId}`);
+    console.log(`[WS] Connected: ${isOverlay ? 'OBS Overlay' : 'Control Panel'} | Room ID: ${roomId} (User ID: ${userId})`);
 
-    // Khởi tạo state mặc định cho user nếu chưa có trong RAM
-    if (!states[userId]) {
-      states[userId] = createDefaultState();
+    // Khởi tạo state mặc định cho room nếu chưa có trong RAM
+    if (!states[roomId]) {
+      states[roomId] = createDefaultState();
     }
 
-    // Gửi full state riêng của user ngay khi connect
-    ws.send(JSON.stringify({ type: 'init', data: states[userId] }));
+    // Gửi full state riêng của room ngay khi connect
+    ws.send(JSON.stringify({ type: 'init', roomId: ws.roomId, data: states[roomId] }));
 
     ws.on('message', (raw) => {
       try {
         const msg = JSON.parse(raw);
-        handleMessage(msg, ws.userId);
+        handleMessage(msg, ws.roomId);
       } catch (e) {
         console.error('[WS] Bad message:', e);
       }
     });
 
     ws.on('close', () => {
-      console.log(`[WS] Disconnected | User ID: ${ws.userId}`);
+      console.log(`[WS] Disconnected | Room ID: ${ws.roomId}`);
     });
   });
 
@@ -116,21 +120,53 @@ function init(server, states, handleMessage) {
 }
 
 /**
- * Gửi tin nhắn tới tất cả client đang kết nối thuộc về cùng một userId
+ * Gửi tin nhắn tới tất cả client đang kết nối thuộc về cùng một roomId
  */
-function broadcast(msg, userId) {
+function broadcast(msg, roomId) {
   if (!wss) return;
-  if (!userId) userId = '1';
+  if (!roomId) roomId = '1';
   const json = JSON.stringify(msg);
   wss.clients.forEach(client => {
-    if (client.readyState === 1 && client.userId === String(userId)) {
+    if (client.readyState === 1 && client.roomId === String(roomId)) {
       client.send(json);
     }
   });
 }
 
+/**
+ * Đếm số lượng client đang kết nối hoạt động trong cùng một roomId
+ */
+function getActiveClientsCount(roomId) {
+  if (!wss) return 0;
+  if (!roomId) roomId = '1';
+  let count = 0;
+  wss.clients.forEach(client => {
+    if (client.readyState === 1 && client.roomId === String(roomId)) {
+      count++;
+    }
+  });
+  return count;
+}
+
+/**
+ * Đếm số lượng Control Panel đang kết nối hoạt động trong cùng một roomId
+ */
+function getActiveControlsCount(roomId) {
+  if (!wss) return 0;
+  if (!roomId) roomId = '1';
+  let count = 0;
+  wss.clients.forEach(client => {
+    if (client.readyState === 1 && client.roomId === String(roomId) && client.isControl === true) {
+      count++;
+    }
+  });
+  return count;
+}
+
 module.exports = {
   init,
   broadcast,
+  getActiveClientsCount,
+  getActiveControlsCount,
   getWss: () => wss
 };

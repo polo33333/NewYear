@@ -5,11 +5,12 @@ if (!token && !window.location.pathname.includes('/login')) {
   window.location.href = '/login';
 }
 
-// Override global fetch to automatically add X-User-Id and Authorization headers
+// Override global fetch to automatically add X-User-Id, Authorization, and X-Room-Id headers
 const originalFetch = window.fetch;
 window.fetch = function (url, options = {}) {
   const currentToken = localStorage.getItem('kdone_auth_token');
   const currentUserId = localStorage.getItem('kdone_user_id');
+  const currentRoomId = sessionStorage.getItem('kdone_current_room_id');
   if (currentToken) {
     options.headers = options.headers || {};
     if (!(options.headers instanceof Headers)) {
@@ -18,12 +19,24 @@ window.fetch = function (url, options = {}) {
         'Authorization': `Bearer ${currentToken}`,
         'X-User-Id': currentUserId
       };
+      if (currentRoomId) {
+        options.headers['X-Room-Id'] = currentRoomId;
+      }
     } else {
       options.headers.set('Authorization', `Bearer ${currentToken}`);
       options.headers.set('X-User-Id', currentUserId);
+      if (currentRoomId) {
+        options.headers.set('X-Room-Id', currentRoomId);
+      }
     }
   }
-  return originalFetch(url, options);
+  return originalFetch(url, options).then(response => {
+    const headerRoomId = response.headers.get('X-Room-Id');
+    if (headerRoomId) {
+      sessionStorage.setItem('kdone_current_room_id', headerRoomId);
+    }
+    return response;
+  });
 };
 
 window.logout = function () {
@@ -34,6 +47,7 @@ window.logout = function () {
       localStorage.removeItem('kdone_user_id');
       localStorage.removeItem('kdone_username');
       localStorage.removeItem('kdone_is_admin');
+      sessionStorage.removeItem('kdone_current_room_id');
       window.location.href = '/login';
     });
 };

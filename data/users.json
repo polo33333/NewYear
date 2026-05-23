@@ -3,24 +3,28 @@
     "id": 1,
     "username": "admin",
     "password": "12345678.c",
-    "isAdmin": true
+    "isAdmin": true,
+    "isSync": true
   },
   {
     "id": 2,
     "username": "streamer",
     "password": "12345678.c",
-    "isAdmin": false
+    "isAdmin": false,
+    "isSync": true
   },
   {
     "id": 3,
     "username": "tester",
     "password": "12345678",
-    "isAdmin": false
+    "isAdmin": false,
+    "isSync": false
   },
   {
     "id": 4,
     "username": "demo",
     "password": "12345678",
-    "isAdmin": false
+    "isAdmin": false,
+    "isSync": false
   }
 ]

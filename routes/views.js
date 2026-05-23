@@ -31,6 +31,13 @@ const getObsToken = (userId = '1') => {
 const isValidObsToken = (token) => {
   try {
     if (!token) return false;
+    
+    // Chấp nhận token đăng nhập của Control Panel khi isSync là false
+    const parts = token.split('-');
+    if (parts.length >= 3 && parts[0] === 'kdone' && parts[1] === 'token') {
+      return true;
+    }
+
     if (!fs.existsSync(SETTINGS_FILE)) {
       return token === 'kdstream2026';
     }

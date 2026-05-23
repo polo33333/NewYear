@@ -253,11 +253,11 @@ input[type=number] {
 }
 
 .switch {
-  width: 36px;
-  height: 15px;
+  width: 36px !important;
+  height: 15px !important;
   background: #333;
   border-radius: 9px;
-  position: relative;
+  position: relative !important;
   cursor: pointer;
 }
 
@@ -266,15 +266,14 @@ input[type=number] {
   position: absolute;
   width: 14px;
   height: 14px;
-  background: #fff;
   border-radius: 50%;
-  top: 2px;
+  background: #fff !important;
   left: 2px;
   transition: 0.2s;
 }
 
 .switch.on {
-  background: var(--accent);
+  background: var(--accent) !important;
 }
 
 .switch.on::after {

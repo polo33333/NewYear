@@ -33,6 +33,14 @@
         });
     }
 
+    // Toggle Multi-Device Sync switch
+    const syncSwitch = document.getElementById('sett-is-sync-switch');
+    if (syncSwitch) {
+        syncSwitch.addEventListener('click', () => {
+            syncSwitch.classList.toggle('on');
+        });
+    }
+
     // Random token generator
     const generateBtn = document.getElementById('sett-btn-generate');
     if (generateBtn) {
@@ -61,6 +69,12 @@
                 if (data.googleAppsScriptUrl && sheetInp) {
                     sheetInp.value = data.googleAppsScriptUrl;
                 }
+                
+                // Hiển thị trạng thái isSync
+                const syncSwitch = document.getElementById('sett-is-sync-switch');
+                if (syncSwitch) {
+                    syncSwitch.classList.toggle('on', !!data.isSync);
+                }
             }
         } catch (e) {
             showToast('Lỗi tải cấu hình từ máy chủ: ' + e.message, 'error');
@@ -73,6 +87,8 @@
         saveSettingsBtn.addEventListener('click', async () => {
             const tokenInp = document.getElementById('sett-token-input');
             const token = tokenInp ? tokenInp.value.trim() : '';
+            const syncSwitch = document.getElementById('sett-is-sync-switch');
+            const isSync = syncSwitch ? syncSwitch.classList.contains('on') : false;
 
             if (!token) {
                 showToast('OBS Token cannot be empty!', 'error');
@@ -88,11 +104,11 @@
                 const res = await fetch('/api/settings', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ obsToken: token })
+                    body: JSON.stringify({ obsToken: token, isSync: isSync })
                 });
 
                 if (res.ok) {
-                    showToast('Lưu mã OBS Security Token thành công!', 'success');
+                    showToast('Lưu mã OBS Security Token & Chế độ đồng bộ thành công!', 'success');
                 } else {
                     showToast('Lỗi lưu OBS Token!', 'error');
                 }

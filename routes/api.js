@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const { states, createDefaultState } = require('../services/state');
+const { states, createDefaultState, getRoomId } = require('../services/state');
 const { broadcast } = require('../services/wsService');
 
 const STATE_SAVE_FILE = path.join(__dirname, '../data/state_save.json');
@@ -18,7 +18,7 @@ function getUserIdFromRequest(req) {
   if (req.headers['x-user-id']) {
     return String(req.headers['x-user-id']);
   }
-  
+
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
@@ -33,6 +33,20 @@ function getUserIdFromRequest(req) {
   }
 
   return '1';
+}
+
+/**
+ * Trích xuất Token từ Request (Authorization header Bearer hoặc Query param)
+ */
+function getTokenFromRequest(req) {
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7);
+  }
+  if (req.query.token) {
+    return String(req.query.token);
+  }
+  return null;
 }
 
 /**
@@ -67,6 +81,7 @@ function requireAdmin(req, res, next) {
  * Lọc cấu hình cài đặt theo User ID (Single-File)
  */
 function getSettings(userId) {
+  let settingsObj = { "obsToken": "kdstream2026" };
   try {
     if (!fs.existsSync(SETTINGS_FILE)) {
       const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
@@ -75,45 +90,63 @@ function getSettings(userId) {
         def[userId] = { "obsToken": defToken };
       }
       fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
-      return def[userId] || { "obsToken": "kdstream2026" };
-    }
-    const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
-    if (!content.trim()) {
-      const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-      const def = {};
-      def[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
-      return def[userId];
-    }
-    const allSettings = JSON.parse(content);
-    
-    // Legacy migration
-    if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
-      if (userId === '1') {
-        return allSettings;
-      } else {
+      settingsObj = def[userId] || { "obsToken": "kdstream2026" };
+    } else {
+      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
+      if (!content.trim()) {
         const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-        const migrated = { '1': allSettings };
-        migrated[userId] = { "obsToken": defToken };
-        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(migrated, null, 2), 'utf8');
-        return migrated[userId];
+        const def = {};
+        def[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
+        settingsObj = def[userId];
+      } else {
+        const allSettings = JSON.parse(content);
+
+        // Legacy migration
+        if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
+          if (userId === '1') {
+            settingsObj = allSettings;
+          } else {
+            const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
+            const migrated = { '1': allSettings };
+            migrated[userId] = { "obsToken": defToken };
+            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(migrated, null, 2), 'utf8');
+            settingsObj = migrated[userId];
+          }
+        } else {
+          // Generate obsToken if not exists for the user
+          if (!allSettings[userId]) {
+            const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
+            allSettings[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
+            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
+          } else if (!allSettings[userId].obsToken) {
+            allSettings[userId].obsToken = userId === '1' ? 'kdstream2026' : ('kdone_' + Math.random().toString(36).substring(2, 10));
+            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
+          }
+          settingsObj = allSettings[userId];
+        }
       }
     }
-    
-    // Generate obsToken if not exists for the user
-    if (!allSettings[userId]) {
-      const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-      allSettings[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
-    } else if (!allSettings[userId].obsToken) {
-      allSettings[userId].obsToken = userId === '1' ? 'kdstream2026' : ('kdone_' + Math.random().toString(36).substring(2, 10));
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
-    }
-    
-    return allSettings[userId];
   } catch (e) {
-    return { "obsToken": "kdstream2026" };
+    settingsObj = { "obsToken": "kdstream2026" };
   }
+
+  // Đọc thêm isSync từ users.json
+  let isSync = false;
+  try {
+    const usersPath = path.join(__dirname, '../data/users.json');
+    if (fs.existsSync(usersPath)) {
+      const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+      const user = users.find(u => String(u.id) === String(userId));
+      if (user) {
+        isSync = !!user.isSync;
+      }
+    }
+  } catch (e) {
+    console.error('[API] Error reading users.json for settings:', e.message);
+  }
+
+  return { ...settingsObj, isSync };
 }
 
 /**
@@ -141,9 +174,9 @@ function saveSettings(userId, userSettings) {
 }
 
 /**
- * Lọc danh sách trận đấu đã lưu theo User ID (Single-File)
+ * Lọc danh sách trận đấu đã lưu theo Room ID (Single-File)
  */
-function getSaves(userId) {
+function getSaves(roomId) {
   try {
     if (!fs.existsSync(SAVES_LIST_FILE)) {
       fs.writeFileSync(SAVES_LIST_FILE, '{}', 'utf8');
@@ -154,18 +187,18 @@ function getSaves(userId) {
     const allSaves = JSON.parse(content);
     if (Array.isArray(allSaves)) {
       // Legacy format migration
-      return userId === '1' ? allSaves : [];
+      return roomId === '1' ? allSaves : [];
     }
-    return allSaves[userId] || [];
+    return allSaves[roomId] || [];
   } catch (e) {
     return [];
   }
 }
 
 /**
- * Lưu danh sách trận đấu đã lưu xuống ổ đĩa theo User ID (Single-File)
+ * Lưu danh sách trận đấu đã lưu xuống ổ đĩa theo Room ID (Single-File)
  */
-function saveSaves(userId, userSaves) {
+function saveSaves(roomId, userSaves) {
   try {
     let allSaves = {};
     if (fs.existsSync(SAVES_LIST_FILE)) {
@@ -179,7 +212,7 @@ function saveSaves(userId, userSaves) {
         }
       }
     }
-    allSaves[userId] = userSaves;
+    allSaves[roomId] = userSaves;
     fs.writeFileSync(SAVES_LIST_FILE, JSON.stringify(allSaves, null, 2), 'utf8');
   } catch (e) {
     console.error('[SYSTEM] Error saving saves:', e);
@@ -216,12 +249,78 @@ router.post('/login', (req, res) => {
   }
 });
 
+// Middleware tự động gán roomId cho các API liên quan tới trạng thái đấu
+router.use((req, res, next) => {
+  const path = req.path;
+  if (
+    path.startsWith('/state') ||
+    path.startsWith('/save-state') ||
+    path.startsWith('/saves') ||
+    path.startsWith('/reset-state')
+  ) {
+    const userId = getUserIdFromRequest(req);
+    const token = getTokenFromRequest(req);
+    const queryRoomId = req.headers['x-room-id'] || req.query.roomId;
+    const roomId = getRoomId(userId, token, queryRoomId);
+
+    req.roomId = roomId;
+    res.setHeader('X-Room-Id', roomId);
+
+    // Đảm bảo states[roomId] luôn được khởi tạo
+    if (!states[roomId]) {
+      states[roomId] = createDefaultState();
+    }
+  }
+  next();
+});
+
 // API dọn sạch dữ liệu thủ công hoặc khi đăng xuất
 router.post('/reset-state', (req, res) => {
   try {
+    const roomId = req.roomId;
     const userId = getUserIdFromRequest(req);
-    const stateService = require('../services/stateService');
-    stateService.resetState(userId);
+
+    // Đếm số thiết bị Control Panel đang hoạt động trong room này qua socket
+    const wsService = require('../services/wsService');
+    const activeControlCount = wsService.getActiveControlsCount(roomId);
+
+    // Nếu vẫn còn thiết bị Control Panel khác đang hoạt động trong room này, giữ nguyên trạng thái
+    if (activeControlCount > 1) {
+      console.log(`[SYSTEM] User logged out but room ${roomId} still has ${activeControlCount} active Control Panel(s). Keeping state.`);
+      return res.json({ ok: true, message: 'Keep state' });
+    }
+
+    // Kiểm tra cấu hình isSync của user trong users.json
+    let isSync = false;
+    try {
+      const usersPath = path.join(__dirname, '../data/users.json');
+      if (fs.existsSync(usersPath)) {
+        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+        const user = users.find(u => String(u.id) === String(userId));
+        if (user) {
+          isSync = !!user.isSync;
+        }
+      }
+    } catch (e) {
+      console.error('[API] Error reading users.json for reset-state:', e.message);
+    }
+
+    if (states[roomId]) {
+      states[roomId].scene = 'end';
+      broadcast({ type: 'scene', value: 'end' }, roomId);
+    }
+
+    if (isSync) {
+      // Nếu là tài khoản sync, giữ nguyên state trên RAM để đăng nhập lại dùng tiếp, không xóa sạch
+      //console.log(`[SYSTEM] Last user of synced room ${roomId} logged out. Keeping state for persistence.`);
+      console.log(`[SYSTEM] Last user of independent room ${roomId} logged out. Deleting state.`);
+      delete states[roomId];
+    } else {
+      // Nếu là tài khoản độc lập (isSync == false), dọn sạch state của thiết bị này trên RAM (RAM-only)
+      console.log(`[SYSTEM] Last user of independent room ${roomId} logged out. Deleting state.`);
+      delete states[roomId];
+    }
+
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to reset state: ' + err.message });
@@ -230,49 +329,32 @@ router.post('/reset-state', (req, res) => {
 
 // ── REST API State ──
 router.get('/state', (req, res) => {
-  const userId = getUserIdFromRequest(req);
-  if (!states[userId]) {
-    states[userId] = createDefaultState();
-  }
-  res.json(states[userId]);
+  res.json(states[req.roomId]);
 });
 
 router.post('/state', (req, res) => {
-  const userId = getUserIdFromRequest(req);
-  if (!states[userId]) {
-    states[userId] = createDefaultState();
-  }
-  Object.assign(states[userId], req.body);
-  broadcast({ type: 'init', data: states[userId] }, userId);
+  const roomId = req.roomId;
+  Object.assign(states[roomId], req.body);
+  broadcast({ type: 'init', data: states[roomId] }, roomId);
   res.json({ ok: true });
 });
 
 // Lưu toàn bộ tournament state vào ổ đĩa để duy trì phiên
 router.post('/save-state', (req, res) => {
-  try {
-    const userId = getUserIdFromRequest(req);
-    const stateService = require('../services/stateService');
-    stateService.saveStateToDisk(userId);
-    res.json({ ok: true });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to write state save file: ' + err.message });
-  }
+  // RAM-Only: Do not save to disk, state changes are already persistent in RAM.
+  res.json({ ok: true });
 });
 
 // ── Saves List API (Multi-Save Slot Support) ──
 router.get('/saves', (req, res) => {
-  const userId = getUserIdFromRequest(req);
-  res.json(getSaves(userId));
+  res.json(getSaves(req.roomId));
 });
 
 router.post('/saves', (req, res) => {
   try {
-    const userId = getUserIdFromRequest(req);
-    const saves = getSaves(userId);
-    if (!states[userId]) {
-      states[userId] = createDefaultState();
-    }
-    const uState = states[userId];
+    const roomId = req.roomId;
+    const saves = getSaves(roomId);
+    const uState = states[roomId];
     const newSave = {
       id: 'save_' + Date.now(),
       name: `${uState.score.teamA.name} vs ${uState.score.teamB.name} (${new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })})`,
@@ -282,7 +364,7 @@ router.post('/saves', (req, res) => {
       tournament: JSON.parse(JSON.stringify(uState.tournament))
     };
     saves.push(newSave);
-    saveSaves(userId, saves);
+    saveSaves(roomId, saves);
     res.json({ ok: true, save: newSave });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -291,17 +373,14 @@ router.post('/saves', (req, res) => {
 
 router.post('/saves/:id/load', (req, res) => {
   try {
-    const userId = getUserIdFromRequest(req);
-    const saves = getSaves(userId);
+    const roomId = req.roomId;
+    const saves = getSaves(roomId);
     const save = saves.find(s => s.id === req.params.id);
     if (!save) {
       return res.status(404).json({ error: 'Roster save slot not found' });
     }
 
-    if (!states[userId]) {
-      states[userId] = createDefaultState();
-    }
-    const uState = states[userId];
+    const uState = states[roomId];
 
     // Cập nhật live state trong RAM
     uState.rosters = JSON.parse(JSON.stringify(save.rosters));
@@ -311,11 +390,7 @@ router.post('/saves/:id/load', (req, res) => {
     }
 
     // Phát broadcast cập nhật ngay lập tức đến toàn bộ giao diện điều khiển & overlay
-    broadcast({ type: 'init', data: uState }, userId);
-
-    // Đồng thời đồng bộ lưu trữ tệp trạng thái active
-    const stateService = require('../services/stateService');
-    stateService.saveStateToDisk(userId);
+    broadcast({ type: 'init', data: uState }, roomId);
 
     res.json({ ok: true });
   } catch (err) {
@@ -325,10 +400,10 @@ router.post('/saves/:id/load', (req, res) => {
 
 router.delete('/saves/:id', (req, res) => {
   try {
-    const userId = getUserIdFromRequest(req);
-    const saves = getSaves(userId);
+    const roomId = req.roomId;
+    const saves = getSaves(roomId);
     const filtered = saves.filter(s => s.id !== req.params.id);
-    saveSaves(userId, filtered);
+    saveSaves(roomId, filtered);
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -338,13 +413,14 @@ router.delete('/saves/:id', (req, res) => {
 router.post('/saves/:id/sync-sheets', async (req, res) => {
   try {
     const { tabName } = req.body;
+    const roomId = req.roomId;
     const userId = getUserIdFromRequest(req);
     const settings = getSettings(userId);
     if (!settings.googleAppsScriptUrl) {
       return res.status(400).json({ error: 'Vui lòng cấu hình Google Apps Script Web App URL trong Cài đặt (Settings) trước khi đồng bộ!' });
     }
 
-    const saves = getSaves(userId);
+    const saves = getSaves(roomId);
     const save = saves.find(s => s.id === req.params.id);
     if (!save) {
       return res.status(404).json({ error: 'Không tìm thấy dữ liệu lưu trữ trận đấu!' });
@@ -473,7 +549,7 @@ router.post('/saves/:id/sync-sheets', async (req, res) => {
     if (!save.syncedTabs.includes(tabName)) {
       save.syncedTabs.push(tabName);
     }
-    saveSaves(userId, saves);
+    saveSaves(roomId, saves);
 
     let result = { ok: true };
     try {
@@ -534,11 +610,29 @@ router.get('/settings', (req, res) => {
 router.post('/settings', (req, res) => {
   try {
     const userId = getUserIdFromRequest(req);
-    saveSettings(userId, req.body);
-    broadcast({ type: 'settings_update', userId: userId });
+    const token = getTokenFromRequest(req);
+    const roomId = getRoomId(userId, token);
+    const { isSync, ...otherSettings } = req.body;
+
+    saveSettings(userId, otherSettings);
+
+    // Lưu isSync vào users.json nếu được truyền lên
+    if (isSync !== undefined) {
+      const usersPath = path.join(__dirname, '../data/users.json');
+      if (fs.existsSync(usersPath)) {
+        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+        const user = users.find(u => String(u.id) === String(userId));
+        if (user) {
+          user.isSync = !!isSync;
+          fs.writeFileSync(usersPath, JSON.stringify(users, null, 2), 'utf8');
+        }
+      }
+    }
+
+    broadcast({ type: 'settings_update', userId: userId }, roomId);
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to save settings' });
+    res.status(500).json({ error: 'Failed to save settings: ' + err.message });
   }
 });
 

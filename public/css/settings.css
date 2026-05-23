@@ -238,3 +238,37 @@
 .btn-save-delete:hover {
     background: rgba(239, 68, 68, 0.15) !important;
 }
+
+/* Switch Toggle Style */
+.switch {
+    width: 44px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    position: relative;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.switch::after {
+    content: '';
+    position: absolute;
+    /* width: 18px; */
+    /* height: 18px; */
+    border-radius: 50%;
+    background: #fff;
+    /* top: 2px; */
+    /* left: 2px; */
+    /* transition: 0.3s; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switch.on {
+    background: var(--success);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.switch.on::after {
+    left: 22px;
+    background: #000;
+}

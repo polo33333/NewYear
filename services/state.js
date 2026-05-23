@@ -1,4 +1,8 @@
 // ── State toàn bộ app ──
+const fs = require('fs');
+const path = require('path');
+
+const USERS_FILE = path.join(__dirname, '../data/users.json');
 const states = {};
 
 function createDefaultState() {
@@ -16,17 +20,9 @@ function createDefaultState() {
       teamB: {},
     },
     score: {
-      teamA: { name: 'Team A', logo: '🐉', color: '#00aaff', score: 0 },
-      teamB: { name: 'Team B', logo: '👻', color: '#ff4444', score: 0 },
+      teamA: { name: 'Team A', logo: '', color: '#00aaff', score: 0 },
+      teamB: { name: 'Team B', logo: '', color: '#ff4444', score: 0 },
       matchTimer: 0
-    },
-    stats: {
-      viewers: 100,
-      chatPerMin: 300,
-      bitrate: 6000,
-      fps: 60,
-      cpu: 30,
-      gpu: 60
     },
     tournament: {
       name: 'MATRIX CUP 2026',
@@ -48,8 +44,36 @@ function createDefaultState() {
   };
 }
 
+function getRoomId(userId, token, queryRoomId) {
+  if (!userId) return '1';
+  try {
+    if (fs.existsSync(USERS_FILE)) {
+      const content = fs.readFileSync(USERS_FILE, 'utf8');
+      if (content.trim()) {
+        const users = JSON.parse(content);
+        const user = users.find(u => String(u.id) === String(userId));
+        if (user && user.isSync === true) {
+          // isSync === true: return room_${userId} so all devices of that user sync together
+          return `room_${userId}`;
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[STATE] Error reading users.json for roomId:', err.message);
+  }
+
+  // isSync === false or not configured (independent devices):
+  if (queryRoomId && queryRoomId.trim()) {
+    return queryRoomId.trim();
+  }
+
+  // Generate a random room ID if none was provided
+  return 'room_' + Math.random().toString(36).substring(2, 10);
+}
+
 module.exports = {
   states,
-  createDefaultState
+  createDefaultState,
+  getRoomId
 };
 
