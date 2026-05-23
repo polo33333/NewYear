@@ -184,7 +184,7 @@ input[type=number] {
   width: 100%;
   max-width: 450px;
   /* Capped to save height for the roster list */
-  margin: 0 auto;
+  margin: 5% auto;
   aspect-ratio: 16/9;
 }
 
@@ -627,7 +627,8 @@ input[type=number] {
   transition: all 0.18s;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
-  color: #797ea3;
+  color: #ffffff;
+  opacity: 0.85;
 }
 
 .scene-btn i {
@@ -1145,7 +1146,7 @@ input[type=number] {
 
 .mcb-break-unit {
   font-size: 9px;
-  color: var(--text-dim);
+  color: #a3a4a9;
   white-space: nowrap;
 }
 
@@ -1280,7 +1281,7 @@ input[type=number] {
 }
 
 .sys-stat-name {
-  color: #8c8e97;
+  color: #a3a4a9;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1300,7 +1301,7 @@ input[type=number] {
   font-family: 'DM Mono', monospace;
   color: #fff;
   font-size: 11px;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 /* Network Latency Sparkline Card */
@@ -2007,7 +2008,7 @@ input[type=number] {
 
 .round-label {
   font-size: 9px;
-  opacity: 0.5;
+  opacity: 0.7;
   font-weight: 700;
   width: 15px;
 }
@@ -2690,7 +2691,7 @@ input[type=number] {
   justify-content: center;
   gap: 6px;
   padding: 18px 8px;
-  color: var(--text-dim);
+  color: #9498b7;
   font-size: 10px;
   opacity: 0.5;
 }
