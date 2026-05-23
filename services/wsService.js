@@ -2,6 +2,7 @@ const { WebSocketServer } = require('ws');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { createDefaultState, getRoomId } = require('./state');
 
 const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
@@ -112,8 +113,67 @@ function init(server, states, handleMessage) {
     });
   }, 30000);
 
+  // Gửi thông số hệ thống (CPU, RAM, Client Count) định kỳ mỗi 3 giây tới các Control Panel
+  function cpuAverage() {
+    let totalIdle = 0, totalTick = 0;
+    const cpus = os.cpus();
+    if (!cpus || cpus.length === 0) return { idle: 0, total: 0 };
+    for (let i = 0, len = cpus.length; i < len; i++) {
+      const cpu = cpus[i];
+      for (const type in cpu.times) {
+        totalTick += cpu.times[type];
+      }
+      totalIdle += cpu.times.idle;
+    }
+    return { idle: totalIdle, total: totalTick };
+  }
+
+  let lastCpuMeasure = cpuAverage();
+
+  const statsInterval = setInterval(() => {
+    if (!wss || wss.clients.size === 0) return;
+
+    // Tính % CPU
+    const currentCpuMeasure = cpuAverage();
+    const idleDiff = currentCpuMeasure.idle - lastCpuMeasure.idle;
+    const totalDiff = currentCpuMeasure.total - lastCpuMeasure.total;
+    let cpuPct = 0;
+    if (totalDiff > 0) {
+      cpuPct = Math.min(100, Math.max(0, Math.round(100 - (100 * idleDiff / totalDiff))));
+    }
+    lastCpuMeasure = currentCpuMeasure;
+
+    // Tính % RAM
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
+    const usedMem = totalMem - freeMem;
+    const ramPct = Math.round((usedMem / totalMem) * 100);
+    const ramUsedGB = (usedMem / (1024 * 1024 * 1024)).toFixed(1);
+    const ramTotalGB = (totalMem / (1024 * 1024 * 1024)).toFixed(1);
+
+    // Đếm số client hoạt động
+    const statsMsg = {
+      type: 'server_stats',
+      data: {
+        cpu: cpuPct,
+        ram: ramPct,
+        ramUsed: ramUsedGB,
+        ramTotal: ramTotalGB,
+        clientsCount: wss.clients.size
+      }
+    };
+
+    const json = JSON.stringify(statsMsg);
+    wss.clients.forEach(client => {
+      if (client.readyState === 1 && client.isControl === true) {
+        client.send(json);
+      }
+    });
+  }, 3000);
+
   wss.on('close', () => {
     clearInterval(interval);
+    clearInterval(statsInterval);
   });
 
   return wss;

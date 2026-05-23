@@ -47,6 +47,9 @@ function handleMessage(msg) {
   else if (msg.type === 'settings_update') {
     syncUI();
   }
+  else if (msg.type === 'server_stats') {
+    updateSystemStats(msg.data);
+  }
 }
 
 function syncUI() {
@@ -465,9 +468,55 @@ function copyUrl(id, btn) {
   });
 }
 
+function updateSystemStats(data) {
+  if (!data) return;
+
+  const cpuVal = document.getElementById('sys-cpu-val');
+  const cpuBar = document.getElementById('sys-cpu-bar');
+  if (cpuVal) cpuVal.textContent = `${data.cpu}%`;
+  if (cpuBar) cpuBar.style.width = `${data.cpu}%`;
+
+  const ramVal = document.getElementById('sys-ram-val');
+  const ramBar = document.getElementById('sys-ram-bar');
+  if (ramVal) ramVal.textContent = `${data.ram}% (${data.ramUsed} / ${data.ramTotal} GB)`;
+  if (ramBar) ramBar.style.width = `${data.ram}%`;
+
+  const clientsVal = document.getElementById('sys-clients-val');
+  if (clientsVal) {
+    clientsVal.textContent = `${data.clientsCount} Connected Client${data.clientsCount !== 1 ? 's' : ''}`;
+  }
+}
+
+function measurePing() {
+  const start = Date.now();
+  fetch('/api/state')
+    .then(() => {
+      const ping = Date.now() - start;
+      const badge = document.getElementById('sys-ping-badge');
+      if (badge) {
+        badge.textContent = `${ping} ms`;
+        badge.className = 'sys-badge-ping';
+        if (ping > 150) {
+          badge.classList.add('danger');
+        } else if (ping > 75) {
+          badge.classList.add('warning');
+        }
+      }
+    })
+    .catch(() => {
+      const badge = document.getElementById('sys-ping-badge');
+      if (badge) {
+        badge.textContent = 'ERR';
+        badge.className = 'sys-badge-ping danger';
+      }
+    });
+}
+
 // --- INITIALIZATION ---
 // Generate the round input DOM elements first
 generateRounds();
+measurePing();
+setInterval(measurePing, 5000);
 
 window.addEventListener('resize', () => resizePreview());
 const previewIframe = document.getElementById('preview-iframe');

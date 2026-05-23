@@ -221,81 +221,122 @@
                   </div>
                 </div>
 
-                <!-- Right: Match Controls -->
-                <div class="match-controls-box">
-                  <!-- Header -->
-                  <div class="mcb-header">
-                    <span class="mcb-title"><i class="fas fa-sliders"></i> MATCH CONTROL</span>
-                    <button onclick="resetMatch()" class="mcb-reset-btn" title="Reset Match">
-                      <i class="fas fa-arrow-rotate-right"></i>
-                    </button>
-                  </div>
-
-                  <!-- Team Score Cards -->
-                  <div class="mcb-teams">
-                    <!-- Team A -->
-                    <div class="mcb-team mcb-team-a">
-                      <div class="mcb-team-label">TEAM A</div>
-                      <input type="text" id="nameA" onchange="updateMatch()" placeholder="Team Name"
-                        class="mcb-name-input">
-                      <div class="mcb-score-row">
-                        <button onclick="adjScore('teamA',-1)" class="mcb-score-btn mcb-minus"><i
-                            class="fas fa-minus"></i></button>
-                        <input type="number" class="mcb-score-val" id="scoreA" value="0" readonly>
-                        <button onclick="adjScore('teamA',1)" class="mcb-score-btn mcb-plus"><i
-                            class="fas fa-plus"></i></button>
+                <!-- Right Column: Controls & System Monitor -->
+                <div class="right-controls-column">
+                  <!-- System Stats Monitor -->
+                  <div class="system-monitor-box">
+                    <div class="mcb-header">
+                      <span class="mcb-title"><i class="fas fa-terminal"></i> SYSTEM MONITOR</span>
+                      <span id="sys-ping-badge" class="sys-badge-ping">-- ms</span>
+                    </div>
+                    <div class="sys-stats-grid">
+                      <!-- CPU Stat -->
+                      <div class="sys-stat-card">
+                        <div class="sys-stat-info">
+                          <span class="sys-stat-name"><i class="fas fa-microchip"></i> CPU</span>
+                          <span id="sys-cpu-val" class="sys-stat-val">0%</span>
+                        </div>
+                        <div class="sys-progress-bar">
+                          <div id="sys-cpu-bar" class="sys-progress-fill" style="width: 0%;"></div>
+                        </div>
                       </div>
-                    </div>
+                      
+                      <!-- RAM Stat -->
+                      <div class="sys-stat-card">
+                        <div class="sys-stat-info">
+                          <span class="sys-stat-name"><i class="fas fa-memory"></i> RAM</span>
+                          <span id="sys-ram-val" class="sys-stat-val">0% (0.0 / 0.0 GB)</span>
+                        </div>
+                        <div class="sys-progress-bar">
+                          <div id="sys-ram-bar" class="sys-progress-fill" style="width: 0%;"></div>
+                        </div>
+                      </div>
 
-                    <!-- VS Divider -->
-                    <div class="mcb-vs">
-                      <div class="mcb-vs-line"></div>
-                      <span class="mcb-vs-badge">VS</span>
-                      <div class="mcb-vs-line"></div>
-                    </div>
-
-                    <!-- Team B -->
-                    <div class="mcb-team mcb-team-b">
-                      <div class="mcb-team-label">TEAM B</div>
-                      <input type="text" id="nameB" onchange="updateMatch()" placeholder="Team Name"
-                        class="mcb-name-input">
-                      <div class="mcb-score-row">
-                        <button onclick="adjScore('teamB',-1)" class="mcb-score-btn mcb-minus"><i
-                            class="fas fa-minus"></i></button>
-                        <input type="number" class="mcb-score-val" id="scoreB" value="0" readonly>
-                        <button onclick="adjScore('teamB',1)" class="mcb-score-btn mcb-plus"><i
-                            class="fas fa-plus"></i></button>
+                      <!-- Connection / Websocket Stat -->
+                      <div class="sys-stat-row">
+                        <span class="sys-stat-name"><i class="fas fa-network-wired"></i> WebSockets</span>
+                        <span id="sys-clients-val" class="sys-stat-val">0 Connected Clients</span>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Subtitle + Break inline -->
-                  <div class="mcb-meta-row">
-                    <div class="mcb-meta-field mcb-meta-flex">
-                      <label class="mcb-meta-label">Subtitle</label>
-                      <input type="text" id="bracket-label" placeholder="GRAND FINALS — 2026" onchange="updateMatch()"
-                        class="mcb-meta-input">
-                    </div>
-                    <div class="mcb-meta-field mcb-meta-break">
-                      <label class="mcb-meta-label">Break</label>
-                      <div class="mcb-break-wrap">
-                        <input type="number" id="break-duration" onchange="updateMatch()"
-                          class="mcb-meta-input text-center">
-                        <span class="mcb-break-unit">min</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Ticker -->
-                  <div class="mcb-ticker">
-                    <div class="mcb-ticker-header">
-                      <span class="mcb-meta-label">Ticker Content</span>
-                      <button onclick="updateTicker()" class="mcb-ticker-btn">
-                        <i class="fas fa-paper-plane"></i> Update
+                  <!-- Right: Match Controls -->
+                  <div class="match-controls-box">
+                    <!-- Header -->
+                    <div class="mcb-header">
+                      <span class="mcb-title"><i class="fas fa-sliders"></i> MATCH CONTROL</span>
+                      <button onclick="resetMatch()" class="mcb-reset-btn" title="Reset Match">
+                        <i class="fas fa-arrow-rotate-right"></i>
                       </button>
                     </div>
-                    <textarea id="ticker-input" class="mcb-ticker-textarea" onchange="updateTicker()"
-                      placeholder="Mỗi dòng là 1 ticker item..."></textarea>
+
+                    <!-- Team Score Cards -->
+                    <div class="mcb-teams">
+                      <!-- Team A -->
+                      <div class="mcb-team mcb-team-a">
+                        <div class="mcb-team-label">TEAM A</div>
+                        <input type="text" id="nameA" onchange="updateMatch()" placeholder="Team Name"
+                          class="mcb-name-input">
+                        <div class="mcb-score-row">
+                          <button onclick="adjScore('teamA',-1)" class="mcb-score-btn mcb-minus"><i
+                              class="fas fa-minus"></i></button>
+                          <input type="number" class="mcb-score-val" id="scoreA" value="0" readonly>
+                          <button onclick="adjScore('teamA',1)" class="mcb-score-btn mcb-plus"><i
+                              class="fas fa-plus"></i></button>
+                        </div>
+                      </div>
+
+                      <!-- VS Divider -->
+                      <div class="mcb-vs">
+                        <div class="mcb-vs-line"></div>
+                        <span class="mcb-vs-badge">VS</span>
+                        <div class="mcb-vs-line"></div>
+                      </div>
+
+                      <!-- Team B -->
+                      <div class="mcb-team mcb-team-b">
+                        <div class="mcb-team-label">TEAM B</div>
+                        <input type="text" id="nameB" onchange="updateMatch()" placeholder="Team Name"
+                          class="mcb-name-input">
+                        <div class="mcb-score-row">
+                          <button onclick="adjScore('teamB',-1)" class="mcb-score-btn mcb-minus"><i
+                              class="fas fa-minus"></i></button>
+                          <input type="number" class="mcb-score-val" id="scoreB" value="0" readonly>
+                          <button onclick="adjScore('teamB',1)" class="mcb-score-btn mcb-plus"><i
+                              class="fas fa-plus"></i></button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Subtitle + Break inline -->
+                    <div class="mcb-meta-row">
+                      <div class="mcb-meta-field mcb-meta-flex">
+                        <label class="mcb-meta-label">Subtitle</label>
+                        <input type="text" id="bracket-label" placeholder="GRAND FINALS — 2026" onchange="updateMatch()"
+                          class="mcb-meta-input">
+                      </div>
+                      <div class="mcb-meta-field mcb-meta-break">
+                        <label class="mcb-meta-label">Break</label>
+                        <div class="mcb-break-wrap">
+                          <input type="number" id="break-duration" onchange="updateMatch()"
+                            class="mcb-meta-input text-center">
+                          <span class="mcb-break-unit">min</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Ticker -->
+                    <div class="mcb-ticker" style="display: none;">
+                      <div class="mcb-ticker-header">
+                        <span class="mcb-meta-label">Ticker Content</span>
+                        <button onclick="updateTicker()" class="mcb-ticker-btn">
+                          <i class="fas fa-paper-plane"></i> Update
+                        </button>
+                      </div>
+                      <textarea id="ticker-input" class="mcb-ticker-textarea" onchange="updateTicker()"
+                        placeholder="Mỗi dòng là 1 ticker item..."></textarea>
+                    </div>
+
                   </div>
                 </div>
               </div>
