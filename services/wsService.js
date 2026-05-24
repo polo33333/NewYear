@@ -68,7 +68,6 @@ function init(server, states, handleMessage) {
     ws.userId = String(userId);
     ws.roomId = String(roomId);
     ws.isControl = parsedUrl.pathname === '/ws/control';
-    ws.isOverlay = parsedUrl.pathname === '/ws/overlay';
     ws.isAlive = true;
 
     ws.on('pong', () => {
@@ -86,10 +85,6 @@ function init(server, states, handleMessage) {
 
     // Gửi full state riêng của room ngay khi connect
     ws.send(JSON.stringify({ type: 'init', roomId: ws.roomId, data: states[roomId] }));
-
-    // Ensure OBS Monitor is running for this user
-    const obsService = require('./obsService');
-    obsService.getMonitor(userId);
 
     ws.on('message', (raw) => {
       try {
@@ -169,40 +164,10 @@ function getActiveControlsCount(roomId) {
   return count;
 }
 
-/**
- * Đếm số lượng OBS Overlay đang kết nối hoạt động trong cùng một roomId
- */
-function getActiveOverlaysCount(roomId) {
-  if (!wss) return 0;
-  if (!roomId) roomId = '1';
-  let count = 0;
-  wss.clients.forEach(client => {
-    if (client.readyState === 1 && client.roomId === String(roomId) && client.isOverlay === true) {
-      count++;
-    }
-  });
-  return count;
-}
-
-/**
- * Gửi tin nhắn tới tất cả client đang kết nối (không phân biệt roomId)
- */
-function broadcastAll(msg) {
-  if (!wss) return;
-  const json = JSON.stringify(msg);
-  wss.clients.forEach(client => {
-    if (client.readyState === 1) {
-      client.send(json);
-    }
-  });
-}
-
 module.exports = {
   init,
   broadcast,
   getActiveClientsCount,
   getActiveControlsCount,
-  getActiveOverlaysCount,
-  broadcastAll,
   getWss: () => wss
 };

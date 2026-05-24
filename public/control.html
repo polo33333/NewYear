@@ -226,33 +226,37 @@
                   <!-- Client Telemetry Monitor -->
                   <div class="system-monitor-box">
                     <div class="mcb-header">
-                      <span class="mcb-title"><i class="fas fa-desktop"></i> OBS Status</span>
+                      <span class="mcb-title"><i class="fas fa-desktop"></i> CLIENT INFO</span>
                       <!-- <span id="sys-ping-badge" class="sys-badge-ping">-- ms</span> -->
                     </div>
                     <div class="sys-stats-grid">
-                      <!-- OBS Status -->
-                      <div class="sys-client-card">
-                        <span class="sys-stat-name">Status</span>
-                        <span id="obs-status-val" class="sys-stat-val" style="color: #888888;">⚪ DISCONNECTED</span>
+                      <!-- Network Latency Chart -->
+                      <div class="sys-client-card sys-network-card">
+                        <div class="sys-network-header">
+                          <span class="sys-stat-name"><i class="fas fa-network-wired"></i> Latency</span>
+                          <span id="chart-ping-val" class="sys-stat-val">-- ms</span>
+                        </div>
+                        <div class="sys-canvas-wrapper">
+                          <canvas id="sys-ping-canvas"></canvas>
+                        </div>
                       </div>
 
-                      <!-- Stream Uptime -->
+                      <!-- RAM Est -->
                       <div class="sys-client-card">
-                        <span class="sys-stat-name">Uptime</span>
-                        <span id="obs-uptime-val" class="sys-stat-val">⏱️ 00:00:00</span>
+                        <span class="sys-stat-name"><i class="fas fa-memory"></i> RAM Est.</span>
+                        <span id="client-ram-val" class="sys-stat-val">-- GB</span>
                       </div>
 
-                      <!-- Bitrate -->
+                      <!-- Screen Resolution -->
                       <div class="sys-client-card">
-                        <span class="sys-stat-name">Bitrate</span>
-                        <span id="obs-bitrate-val" class="sys-stat-val" style="color: #ff4444;">📡 0 kbps</span>
+                        <span class="sys-stat-name"><i class="fas fa-tv"></i> Resolution</span>
+                        <span id="client-res-val" class="sys-stat-val">--</span>
                       </div>
 
-                      <!-- Dropped Frames -->
+                      <!-- Session Uptime -->
                       <div class="sys-client-card">
-                        <span class="sys-stat-name">Dropped Frames</span>
-                        <span id="obs-dropped-val" class="sys-stat-val" style="color: #00ff88;">🎞️ 0 frames
-                          (0.0%)</span>
+                        <span class="sys-stat-name"><i class="fas fa-clock"></i> Uptime</span>
+                        <span id="client-uptime-val" class="sys-stat-val">00:00:00</span>
                       </div>
                     </div>
                   </div>

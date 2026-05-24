@@ -66,7 +66,7 @@
                 <div class="settings-col">
                     <!-- OBS Security Card -->
                     <div class="settings-card">
-                        <div class="settings-title"><i class="fas fa-shield-alt"></i> Overlay Token URL</div>
+                        <div class="settings-title"><i class="fas fa-shield-alt"></i> OBS Security Token</div>
 
                         <div class="form-group">
                             <label class="form-label">Overlay Token URL</label>
@@ -109,46 +109,6 @@
                         </div>
 
                         <button id="sett-btn-save-settings" class="btn-save"><i class="fas fa-save"></i> Save</button>
-                    </div>
-
-                    <!-- OBS Connection Settings Card -->
-                    <div class="settings-card">
-                        <div class="settings-title">
-                            <i class="fas fa-network-wired" style="color: var(--accent);"></i> OBS Connection Settings
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">OBS WebSocket Host</label>
-                            <input type="text" id="sett-obs-host-input" class="form-input" placeholder="localhost">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">OBS WebSocket Port</label>
-                            <input type="text" id="sett-obs-port-input" class="form-input" placeholder="4455">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">OBS WebSocket Password</label>
-                            <div style="position: relative;">
-                                <input type="text" id="sett-obs-password-input" class="form-input"
-                                    placeholder="Enter password (leave blank if none)"
-                                    style="padding-right: 40px; width: 100%; -webkit-text-security: disc;">
-                                <button type="button" id="sett-btn-toggle-obs-password"
-                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 5px; font-size: 14px; transition: 0.2s;"
-                                    title="Ẩn/Hiện Mật khẩu">
-                                    <i class="fas fa-eye-slash" id="sett-toggle-obs-password-icon"></i>
-                                </button>
-                            </div>
-                            <div class="form-desc" style="margin-top: 10px;">
-                                Kết nối trực tiếp đến phần mềm OBS của bạn để hiển thị trạng thái phát sóng theo thời
-                                gian thực.<br>
-                                <a href="#" onclick="showObsGuide(event)"
-                                    style="color: var(--accent); text-decoration: underline; font-weight: 600;">Xem
-                                    hướng dẫn kích hoạt &amp; thiết lập OBS WebSocket</a>
-                            </div>
-                        </div>
-
-                        <button id="sett-btn-save-obs" class="btn-save"><i class="fas fa-save"></i> Save</button>
                     </div>
 
                     <!-- Google Sheets Card -->
