@@ -1,34 +1,34 @@
 {
   "room_1": [
     {
-      "id": "save_1779545873337",
-      "name": "Team A vs Team B (21:17, 23-05)",
-      "timestamp": 1779545873354,
+      "id": "save_1779645923369",
+      "name": "Team A vs Team B (01:05, 25-05)",
+      "timestamp": 1779645923431,
       "rosters": {
         "teamA": {
           "round1": {
             "heroes": [
               "Aemeath",
-              "Augusta",
-              "Brant"
+              "Lynae",
+              "Mornye"
             ],
             "heroRcs": [
               "0",
               "0",
-              "0"
+              "1"
             ],
             "weapons": [
-              "",
-              "",
-              ""
+              "Everbright Polestar",
+              "Spectrum Blaster",
+              "Starfield Calibrator"
             ],
             "weaponRs": [
               "1",
               "1",
               "1"
             ],
-            "points": 0,
-            "deduction": 0,
+            "points": 18000,
+            "deduction": 5000,
             "buyPoints": 0
           },
           "round2": {
@@ -160,9 +160,9 @@
         "teamB": {
           "round1": {
             "heroes": [
-              "",
-              "",
-              ""
+              "Cartethyia",
+              "Ciaccona",
+              "Chisa"
             ],
             "heroRcs": [
               "0",
@@ -170,17 +170,17 @@
               "0"
             ],
             "weapons": [
-              "",
-              "",
-              ""
+              "Defier's Thorn",
+              "Woodland Aria",
+              "Kumokiri"
             ],
             "weaponRs": [
               "1",
               "1",
               "1"
             ],
-            "points": 0,
-            "deduction": 0,
+            "points": 12000,
+            "deduction": 3000,
             "buyPoints": 0
           },
           "round2": {
@@ -315,13 +315,13 @@
           "name": "Team A",
           "logo": "",
           "color": "#00aaff",
-          "score": 0
+          "score": 13000
         },
         "teamB": {
           "name": "Team B",
           "logo": "",
           "color": "#ff4444",
-          "score": 0
+          "score": 9000
         },
         "matchTimer": 0
       },
@@ -330,7 +330,10 @@
         "game": "Wuthering Waves",
         "format": "Double Elimination",
         "bracketLabel": "GRAND FINALS — MATRIX CUP 2026"
-      }
+      },
+      "syncedTabs": [
+        "Match History"
+      ]
     }
   ],
   "room_6agh793p": [

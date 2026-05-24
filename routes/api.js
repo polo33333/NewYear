@@ -529,7 +529,8 @@ router.post('/saves/:id/sync-sheets', async (req, res) => {
       timestamp: save.timestamp,
       bracket: save.tournament?.bracketLabel || 'TOURNAMENT MATCH',
       tabName: tabName || 'Match History',
-      players: playersPayload
+      players: playersPayload,
+      characters: allChars.map(c => ({ name: c.name, element: c.element }))
     };
 
     console.log('[SHEETS] Syncing match to Google Sheets via:', settings.googleAppsScriptUrl);
