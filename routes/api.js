@@ -146,6 +146,12 @@ function getSettings(userId) {
     console.error('[API] Error reading users.json for settings:', e.message);
   }
 
+  if (settingsObj) {
+    if (settingsObj.obsHost === undefined) settingsObj.obsHost = 'localhost';
+    if (settingsObj.obsPort === undefined) settingsObj.obsPort = '4455';
+    if (settingsObj.obsPassword === undefined) settingsObj.obsPassword = '';
+  }
+
   return { ...settingsObj, isSync };
 }
 
@@ -256,7 +262,8 @@ router.use((req, res, next) => {
     path.startsWith('/state') ||
     path.startsWith('/save-state') ||
     path.startsWith('/saves') ||
-    path.startsWith('/reset-state')
+    path.startsWith('/reset-state') ||
+    path.startsWith('/obs/stats')
   ) {
     const userId = getUserIdFromRequest(req);
     const token = getTokenFromRequest(req);
@@ -616,6 +623,12 @@ router.post('/settings', (req, res) => {
 
     saveSettings(userId, otherSettings);
 
+    // Update OBS monitor connection if host/port/password was changed
+    if (otherSettings.obsHost !== undefined || otherSettings.obsPort !== undefined || otherSettings.obsPassword !== undefined) {
+      const obsService = require('../services/obsService');
+      obsService.updateMonitorConnection(userId);
+    }
+
     // Lưu isSync vào users.json nếu được truyền lên
     if (isSync !== undefined) {
       const usersPath = path.join(__dirname, '../data/users.json');
@@ -633,6 +646,22 @@ router.post('/settings', (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save settings: ' + err.message });
+  }
+});
+
+// ── OBS WebSocket Stats API ──
+router.get('/obs/stats', (req, res) => {
+  try {
+    const obsService = require('../services/obsService');
+    const wsService = require('../services/wsService');
+    const userId = getUserIdFromRequest(req);
+    const monitor = obsService.getMonitor(userId);
+    const stats = monitor.getStats();
+    // Inject the overlays count for the current room
+    stats.connectedOverlays = wsService.getActiveOverlaysCount(req.roomId);
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve OBS stats: ' + err.message });
   }
 });
 

@@ -50,6 +50,12 @@ function handleMessage(msg) {
   else if (msg.type === 'server_stats') {
     updateSystemStats(msg.data);
   }
+  else if (msg.type === 'obs:stats') {
+    updateOBSStatsUI(msg.data);
+  }
+  else if (msg.type === 'obs:status') {
+    updateOBSStatusUI(msg.data.connected);
+  }
 }
 
 function syncUI() {
@@ -502,6 +508,82 @@ function updateUptime() {
   uptimeVal.textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
 }
 
+function updateOBSStatusUI(connected) {
+  const statusVal = document.getElementById('obs-status-val');
+  if (!statusVal) return;
+  if (!connected) {
+    statusVal.textContent = '⚪ DISCONNECTED';
+    statusVal.style.color = '#888888';
+    
+    // Reset other fields on connection drop
+    const uptimeVal = document.getElementById('obs-uptime-val');
+    if (uptimeVal) uptimeVal.textContent = '⏱️ 00:00:00';
+    const bitrateVal = document.getElementById('obs-bitrate-val');
+    if (bitrateVal) {
+      bitrateVal.textContent = '📡 0 kbps';
+      bitrateVal.style.color = '#ff4444';
+    }
+    const droppedVal = document.getElementById('obs-dropped-val');
+    if (droppedVal) {
+      droppedVal.textContent = '🎞️ 0 frames (0.0%)';
+      droppedVal.style.color = '#00ff88';
+    }
+  }
+}
+
+function updateOBSStatsUI(stats) {
+  if (!stats) return;
+  
+  const statusVal = document.getElementById('obs-status-val');
+  if (statusVal) {
+    if (!stats.connected) {
+      statusVal.textContent = '⚪ DISCONNECTED';
+      statusVal.style.color = '#888888';
+    } else if (stats.streaming) {
+      statusVal.textContent = '🟢 STREAMING';
+      statusVal.style.color = '#00ff88';
+    } else if (stats.recording) {
+      statusVal.textContent = '🟡 RECORDING';
+      statusVal.style.color = '#ffd700';
+    } else {
+      statusVal.textContent = '🔴 OFFLINE';
+      statusVal.style.color = '#ff4444';
+    }
+  }
+
+  const uptimeVal = document.getElementById('obs-uptime-val');
+  if (uptimeVal) {
+    uptimeVal.textContent = `⏱️ ${stats.uptime || '00:00:00'}`;
+  }
+
+  const bitrateVal = document.getElementById('obs-bitrate-val');
+  if (bitrateVal) {
+    const kbps = stats.bitrate || 0;
+    bitrateVal.textContent = `📡 ${kbps.toLocaleString()} kbps`;
+    if (kbps > 5000) {
+      bitrateVal.style.color = '#00ff88';
+    } else if (kbps >= 2000) {
+      bitrateVal.style.color = '#ffd700';
+    } else {
+      bitrateVal.style.color = '#ff4444';
+    }
+  }
+
+  const droppedVal = document.getElementById('obs-dropped-val');
+  if (droppedVal) {
+    const count = stats.droppedFrames || 0;
+    const pct = parseFloat(stats.droppedFramesPct || 0);
+    droppedVal.textContent = `🎞️ ${count.toLocaleString()} frames (${pct.toFixed(1)}%)`;
+    if (pct === 0) {
+      droppedVal.style.color = '#00ff88';
+    } else if (pct <= 1.0) {
+      droppedVal.style.color = '#ffd700';
+    } else {
+      droppedVal.style.color = '#ff4444';
+    }
+  }
+}
+
 function addPingToChart(ping) {
   pingHistory.push(ping);
   if (pingHistory.length > maxPingPoints) {
@@ -642,6 +724,19 @@ fetch('/api/state')
     console.error('[API] Error fetching initial state:', err);
   })
   .finally(() => {
+    // Fetch initial OBS stats
+    fetch('/api/obs/stats')
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP status ' + res.status);
+        return res.json();
+      })
+      .then(obsStats => {
+        updateOBSStatsUI(obsStats);
+      })
+      .catch(err => {
+        console.error('[API] Error fetching initial OBS stats:', err);
+      });
+
     // Connect WebSocket for real-time updates after initial load
     connect();
     resizePreview();

@@ -5,6 +5,8 @@
  * Control panel: http://localhost:3000
  */
 
+require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -65,6 +67,10 @@ const stateService = require('./services/stateService');
 // Initialize services
 wsService.init(server, state.states, stateService.handleWSMessage);
 stateService.init();
+
+// ── OBS Monitor Service ──
+const obsService = require('./services/obsService');
+obsService.initAll();
 
 // ── Router Modules ──
 const apiRouter = require('./routes/api');

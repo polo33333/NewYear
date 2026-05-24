@@ -33,6 +33,23 @@
         });
     }
 
+    // Toggle OBS Password visibility
+    const obsPasswordInput = document.getElementById('sett-obs-password-input');
+    const toggleObsPasswordBtn = document.getElementById('sett-btn-toggle-obs-password');
+    const toggleObsPasswordIcon = document.getElementById('sett-toggle-obs-password-icon');
+
+    if (toggleObsPasswordBtn && obsPasswordInput && toggleObsPasswordIcon) {
+        toggleObsPasswordBtn.addEventListener('click', () => {
+            if (obsPasswordInput.style.webkitTextSecurity === 'none') {
+                obsPasswordInput.style.webkitTextSecurity = 'disc';
+                toggleObsPasswordIcon.className = 'fas fa-eye-slash';
+            } else {
+                obsPasswordInput.style.webkitTextSecurity = 'none';
+                toggleObsPasswordIcon.className = 'fas fa-eye';
+            }
+        });
+    }
+
     // Toggle Multi-Device Sync switch
     const syncSwitch = document.getElementById('sett-is-sync-switch');
     if (syncSwitch) {
@@ -63,11 +80,24 @@
             if (data) {
                 const tokenInp = document.getElementById('sett-token-input');
                 const sheetInp = document.getElementById('sett-apps-script-url-input');
+                const hostInp = document.getElementById('sett-obs-host-input');
+                const portInp = document.getElementById('sett-obs-port-input');
+                const passInp = document.getElementById('sett-obs-password-input');
+                
                 if (data.obsToken && tokenInp) {
                     tokenInp.value = data.obsToken;
                 }
                 if (data.googleAppsScriptUrl && sheetInp) {
                     sheetInp.value = data.googleAppsScriptUrl;
+                }
+                if (hostInp) {
+                    hostInp.value = data.obsHost || '';
+                }
+                if (portInp) {
+                    portInp.value = data.obsPort || '';
+                }
+                if (passInp) {
+                    passInp.value = data.obsPassword || '';
                 }
                 
                 // Hiển thị trạng thái isSync
@@ -111,6 +141,48 @@
                     showToast('Lưu mã OBS Security Token & Chế độ đồng bộ thành công!', 'success');
                 } else {
                     showToast('Lỗi lưu OBS Token!', 'error');
+                }
+            } catch (e) {
+                showToast('Lỗi kết nối máy chủ: ' + e.message, 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = oldHtml;
+        });
+    }
+
+    // Save OBS WebSocket connection settings to backend
+    const saveObsBtn = document.getElementById('sett-btn-save-obs');
+    if (saveObsBtn) {
+        saveObsBtn.addEventListener('click', async () => {
+            const hostInp = document.getElementById('sett-obs-host-input');
+            const portInp = document.getElementById('sett-obs-port-input');
+            const passInp = document.getElementById('sett-obs-password-input');
+            
+            const obsHost = hostInp ? hostInp.value.trim() : 'localhost';
+            const obsPort = portInp ? portInp.value.trim() : '4455';
+            const obsPassword = passInp ? passInp.value : '';
+
+            const btn = document.getElementById('sett-btn-save-obs');
+            btn.disabled = true;
+            const oldHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const res = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        obsHost, 
+                        obsPort, 
+                        obsPassword 
+                    })
+                });
+
+                if (res.ok) {
+                    showToast('Lưu thông tin cấu hình kết nối OBS thành công!', 'success');
+                } else {
+                    showToast('Lỗi lưu cấu hình kết nối OBS!', 'error');
                 }
             } catch (e) {
                 showToast('Lỗi kết nối máy chủ: ' + e.message, 'error');
@@ -331,6 +403,58 @@ function mergeStyle(sheet, r1,c1, r2,c2, value, bg, fg, bold, align) {
                     <li>Copy lấy đường dẫn <b>URL ứng dụng web (Web app URL)</b> hiển thị ở cuối bảng.</li>
                     <li>Dán đường dẫn URL vừa copy vào ô <b>Google Apps Script Web App URL</b> trên trang Cài đặt (Settings) của MATRIX HUB và nhấn Lưu!</li>
                 </ol>
+            </body>
+            </html>
+        `);
+        popup.document.close();
+    };
+
+    // Show OBS WebSocket settings guide
+    window.showObsGuide = function (e) {
+        if (e) e.preventDefault();
+        const popup = window.open("", "ObsGuide", "width=800,height=600,scrollbars=yes");
+        popup.document.write(`
+            <html>
+            <head>
+                <title>OBS WebSocket Settings Guide - KDSTREAM</title>
+                <style>
+                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0d14; color: #e2e8f0; padding: 32px; line-height: 1.6; }
+                    h2 { color: #00f5ff; font-family: 'Outfit', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 0; }
+                    code { font-family: monospace; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #00f5ff; }
+                    li { margin-bottom: 12px; }
+                    ul { margin-top: 6px; }
+                    .note { background: rgba(245, 158, 11, 0.08); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 4px; margin-top: 15px; font-size: 14px; }
+                </style>
+            </head>
+            <body>
+                <h2>Hướng Dẫn Kích Hoạt & Thiết Lập OBS WebSocket</h2>
+                <p>Để Control Panel có thể lấy các thông số trực tiếp từ OBS (trạng thái stream, uptime, bitrate, dropped frames), bạn cần kích hoạt máy chủ WebSocket trên phần mềm OBS Studio của mình:</p>
+                
+                <ol>
+                    <li>Mở phần mềm <b>OBS Studio</b> (yêu cầu phiên bản v28.0 trở lên).</li>
+                    <li>Trên thanh menu trên cùng, chọn <b>Công cụ (Tools)</b> > <b>Cài đặt máy chủ WebSocket (WebSocket Server Settings)</b>.</li>
+                    <li>Cấu hình trong bảng hiện ra:
+                        <ul>
+                            <li>Tích chọn <b>Bật máy chủ WebSocket (Enable WebSocket Server)</b>.</li>
+                            <li>Ghi nhớ hoặc đổi <b>Cổng máy chủ (Server Port)</b> (mặc định là <code>4455</code>).</li>
+                            <li>Tích chọn <b>Bật xác thực (Enable Authentication)</b>.</li>
+                            <li>Click vào nút <b>Tạo mật khẩu (Generate Password)</b> hoặc tự nhập mật khẩu riêng của bạn vào mục <b>Mật khẩu máy chủ (Server Password)</b>.</li>
+                        </ul>
+                    </li>
+                    <li>Click <b>Áp dụng (Apply)</b> và <b>Đồng ý (OK)</b> để lưu lại cấu hình trong OBS.</li>
+                    <li>Quay trở lại trang Cài đặt (Settings) của MATRIX HUD và nhập các thông số bạn vừa thiết lập:
+                        <ul>
+                            <li><b>OBS WebSocket Host:</b> Nhập <code>localhost</code> nếu chạy OBS trên cùng máy tính chạy Server Node.js, hoặc nhập địa chỉ IP mạng nội bộ của máy chạy OBS.</li>
+                            <li><b>OBS WebSocket Port:</b> Nhập cổng bạn đã ghi nhớ (mặc định <code>4455</code>).</li>
+                            <li><b>OBS WebSocket Password:</b> Nhập mật khẩu máy chủ bạn đã lấy trong OBS.</li>
+                        </ul>
+                    </li>
+                    <li>Nhấn nút <b>Lưu (Save)</b> ở thẻ cấu hình OBS trong Control Panel để lưu lại cài đặt. Hệ thống sẽ tự động kết nối lại tới OBS trong vài giây!</li>
+                </ol>
+
+                <div class="note">
+                    📌 <b>Lưu ý quan trọng:</b> Hãy chắc chắn phần mềm OBS của bạn đang hoạt động và không bị tường lửa (Firewall) chặn cổng <code>4455</code> nếu kết nối từ các máy tính khác nhau trong mạng LAN.
+                </div>
             </body>
             </html>
         `);
