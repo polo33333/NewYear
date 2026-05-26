@@ -42,38 +42,30 @@ function syncUI() {
 
 function updateScore(score) {
   const sa = score.teamA.score, sb = score.teamB.score;
-  document.getElementById('scoreA').textContent = sa;
-  document.getElementById('scoreB').textContent = sb;
-  document.getElementById('nameA').textContent = score.teamA.name;
-  document.getElementById('nameB').textContent = score.teamB.name;
+  const scoreAEl = document.getElementById('scoreA');
+  const scoreBEl = document.getElementById('scoreB');
+  if (scoreAEl) scoreAEl.textContent = sa;
+  if (scoreBEl) scoreBEl.textContent = sb;
+
+  const nameAEl = document.getElementById('nameA');
+  const nameBEl = document.getElementById('nameB');
+  if (nameAEl) nameAEl.textContent = score.teamA.name;
+  if (nameBEl) nameBEl.textContent = score.teamB.name;
+
   if (document.getElementById('bName1')) document.getElementById('bName1').textContent = score.teamA.name;
   if (document.getElementById('bName2')) document.getElementById('bName2').textContent = score.teamB.name;
 
-  const colorA = score.teamA.color || '#00aaff';
-  const colorB = score.teamB.color || '#ff4444';
+  const colorA = score.teamA.color || '#10b981';
+  const colorB = score.teamB.color || '#ef4444';
 
-  document.getElementById('nameA').parentElement.parentElement.style.setProperty('--color', colorA);
-  document.getElementById('nameB').parentElement.parentElement.style.setProperty('--color', colorB);
+  const scoreboard = document.getElementById('scoreboard');
+  if (scoreboard) {
+    scoreboard.style.setProperty('--color-left', colorA);
+    scoreboard.style.setProperty('--color-right', colorB);
+  }
+
   if (document.getElementById('bName1')) document.getElementById('bName1').style.setProperty('--color', colorA);
   if (document.getElementById('bName2')) document.getElementById('bName2').style.setProperty('--color', colorB);
-
-  const diff = sa - sb, da = document.getElementById('scoreDiffA'), db = document.getElementById('scoreDiffB');
-  if (da && db) {
-    // Reset both
-    da.textContent = '';
-    db.textContent = '';
-
-    if (diff > 0) {
-      // Team A leading (Blue)
-      da.textContent = `+${diff}`;
-      //da.style.backgroundColor = colorA;
-    }
-    else if (diff < 0) {
-      // Team B leading (Red)
-      db.textContent = `+${Math.abs(diff)}`;
-      //db.style.backgroundColor = colorB;
-    }
-  }
 }
 
 function updateOverlays(overlays) {
@@ -133,11 +125,47 @@ function updateRosters(data) {
   const rnb = document.getElementById('rosterNameB');
   if (rna) {
     rna.textContent = state.score.teamA.name;
-    rna.style.setProperty('--color', state.score.teamA.color || '#00aaff');
   }
   if (rnb) {
     rnb.textContent = state.score.teamB.name;
-    rnb.style.setProperty('--color', state.score.teamB.color || '#ff4444');
+  }
+
+  // ── Calculate Scoreboard Net Points ──
+  let netA = 0, netB = 0;
+  if (data.teamA) {
+    for (let r = 1; r <= 6; r++) {
+      const rd = data.teamA['round' + r] || { points: 0, deduction: 0, buyPoints: 0 };
+      netA += (rd.points || 0) - (rd.deduction || 0) - (rd.buyPoints || 0);
+    }
+  }
+  if (data.teamB) {
+    for (let r = 1; r <= 6; r++) {
+      const rd = data.teamB['round' + r] || { points: 0, deduction: 0, buyPoints: 0 };
+      netB += (rd.points || 0) - (rd.deduction || 0) - (rd.buyPoints || 0);
+    }
+  }
+
+  const formatNumber = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+  // Set widths
+  const maxPoints = Math.max(30000, netA, netB);
+  const fillA = document.getElementById('progressFillA');
+  const fillB = document.getElementById('progressFillB');
+  if (fillA) fillA.style.width = `${(netA / maxPoints) * 100}%`;
+  if (fillB) fillB.style.width = `${(netB / maxPoints) * 100}%`;
+
+  // Calculate and update point difference inside the transparent containers
+  const diff = netA - netB;
+  const netAEl = document.getElementById('netPointsA');
+  const netBEl = document.getElementById('netPointsB');
+  if (netAEl && netBEl) {
+    netAEl.textContent = '';
+    netBEl.textContent = '';
+    if (diff > 0) {
+      netAEl.textContent = `+${formatNumber(diff)}`;
+    } else if (diff < 0) {
+      netBEl.textContent = `+${formatNumber(Math.abs(diff))}`;
+    }
   }
 
   updateStatsScene(data);

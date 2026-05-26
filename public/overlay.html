@@ -16,28 +16,50 @@
   <div id="scene-overlay"></div>
 
   <div id="scoreboard" class="hidden">
-    <div class="sb-main-bar">
-      <div class="sb-team left" id="teamA">
-        <div class="sb-info">
-          <div class="sb-name" id="nameA">DRAGONS</div>
-          <div class="sb-label">TEAM</div>
+    <div class="sb-container">
+      
+      <!-- TEAM A (LEFT - GREEN) -->
+      <div class="sb-side left" id="teamA">
+        <div class="sb-bar-row">
+          <!-- Progress bar container -->
+          <div class="sb-progress-container">
+            <!-- Team Name inside -->
+            <span class="sb-team-name" id="nameA">DRAGONS</span>
+            <div class="sb-progress-bar">
+              <div class="sb-progress-fill" id="progressFillA"></div>
+            </div>
+            <!-- Net points difference value inside container -->
+            <span class="sb-net-points" id="netPointsA"></span>
+          </div>
+          
+          <!-- Score Badge Chevron -->
+          <div class="sb-badge-chevron" id="badgeA">
+            <span class="sb-score-val" id="scoreA">0</span>
+          </div>
         </div>
-        <div class="sb-diff" id="scoreDiffA"></div>
       </div>
-      <div class="sb-center">
-        <div class="sb-scores">
-          <span class="sb-score-a" id="scoreA">0</span>
-          <span class="sb-sep">:</span>
-          <span class="sb-score-b" id="scoreB">0</span>
+      
+      <!-- TEAM B (RIGHT - RED) -->
+      <div class="sb-side right" id="teamB">
+        <div class="sb-bar-row">
+          <!-- Score Badge Chevron -->
+          <div class="sb-badge-chevron" id="badgeB">
+            <span class="sb-score-val" id="scoreB">0</span>
+          </div>
+          
+          <!-- Progress bar container -->
+          <div class="sb-progress-container">
+            <!-- Net points difference value inside container -->
+            <span class="sb-net-points" id="netPointsB"></span>
+            <div class="sb-progress-bar">
+              <div class="sb-progress-fill" id="progressFillB"></div>
+            </div>
+            <!-- Team Name inside -->
+            <span class="sb-team-name" id="nameB">PHANTOMS</span>
+          </div>
         </div>
       </div>
-      <div class="sb-team right" id="teamB">
-        <div class="sb-info">
-          <div class="sb-name" id="nameB">PHANTOMS</div>
-          <div class="sb-label">TEAM</div>
-        </div>
-        <div class="sb-diff" id="scoreDiffB"></div>
-      </div>
+      
     </div>
   </div>
 

@@ -24,51 +24,13 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   font-family: 'Outfit', sans-serif;
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.9));
   transition: opacity 0.4s, transform 0.4s;
-  gap: 0;
   z-index: 100;
-}
-
-.sb-main-bar {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  background: rgba(4, 8, 20, 0.95);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.05);
-}
-
-/* Sweep effect for scoreboard */
-.sb-main-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  animation: sb-sweep 6s infinite;
-  pointer-events: none;
-}
-
-@keyframes sb-sweep {
-  0% {
-    left: -100%;
-  }
-
-  20% {
-    left: 100%;
-  }
-
-  100% {
-    left: 100%;
-  }
+  width: 95%;
+  /* max-width: 1240px; */
 }
 
 #scoreboard.hidden {
@@ -77,129 +39,195 @@ body {
   pointer-events: none;
 }
 
-.sb-team {
-  backdrop-filter: blur(12px);
-  padding: 8px 25px;
+.sb-container {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  width: 260px;
-  position: relative;
-  flex-shrink: 0;
+  justify-content: space-between;
+  width: 100%;
+  gap: 24px;
 }
 
-.sb-team.left {
-  background: linear-gradient(90deg, var(--color, #00aaff) 0%, var(--color, #00aaff) 5px, rgba(0, 170, 255, 0.05) 5px, transparent 100%);
-}
-
-.sb-team.right {
-  flex-direction: row-reverse;
-  background: linear-gradient(-90deg, var(--color, #ff4444) 0%, var(--color, #ff4444) 5px, rgba(255, 68, 68, 0.05) 5px, transparent 100%);
-}
-
-.sb-name {
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fff;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 140px;
-}
-
-.sb-label {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 1px;
-}
-
-.sb-center {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 5px 15px;
+.sb-side {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  min-width: 240px;
   flex: 1;
-  position: relative;
+  max-width: 580px;
 }
 
-.sb-scores {
+.sb-side.left {
+  align-items: flex-end;
+}
+
+.sb-side.right {
+  align-items: flex-start;
+}
+
+/* Team Name styling inside container */
+.sb-team-name {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.sb-side.left .sb-team-name {
+  color: var(--color-left, #10b981);
+
+}
+
+.sb-side.right .sb-team-name {
+  color: var(--color-right, #ef4444);
+}
+
+/* Bar Row containing Diff, Progress Bar, Chevron Badge */
+.sb-bar-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+}
+
+/* Chevron Badges */
+.sb-badge-chevron {
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  font-size: 28px;
-  font-weight: 900;
-  line-height: 1;
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  gap: 5px;
-}
-
-.sb-score-a,
-.sb-score-b {
-  flex: 1;
-  text-align: center;
-  font-family: 'Outfit', sans-serif;
-}
-
-.sb-score-a {
-  color: #00f5ff;
-  text-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
-}
-
-.sb-score-b {
-  color: #ff003c;
-  text-shadow: 0 0 15px rgba(255, 0, 60, 0.4);
-}
-
-.sb-sep {
   color: #fff;
   font-size: 20px;
-  opacity: 0.5;
-  margin: 0 5px;
-}
-
-.sb-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.sb-diff {
-  display: none;
-  font-size: 12px;
   font-weight: 900;
-  color: #fff !important;
-  /* background: var(--color, #00f5ff); */
-  padding: 2px 10px;
-  border-radius: 4px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  animation: diff-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 10;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  min-width: 48px;
+  width: auto;
 }
 
+.sb-side.left .sb-badge-chevron {
+  background: var(--color-left, #10b981);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+  padding-left: 10px;
+  padding-right: 20px;
+}
 
+.sb-side.right .sb-badge-chevron {
+  background: var(--color-right, #ef4444);
+  clip-path: polygon(12px 0, 100% 0, 100% 100%, 12px 100%, 0 50%);
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+.sb-score-val {
+  font-family: 'Outfit', sans-serif;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+/* Progress bar container (transparent & symmetric) */
+.sb-progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 4px 14px;
+  flex: 1;
+  position: relative;
+  height: 46px;
+  backdrop-filter: blur(10px);
+}
+
+.sb-side.left .sb-progress-container {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+
+.sb-side.right .sb-progress-container {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: none;
+}
+
+/* Dynamic progress bar background and notches */
+.sb-progress-bar {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  z-index: 1;
+  left: 4px;
+  right: 4px;
+}
+
+.sb-progress-fill {
+  height: 100%;
+  transition: width 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.sb-side.left .sb-progress-fill {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, var(--color-left, #10b981) 100%);
+  mask-image: repeating-linear-gradient(90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  -webkit-mask-image: repeating-linear-gradient(90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  float: right;
+  width: 0%;
+}
+
+.sb-side.right .sb-progress-fill {
+  background: linear-gradient(-90deg, rgba(239, 68, 68, 0.1) 0%, var(--color-right, #ef4444) 100%);
+  mask-image: repeating-linear-gradient(-90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  -webkit-mask-image: repeating-linear-gradient(-90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  float: left;
+  width: 0%;
+}
+
+/* Net points text styling */
+.sb-net-points {
+  font-size: 20px;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  color: #ffffff;
+  z-index: 5;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.5px;
+}
+
+/* Diff values */
+.sb-diff {
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+  animation: diff-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-width: 45px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.3s ease;
+}
+
+.sb-side.left .sb-diff {
+  text-align: right;
+}
+
+.sb-side.right .sb-diff {
+  text-align: left;
+}
 
 @keyframes diff-pop {
   0% {
-    transform: scale(0);
+    transform: scale(0.6);
+    opacity: 0;
   }
 
   100% {
     transform: scale(1);
+    opacity: 1;
   }
 }
 
-.sb-diff:not(:empty) {
-  display: block;
-}
+
 
 
 /* ── TICKER ── bottom (nâng lên 10px cho an toàn) */
