@@ -62,6 +62,8 @@ function updateScore(score) {
   if (scoreboard) {
     scoreboard.style.setProperty('--color-left', colorA);
     scoreboard.style.setProperty('--color-right', colorB);
+    scoreboard.style.setProperty('--color-left-faint', colorA + '26'); // 15% opacity hex
+    scoreboard.style.setProperty('--color-right-faint', colorB + '26'); // 15% opacity hex
   }
 
   if (document.getElementById('bName1')) document.getElementById('bName1').style.setProperty('--color', colorA);
@@ -147,12 +149,21 @@ function updateRosters(data) {
 
   const formatNumber = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
-  // Set widths
-  const maxPoints = Math.max(30000, netA, netB);
+  // Set widths based on comparison (tied = both 100%, otherwise leading is 100% and trailing is proportional)
   const fillA = document.getElementById('progressFillA');
   const fillB = document.getElementById('progressFillB');
-  if (fillA) fillA.style.width = `${(netA / maxPoints) * 100}%`;
-  if (fillB) fillB.style.width = `${(netB / maxPoints) * 100}%`;
+  if (fillA && fillB) {
+    if (netA === netB) {
+      fillA.style.width = '100%';
+      fillB.style.width = '100%';
+    } else if (netA > netB) {
+      fillA.style.width = '100%';
+      fillB.style.width = netA === 0 ? '0%' : `${(netB / netA) * 100}%`;
+    } else {
+      fillB.style.width = '100%';
+      fillA.style.width = netB === 0 ? '0%' : `${(netA / netB) * 100}%`;
+    }
+  }
 
   // Calculate and update point difference inside the transparent containers
   const diff = netA - netB;

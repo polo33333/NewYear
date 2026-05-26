@@ -50,7 +50,7 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-width: 580px;
+  max-width: 480px;
 }
 
 .sb-side.left {
@@ -73,11 +73,12 @@ body {
 
 .sb-side.left .sb-team-name {
   color: var(--color-left, #10b981);
-
+  margin-right: auto;
 }
 
 .sb-side.right .sb-team-name {
   color: var(--color-right, #ef4444);
+  margin-left: auto;
 }
 
 /* Bar Row containing Diff, Progress Bar, Chevron Badge */
@@ -124,44 +125,45 @@ body {
   white-space: nowrap;
 }
 
-/* Progress bar container (transparent & symmetric) */
+/* Progress bar container (transparent flex layout - no borders) */
 .sb-progress-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-direction: row;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  padding: 4px 14px;
+  border: none;
   flex: 1;
   position: relative;
   height: 46px;
-  backdrop-filter: blur(10px);
+  gap: 16px;
 }
 
 .sb-side.left .sb-progress-container {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-right: none;
+  justify-content: flex-end;
 }
 
 .sb-side.right .sb-progress-container {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-left: none;
+  justify-content: flex-start;
 }
 
-/* Dynamic progress bar background and notches */
+/* Dynamic progress bar background and notches as a flex element in the middle (18.75% width) */
 .sb-progress-bar {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
+  flex: 0 0 45%;
+  height: 36px;
+  position: relative;
   border-radius: 2px;
   overflow: hidden;
   z-index: 1;
-  left: 4px;
-  right: 4px;
+  mask-image: repeating-linear-gradient(90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  -webkit-mask-image: repeating-linear-gradient(90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+}
+
+.sb-side.left .sb-progress-bar {
+  background: var(--color-left-faint, rgba(16, 185, 129, 0.15));
+}
+
+.sb-side.right .sb-progress-bar {
+  background: var(--color-right-faint, rgba(239, 68, 68, 0.15));
 }
 
 .sb-progress-fill {
@@ -170,23 +172,22 @@ body {
 }
 
 .sb-side.left .sb-progress-fill {
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, var(--color-left, #10b981) 100%);
-  mask-image: repeating-linear-gradient(90deg, black 0px, black 5px, transparent 5px, transparent 7px);
-  -webkit-mask-image: repeating-linear-gradient(90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.1) 0%, var(--color-left, #10b981) 100%);
   float: right;
   width: 0%;
 }
 
 .sb-side.right .sb-progress-fill {
-  background: linear-gradient(-90deg, rgba(239, 68, 68, 0.1) 0%, var(--color-right, #ef4444) 100%);
-  mask-image: repeating-linear-gradient(-90deg, black 0px, black 5px, transparent 5px, transparent 7px);
-  -webkit-mask-image: repeating-linear-gradient(-90deg, black 0px, black 5px, transparent 5px, transparent 7px);
+  background: linear-gradient(to left, rgba(239, 68, 68, 0.1) 0%, var(--color-right, #ef4444) 100%);
   float: left;
   width: 0%;
 }
 
-/* Net points text styling */
+/* Net points text styling (floating on top of the progress bar, outside mask) */
 .sb-net-points {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 20px;
   font-weight: 900;
   font-family: 'Outfit', sans-serif;
@@ -194,6 +195,15 @@ body {
   z-index: 5;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
   letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+.sb-side.left .sb-net-points {
+  right: 16px;
+}
+
+.sb-side.right .sb-net-points {
+  left: 16px;
 }
 
 /* Diff values */
