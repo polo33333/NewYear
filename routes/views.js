@@ -96,6 +96,9 @@ router.get('/weapon-editor', (req, res) => res.sendFile(path.join(__dirname, '..
 router.get('/history', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
 router.get('/settings', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
 
+// Public bracket viewer
+router.get('/bracket-view', (req, res) => res.sendFile(path.join(__dirname, '../public/bracket-view.html')));
+
 // Standalone music player (kept for legacy support)
 router.get('/music-player', (req, res) => res.sendFile(path.join(__dirname, '../public/music-player.html')));
 

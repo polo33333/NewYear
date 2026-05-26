@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/character-editor.css">
     <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/history.css">
+    <link rel="stylesheet" href="css/history.css?v=5">
     <script src="js/auth.js"></script>
 </head>
 
@@ -60,19 +60,95 @@
                 </div>
             </header>
 
-            <div id="char-editor-container">
-                <div class="controls" style="margin-bottom: 24px;">
-                    <div class="search-box" style="max-width: 400px; flex: unset;">
-                        <input type="text" id="hist-search-input"
-                            placeholder="Tìm kiếm trận đấu (tên đội, giải đấu)...">
+            <!-- Sub Tabs Navigation -->
+            <div class="history-subtabs-nav" style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px;">
+                <button class="subtab-btn active" id="btn-subtab-list" onclick="switchHistorySubTab('list')" style="font-size: 11px; padding: 6px 16px; border-radius: 6px; letter-spacing: 0.5px;">
+                    <i class="fas fa-list" style="margin-right: 6px;"></i> LỊCH SỬ TRẬN ĐẤU
+                </button>
+                <button class="subtab-btn" id="btn-subtab-bracket" onclick="switchHistorySubTab('bracket')" style="font-size: 11px; padding: 6px 16px; border-radius: 6px; letter-spacing: 0.5px;">
+                    <i class="fas fa-sitemap" style="margin-right: 6px;"></i> THIẾT KẾ SƠ ĐỒ GIẢI ĐẤU
+                </button>
+            </div>
+
+            <!-- SUB-TAB 1: MATCH HISTORY LIST -->
+            <div id="history-list-view" class="history-subtab-content">
+                <div id="char-editor-container" style="padding: 0;">
+                    <div class="controls" style="margin-bottom: 24px;">
+                        <div class="search-box" style="max-width: 400px; flex: unset;">
+                            <input type="text" id="hist-search-input"
+                                placeholder="Tìm kiếm trận đấu (tên đội, giải đấu)...">
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-label">Sắp xếp:</span>
+                            <select id="hist-sort-order" style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 16px; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: all 0.2s; cursor: pointer;">
+                                <option value="desc">Mới nhất (Mới &rarr; Cũ)</option>
+                                <option value="asc">Cũ nhất (Cũ &rarr; Mới)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="history-grid" id="hist-grid">
+                        <!-- Loading State -->
+                        <div class="history-empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Đang tải danh sách lịch sử trận đấu...</p>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="history-grid" id="hist-grid">
-                    <!-- Loading State -->
-                    <div class="history-empty-state">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Đang tải danh sách lịch sử trận đấu...</p>
+            <!-- SUB-TAB 2: TOURNAMENT BRACKET DESIGNER -->
+            <div id="history-bracket-view" class="history-subtab-content" style="display: none; flex: 1; flex-direction: column; overflow: hidden; height: calc(100vh - 170px); position: relative; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; background: rgba(8, 12, 28, 0.4);">
+                <div class="bracket-designer-layout" style="display: flex; flex: 1; height: 100%; overflow: hidden; width: 100%;">
+                    
+                    <!-- Left Sidebar: Saved Matches & Seeds -->
+                    <!-- Right Main Area: Workspace Canvas (Now full width with top toolbar) -->
+                    <div class="bracket-designer-workspace" id="bracket-workspace" style="flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; background: #040814;">
+                        
+                        <!-- Canvas Viewport -->
+                        <div class="bracket-canvas-viewport" id="bracket-canvas-viewport" style="flex: 1; width: 100%; height: 100%; overflow: hidden; position: relative; cursor: grab;">
+                            
+                            <!-- Pannable/Zoomable Canvas -->
+                            <div class="bracket-canvas grid-bg" id="bracket-canvas" style="position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; transform-origin: 0 0; pointer-events: auto;">
+                                
+                                <!-- SVG Connections Overlay -->
+                                <svg class="bracket-svg-layer" id="bracket-svg-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2;"></svg>
+                                
+                                <!-- Nodes Container -->
+                                <div class="bracket-nodes-container" id="bracket-nodes-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                                
+                            </div>
+                        </div>
+
+                        <!-- Canvas Zoom/Pan & Controls HUD -->
+                        <div class="canvas-controls-hud" id="bracket-hud" style="position: absolute; bottom: 20px; right: 20px; z-index: 100; display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 12px; backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                            <!-- Toggle Button -->
+                            <button onclick="toggleHudCollapse()" id="btn-hud-toggle" title="Mở rộng / Thu gọn thanh công cụ" style="padding: 6px 10px; font-size: 11px; display: flex; align-items: center; justify-content: center; background: rgba(0, 245, 255, 0.08); border-color: rgba(0, 245, 255, 0.15); color: var(--accent); transition: transform 0.2s;"><i class="fas fa-chevron-right" id="hud-toggle-icon"></i></button>
+
+                            <!-- Content Wrapper -->
+                            <div id="hud-content-wrapper" style="display: flex; align-items: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: right center;">
+                                <!-- Node Creation Tools -->
+                                <button onclick="addMatchNode()" title="Thêm Cặp Trận" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-gamepad"></i></button>
+                                <button onclick="addSeedNode()" title="Thêm Ô Tên Đội (Seed)" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-user-plus"></i></button>
+                                <button onclick="addRegionNode()" title="Thêm Vùng Nền" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-vector-square"></i></button>
+                                
+                                <span class="hud-divider" style="width: 1px; height: 16px; background: rgba(255,255,255,0.15); margin: 0 4px;"></span>
+
+                                <!-- Canvas Controls -->
+                                <button onclick="zoomBracket(0.1)" title="Zoom In" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-plus"></i></button>
+                                <button onclick="zoomBracket(-0.1)" title="Zoom Out" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-minus"></i></button>
+                                <button onclick="resetBracketView()" title="Reset View" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-expand"></i></button>
+                                <button onclick="toggleBracketGrid()" id="btn-toggle-grid" title="Bật/Tắt lưới" class="active" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-border-all"></i></button>
+                                
+                                <span class="hud-divider" style="width: 1px; height: 16px; background: rgba(255,255,255,0.15); margin: 0 4px;"></span>
+                                
+                                <!-- Save/Reset Actions -->
+                                <button onclick="saveBracketConfig()" class="btn-save-bracket" style="background: var(--success); color: #0b0d14; border-color: var(--success); padding: 6px 14px; font-size: 11px; font-weight: 700;"><i class="fas fa-save" style="margin-right: 4px;"></i> LƯU SƠ ĐỒ</button>
+                                <button onclick="copyPublicBracketLink()" class="btn-share-bracket" style="background: rgba(0, 245, 255, 0.15); border-color: rgba(0, 245, 255, 0.4); color: var(--accent); padding: 6px 14px; font-size: 11px; font-weight: 700; margin-left: 2px;"><i class="fas fa-share-alt" style="margin-right: 4px;"></i> CHIA SẺ</button>
+                                <button onclick="clearBracketConfig()" class="btn-clear-bracket" style="background: transparent; border-color: var(--danger); color: var(--danger); padding: 6px 14px; font-size: 11px; font-weight: 700;"><i class="fas fa-trash" style="margin-right: 4px;"></i> XÓA HẾT</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -131,11 +207,46 @@
                 </div>
             </div>
 
+            <!-- Bracket Match Selector Modal -->
+            <div id="bracket-select-modal" class="modal-overlay" style="display: none; z-index: 100000;">
+                <div class="modal-content"
+                    style="width: 600px; max-width: 90vw; background: #0f172a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: flex; flex-direction: column;">
+                    <div class="modal-header"
+                        style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="modal-title"
+                            style="font-family: 'Outfit', sans-serif; font-weight: 700; color: #fff; margin: 0; font-size: 16px;">
+                            Chọn Trận Đấu Từ Lịch Sử
+                        </h3>
+                        <button class="modal-close" onclick="closeBracketSelectModal()"
+                            style="background: none; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; transition: 0.2s;">&times;</button>
+                    </div>
+
+                    <div class="modal-body custom-scroll"
+                        style="padding: 20px; overflow-y: auto; max-height: 60vh; display: flex; flex-direction: column; gap: 12px;">
+                        <div class="search-box" style="width: 100%; margin-bottom: 8px;">
+                            <input type="text" id="bracket-modal-search" oninput="filterBracketSelectModalMatches()"
+                                placeholder="Tìm kiếm trận đấu (tên đội, giải đấu)..." style="width: 100%;">
+                        </div>
+                        <div id="bracket-modal-matches-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <!-- Populated dynamically in JS -->
+                        </div>
+                    </div>
+
+                    <div class="modal-footer"
+                        style="border-top: 1px solid rgba(255,255,255,0.05); padding: 16px 20px; display: flex; justify-content: flex-end; gap: 12px; background: rgba(0,0,0,0.1);">
+                        <button id="btn-bracket-modal-unbind" class="page-btn" onclick="unbindActiveMatch()"
+                            style="padding: 8px 24px; font-weight: 600; cursor: pointer; background: var(--danger); border-color: var(--danger); color: #fff; display: none;">Gỡ Trận Đấu</button>
+                        <button class="page-btn" onclick="closeBracketSelectModal()"
+                            style="padding: 8px 24px; font-weight: 600; cursor: pointer;">Hủy</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="toast" class="save-toast" style="display: none;">✓ Thao tác thành công!</div>
 
             <script src="js/sidebar.js?v=3"></script>
             <script src="js/toast.js?v=3"></script>
-            <script src="js/history.js?v=3"></script>
+            <script src="js/history.js?v=5"></script>
         </div>
     </div>
 </body>

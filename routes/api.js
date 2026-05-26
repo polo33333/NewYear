@@ -10,6 +10,7 @@ const SAVES_LIST_FILE = path.join(__dirname, '../data/saved_rosters.json');
 const CHAR_FILE = path.join(__dirname, '../data-local/character_local.json');
 const WEAPON_FILE = path.join(__dirname, '../data-local/weapons_local.json');
 const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
+const BRACKET_FILE = path.join(__dirname, '../data/bracket_save.json');
 
 /**
  * Trích xuất User ID từ Request (Header X-User-Id hoặc Authorization token hoặc Query param)
@@ -64,6 +65,27 @@ function checkIfAdmin(req) {
     return false;
   }
 }
+
+/**
+ * Kiểm tra xem user hiện tại có quyền Admin hoặc Streamer hay không
+ */
+function checkIfAdminOrStream(req) {
+  const userId = getUserIdFromRequest(req);
+  try {
+    const usersPath = path.join(__dirname, '../data/users.json');
+    if (!fs.existsSync(usersPath)) return false;
+    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+    const user = users.find(u => String(u.id) === String(userId));
+    if (!user) return false;
+    return user.isAdmin === true || 
+           user.isStream === true || 
+           user.isStreamer === true || 
+           user.username === 'streamer';
+  } catch (e) {
+    return false;
+  }
+}
+
 
 /**
  * Middleware yêu cầu quyền Admin
@@ -174,6 +196,43 @@ function saveSettings(userId, userSettings) {
 }
 
 /**
+ * Lọc cấu hình sơ đồ giải đấu theo Room ID
+ */
+function getBracket(roomId) {
+  try {
+    if (!fs.existsSync(BRACKET_FILE)) {
+      fs.writeFileSync(BRACKET_FILE, '{}', 'utf8');
+      return { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+    }
+    const content = fs.readFileSync(BRACKET_FILE, 'utf8');
+    if (!content.trim()) return { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+    const allBrackets = JSON.parse(content);
+    return allBrackets[roomId] || { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+  } catch (e) {
+    return { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+  }
+}
+
+/**
+ * Lưu cấu hình sơ đồ giải đấu theo Room ID
+ */
+function saveBracket(roomId, bracketData) {
+  try {
+    let allBrackets = {};
+    if (fs.existsSync(BRACKET_FILE)) {
+      const content = fs.readFileSync(BRACKET_FILE, 'utf8');
+      if (content.trim()) {
+        allBrackets = JSON.parse(content);
+      }
+    }
+    allBrackets[roomId] = bracketData;
+    fs.writeFileSync(BRACKET_FILE, JSON.stringify(allBrackets, null, 2), 'utf8');
+  } catch (e) {
+    console.error('[SYSTEM] Error saving bracket:', e);
+  }
+}
+
+/**
  * Lọc danh sách trận đấu đã lưu theo Room ID (Single-File)
  */
 function getSaves(roomId) {
@@ -252,11 +311,15 @@ router.post('/login', (req, res) => {
 // Middleware tự động gán roomId cho các API liên quan tới trạng thái đấu
 router.use((req, res, next) => {
   const path = req.path;
+  if (path.startsWith('/bracket/public') || path.startsWith('/saves/public')) {
+    return next();
+  }
   if (
     path.startsWith('/state') ||
     path.startsWith('/save-state') ||
     path.startsWith('/saves') ||
-    path.startsWith('/reset-state')
+    path.startsWith('/reset-state') ||
+    path.startsWith('/bracket')
   ) {
     const userId = getUserIdFromRequest(req);
     const token = getTokenFromRequest(req);
@@ -634,6 +697,66 @@ router.post('/settings', (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save settings: ' + err.message });
+  }
+});
+
+// ── Bracket Editor API ──
+router.get('/bracket', (req, res) => {
+  const userId = getUserIdFromRequest(req);
+  const bracket = getBracket(req.roomId);
+
+  // If the bracket has a creatorId, check ownership
+  if (bracket.creatorId && String(bracket.creatorId) !== String(userId)) {
+    // If not the creator, only allow Admin or Streamer
+    if (!checkIfAdminOrStream(req)) {
+      return res.json({ nodes: [], connections: [], panZoom: { x: 100, y: 100, scale: 1 }, error: 'Bạn không có quyền xem sơ đồ này!' });
+    }
+  }
+
+  res.json(bracket);
+});
+
+router.post('/bracket', (req, res) => {
+  try {
+    const userId = getUserIdFromRequest(req);
+    const existingBracket = getBracket(req.roomId);
+
+    // If the bracket has a creatorId, check ownership for modification
+    if (existingBracket.creatorId && String(existingBracket.creatorId) !== String(userId)) {
+      if (!checkIfAdminOrStream(req)) {
+        return res.status(403).json({ error: 'Bạn không có quyền chỉnh sửa sơ đồ này!' });
+      }
+    }
+
+    const bracketData = req.body;
+    // Keep original creatorId or set to current user if new
+    bracketData.creatorId = existingBracket.creatorId || userId;
+
+    saveBracket(req.roomId, bracketData);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Public read-only endpoints (bypasses room & user checks, defaults to Room "room_1")
+router.get('/bracket/public', (req, res) => {
+  try {
+    const roomId = req.query.roomId || 'room_1';
+    const bracket = getBracket(roomId);
+    res.json(bracket);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/saves/public', (req, res) => {
+  try {
+    const roomId = req.query.roomId || 'room_1';
+    const saves = getSaves(roomId);
+    res.json(saves);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

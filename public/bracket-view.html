@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATRIX HUD - Sơ Đồ Giải Đấu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Exo+2:wght@600;800&family=Inter:wght@400;500;600;700&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/history.css?v=6">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #040814;
+            color: #cdd6f4;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .public-bracket-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background: #040814;
+        }
+
+        .bracket-canvas-viewport {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+        }
+
+        /* Customize nodes specifically for read-only view */
+        .bracket-node {
+            cursor: default !important;
+            border-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .node-header {
+            cursor: default !important;
+            background: rgba(255, 255, 255, 0.01) !important;
+            padding: 8px 12px !important;
+            font-size: 10px !important;
+        }
+
+        .bracket-node.region-node {
+            pointer-events: none !important;
+        }
+
+        .bracket-node.region-node .node-header {
+            display: none !important;
+        }
+
+        .bracket-node.region-node .region-resize-handle {
+            display: none !important;
+        }
+
+        .bracket-node.region-node input {
+            pointer-events: none !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .public-header-hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            pointer-events: auto;
+        }
+
+        .public-header-hud h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            margin: 0;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .public-header-hud p {
+            font-size: 11px;
+            margin: 4px 0 0 0;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="public-bracket-container">
+        
+        <!-- Brand Title HUD -->
+        <div class="public-header-hud">
+            <h1>Sơ Đồ Giải Đấu</h1>
+            <p>Sơ đồ thi đấu trực tiếp • MATRIX HUD</p>
+        </div>
+
+        <!-- Canvas Viewport -->
+        <div class="bracket-canvas-viewport" id="bracket-canvas-viewport">
+            
+            <!-- Pannable/Zoomable Canvas -->
+            <div class="bracket-canvas grid-bg" id="bracket-canvas" style="position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; transform-origin: 0 0; pointer-events: auto;">
+                
+                <!-- SVG Connections Overlay -->
+                <svg class="bracket-svg-layer" id="bracket-svg-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2;"></svg>
+                
+                <!-- Nodes Container -->
+                <div class="bracket-nodes-container" id="bracket-nodes-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                
+            </div>
+        </div>
+
+        <!-- Canvas Zoom/Pan HUD -->
+        <div class="canvas-controls-hud" style="position: absolute; bottom: 20px; right: 20px; z-index: 100; display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 12px; backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <button onclick="zoomBracket(0.1)" title="Phóng to" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-plus"></i></button>
+            <button onclick="zoomBracket(-0.1)" title="Thu nhỏ" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-minus"></i></button>
+            <button onclick="resetBracketView()" title="Đặt lại góc nhìn" style="padding: 6px 10px; font-size: 11px;"><i class="fas fa-expand"></i></button>
+        </div>
+
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        let nodes = [];
+        let connections = [];
+        let savedMatches = [];
+        let pan = { x: 100, y: 100 };
+        let zoom = 1.0;
+        let isPanning = false;
+        let panStart = { x: 0, y: 0 };
+
+        async function init() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const roomId = urlParams.get('roomId') || 'room_1';
+
+                // Fetch public data
+                const [savesRes, bracketRes] = await Promise.all([
+                    fetch(`/api/saves/public?roomId=${roomId}`).then(r => r.json()),
+                    fetch(`/api/bracket/public?roomId=${roomId}`).then(r => r.json())
+                ]);
+
+                savedMatches = savesRes || [];
+                nodes = bracketRes.nodes || [];
+                connections = bracketRes.connections || [];
+                pan = bracketRes.panZoom || { x: 100, y: 100 };
+                zoom = bracketRes.zoom || 1.0;
+
+                // Render Nodes
+                const container = document.getElementById('bracket-nodes-container');
+                if (container) container.innerHTML = '';
+                nodes.forEach(node => renderNodeDOM(node));
+
+                evaluateBracket();
+                updateCanvasTransform();
+
+                setTimeout(() => {
+                    drawConnections();
+                }, 100);
+
+                setupViewportListeners();
+            } catch (e) {
+                console.error('Lỗi khởi tạo sơ đồ public:', e);
+            }
+        }
+
+        function hexToRgb(hex) {
+            if (!hex) return '0, 245, 255';
+            const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 245, 255';
+        }
+
+        // Render node DOM element
+        function renderNodeDOM(node) {
+            const container = document.getElementById('bracket-nodes-container');
+            if (!container) return;
+
+            const nodeEl = document.createElement('div');
+            nodeEl.id = node.id;
+            nodeEl.style.left = node.x + 'px';
+            nodeEl.style.top = node.y + 'px';
+
+            if (node.type === 'region') {
+                if (!node.colorHex) node.colorHex = '#00f5ff';
+                nodeEl.className = 'bracket-node region-node';
+                nodeEl.style.width = (node.width || 320) + 'px';
+                nodeEl.style.height = (node.height || 220) + 'px';
+                nodeEl.style.setProperty('--region-color', node.colorHex);
+                nodeEl.style.setProperty('--region-color-rgb', hexToRgb(node.colorHex));
+                nodeEl.innerHTML = `
+                    <div class="node-body" style="padding: 12px; height: 100%;">
+                        <input type="text" class="node-label-input" value="${node.text || ''}" readonly style="text-align: center;">
+                    </div>
+                `;
+            } else if (node.type === 'seed') {
+                nodeEl.className = 'bracket-node';
+                const teamA = node.computedTeamA || node.teamAName || 'Đội hạt giúp';
+
+                nodeEl.innerHTML = `
+                    <div class="node-header">
+                        <span>Hạt Giống / Đội</span>
+                    </div>
+                    <div class="node-body">
+                        <div class="node-team-row" style="position: relative; background: transparent; padding: 0; border: none;">
+                            <input type="text" class="node-seed-input" value="${teamA}" readonly style="opacity:0.95; cursor:default;">
+                        </div>
+                    </div>
+                `;
+            } else {
+                nodeEl.className = 'bracket-node';
+                const save = savedMatches.find(s => s.id === node.saveId);
+                const teamA = node.computedTeamA || save?.score?.teamA?.name || 'TEAM A';
+                const teamB = node.computedTeamB || save?.score?.teamB?.name || 'TEAM B';
+                const scoreA = save?.score?.teamA?.score ?? 0;
+                const scoreB = save?.score?.teamB?.score ?? 0;
+                const winner = scoreA > scoreB ? teamA : (scoreB > scoreA ? teamB : '');
+                const loser = scoreA > scoreB ? teamB : (scoreB > scoreA ? teamA : '');
+
+                nodeEl.innerHTML = `
+                    <div class="node-header">
+                        <span>${save?.tournament?.bracketLabel || 'CẶP TRẬN'}</span>
+                    </div>
+                    <div class="node-body">
+                        <div class="node-team-row ${node.saveId && scoreA > scoreB ? 'winner' : ''}">
+                            <span class="node-team-name" title="${teamA}">${teamA}</span>
+                            <span class="node-team-score">${node.saveId ? scoreA : '-'}</span>
+                        </div>
+                        <div class="node-team-row ${node.saveId && scoreB > scoreA ? 'winner' : ''}">
+                            <span class="node-team-name" title="${teamB}">${teamB}</span>
+                            <span class="node-team-score">${node.saveId ? scoreB : '-'}</span>
+                        </div>
+                        <div class="node-winner-row" style="margin-top: 6px;">
+                            <span>Thắng: <span class="node-winner-name" style="font-weight: bold; color: var(--accent);">${node.saveId ? (winner || 'Chưa định đoạt') : 'Chờ gán trận'}</span></span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.appendChild(nodeEl);
+        }
+
+        // Snap and drag coordinates
+        function evaluateBracket() {
+            const iterations = 6;
+            for (let i = 0; i < iterations; i++) {
+                nodes.forEach(node => {
+                    if (node.type === 'match') {
+                        node.computedTeamA = '';
+                        node.computedTeamB = '';
+                    } else if (node.type === 'seed') {
+                        node.computedTeamA = '';
+                    }
+                });
+
+                connections.forEach(conn => {
+                    const sourceNode = nodes.find(n => n.id === conn.fromNodeId);
+                    const targetNode = nodes.find(n => n.id === conn.toNodeId);
+                    if (!sourceNode || !targetNode) return;
+
+                    let val = '';
+                    if (sourceNode.type === 'seed') {
+                        val = sourceNode.computedTeamA || sourceNode.teamAName || '';
+                    } else if (sourceNode.type === 'match') {
+                        const save = savedMatches.find(s => s.id === sourceNode.saveId);
+                        const teamA = sourceNode.computedTeamA || save?.score?.teamA?.name || 'TEAM A';
+                        const teamB = sourceNode.computedTeamB || save?.score?.teamB?.name || 'TEAM B';
+                        const scoreA = save?.score?.teamA?.score ?? 0;
+                        const scoreB = save?.score?.teamB?.score ?? 0;
+                        const winner = scoreA > scoreB ? teamA : (scoreB > scoreA ? teamB : '');
+                        const loser = scoreA > scoreB ? teamB : (scoreB > scoreA ? teamA : '');
+
+                        val = conn.fromPort === 'loser' ? loser : winner;
+                    }
+
+                    if (conn.toPort === 'teamA') {
+                        targetNode.computedTeamA = val;
+                    } else if (conn.toPort === 'teamB') {
+                        targetNode.computedTeamB = val;
+                    }
+                });
+            }
+
+            nodes.forEach(node => {
+                const el = document.getElementById(node.id);
+                if (!el) return;
+
+                if (node.type === 'seed') {
+                    const teamA = node.computedTeamA || node.teamAName || '';
+                    const input = el.querySelector('.node-seed-input');
+                    if (input) input.value = teamA;
+                } else if (node.type === 'match') {
+                    const save = savedMatches.find(s => s.id === node.saveId);
+                    const teamA = node.computedTeamA || save?.score?.teamA?.name || 'TEAM A';
+                    const teamB = node.computedTeamB || save?.score?.teamB?.name || 'TEAM B';
+                    const scoreA = save?.score?.teamA?.score ?? 0;
+                    const scoreB = save?.score?.teamB?.score ?? 0;
+                    const winner = scoreA > scoreB ? teamA : (scoreB > scoreA ? teamB : '');
+
+                    const nameAEl = el.querySelectorAll('.node-team-name')[0];
+                    const scoreAEl = el.querySelectorAll('.node-team-score')[0];
+                    const nameBEl = el.querySelectorAll('.node-team-name')[1];
+                    const scoreBEl = el.querySelectorAll('.node-team-score')[1];
+                    const winnerNameEl = el.querySelector('.node-winner-name');
+
+                    if (nameAEl) nameAEl.textContent = teamA;
+                    if (scoreAEl) scoreAEl.textContent = node.saveId ? scoreA : '-';
+                    if (nameBEl) nameBEl.textContent = teamB;
+                    if (scoreBEl) scoreBEl.textContent = node.saveId ? scoreB : '-';
+                    if (winnerNameEl) winnerNameEl.textContent = node.saveId ? (winner || 'Chưa định đoạt') : 'Chờ gán trận';
+
+                    el.querySelectorAll('.node-team-row')[0].className = `node-team-row ${node.saveId && scoreA > scoreB ? 'winner' : ''}`;
+                    el.querySelectorAll('.node-team-row')[1].className = `node-team-row ${node.saveId && scoreB > scoreA ? 'winner' : ''}`;
+                }
+            });
+        }
+
+        // Draw connections SVGs
+        function getPortCoordinates(nodeId, portType) {
+            const node = nodes.find(n => n.id === nodeId);
+            const el = document.getElementById(nodeId);
+            if (!node || !el) return null;
+
+            const w = el.offsetWidth;
+            const h = el.offsetHeight;
+
+            if (node.type === 'seed') {
+                if (portType === 'teamA') return { x: node.x, y: node.y + h / 2 };
+                if (portType === 'winner') return { x: node.x + w, y: node.y + h / 2 };
+            } else if (node.type === 'match') {
+                if (portType === 'teamA') return { x: node.x, y: node.y + 40 };
+                if (portType === 'teamB') return { x: node.x, y: node.y + 65 };
+                if (portType === 'winner') return { x: node.x + w, y: node.y + 90 };
+                if (portType === 'loser') return { x: node.x + w, y: node.y + 115 };
+            }
+            return null;
+        }
+
+        function drawConnections() {
+            const svg = document.getElementById('bracket-svg-layer');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            connections.forEach(conn => {
+                const start = getPortCoordinates(conn.fromNodeId, conn.fromPort);
+                const end = getPortCoordinates(conn.toNodeId, conn.toPort);
+
+                if (start && end) {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const cp1x = start.x + Math.max(40, (end.x - start.x) / 2);
+                    const cp1y = start.y;
+                    const cp2x = end.x - Math.max(40, (end.x - start.x) / 2);
+                    const cp2y = end.y;
+
+                    path.setAttribute('d', `M ${start.x} ${start.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${end.x} ${end.y}`);
+                    path.setAttribute('class', 'bracket-svg-path');
+                    if (conn.fromPort === 'loser') {
+                        path.style.stroke = 'rgba(255, 159, 67, 0.3)';
+                    }
+                    svg.appendChild(path);
+                }
+            });
+        }
+
+        // Panning & Zooming
+        function setupViewportListeners() {
+            const viewport = document.getElementById('bracket-canvas-viewport');
+            const canvas = document.getElementById('bracket-canvas');
+            if (!viewport || !canvas) return;
+
+            viewport.addEventListener('mousedown', (e) => {
+                isPanning = true;
+                viewport.style.cursor = 'grabbing';
+                panStart = { x: e.clientX - pan.x, y: e.clientY - pan.y };
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isPanning) {
+                    pan.x = e.clientX - panStart.x;
+                    pan.y = e.clientY - panStart.y;
+                    updateCanvasTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isPanning) {
+                    isPanning = false;
+                    viewport.style.cursor = 'grab';
+                }
+            });
+
+            viewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomFactor = 1.08;
+                let newZoom = e.deltaY < 0 ? zoom * zoomFactor : zoom / zoomFactor;
+                newZoom = Math.max(0.3, Math.min(2.5, newZoom));
+
+                const rect = viewport.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                const canvasX = (mouseX - pan.x) / zoom;
+                const canvasY = (mouseY - pan.y) / zoom;
+
+                zoom = newZoom;
+                pan.x = mouseX - canvasX * zoom;
+                pan.y = mouseY - canvasY * zoom;
+
+                updateCanvasTransform();
+            });
+        }
+
+        function updateCanvasTransform() {
+            const canvas = document.getElementById('bracket-canvas');
+            if (canvas) {
+                canvas.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
+            }
+        }
+
+        function zoomBracket(factor) {
+            zoom = Math.max(0.3, Math.min(2.5, zoom + factor));
+            updateCanvasTransform();
+        }
+
+        function resetBracketView() {
+            pan = { x: 100, y: 100 };
+            zoom = 1.0;
+            updateCanvasTransform();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
