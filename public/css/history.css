@@ -868,6 +868,14 @@ div#history-list-view {
     transform: scale(1.2);
 }
 
+/* Position HUD at bottom center to avoid overlapping with widgets at corners */
+#bracket-hud {
+    right: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: 20px !important;
+}
+
 /* Canvas HUD controls buttons */
 .canvas-controls-hud button {
     background: rgba(255, 255, 255, 0.05);

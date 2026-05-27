@@ -30,9 +30,11 @@
 }
 
 .sidebar-logo {
-    white-space: normal;
+    white-space: nowrap !important;
     font-size: 14px;
     line-height: 1.2;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .sidebar-toggle {

@@ -1,8 +1,8 @@
 const CACHE_NAME = 'kdstream-v2';
 const ASSETS = [
   '/',
-  '/css/control.css?v=6',
-  '/css/sidebar.css',
+  '/css/control.css?v=14',
+  '/css/sidebar.css?v=4',
   '/js/control.js',
   '/js/sidebar.js'
 ];
@@ -21,13 +21,28 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // Bypass API requests, hot reloading, and sockets
+  if (
+    e.request.url.includes('/api/') || 
+    e.request.url.includes('/socket') || 
+    e.request.url.includes('socket.io') || 
+    e.request.url.includes('browser-sync') ||
+    e.request.url.includes('/live-reload')
+  ) {
+    return;
+  }
+
   e.respondWith(
-    fetch(e.request).catch((err) => {
+    fetch(e.request).catch(() => {
       return caches.match(e.request).then((response) => {
         if (response) {
           return response;
         }
-        throw err;
+        // Return a basic offline fallback or let it fail gracefully without uncaught rejection
+        return new Response('Network error occurred', {
+          status: 488,
+          statusText: 'Network Connection Failed'
+        });
       });
     })
   );

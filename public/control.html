@@ -10,7 +10,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/control.css?v=14">
-  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/sidebar.css?v=4">
   <link rel="stylesheet" href="/css/character-editor.css">
   <link rel="stylesheet" href="/css/history.css">
   <link rel="stylesheet" href="/css/settings.css">
@@ -233,7 +233,7 @@
                       <!-- Network Latency Chart -->
                       <div class="sys-client-card sys-network-card">
                         <div class="sys-network-header">
-                          <span class="sys-stat-name"><i class="fas fa-network-wired"></i> Latency</span>
+                          <span class="sys-stat-name">Latency</span>
                           <span id="chart-ping-val" class="sys-stat-val">-- ms</span>
                         </div>
                         <div class="sys-canvas-wrapper">
@@ -243,7 +243,7 @@
 
                       <!-- Session Uptime -->
                       <div class="sys-client-card">
-                        <span class="sys-stat-name"><i class="fas fa-clock"></i> Uptime</span>
+                        <span class="sys-stat-name">Uptime</span>
                         <span id="client-uptime-val" class="sys-stat-val">00:00:00</span>
                       </div>
                     </div>
@@ -263,7 +263,7 @@
                     <div class="mcb-teams">
                       <!-- Team A -->
                       <div class="mcb-team mcb-team-a">
-                        <div class="mcb-team-label">TEAM A</div>
+                        <div class="mcb-team-label">TEAM BLUE</div>
                         <input type="text" id="nameA" onchange="updateMatch()" placeholder="Team Name"
                           class="mcb-name-input">
                         <div class="mcb-score-row">
@@ -284,7 +284,7 @@
 
                       <!-- Team B -->
                       <div class="mcb-team mcb-team-b">
-                        <div class="mcb-team-label">TEAM B</div>
+                        <div class="mcb-team-label">TEAM RED</div>
                         <input type="text" id="nameB" onchange="updateMatch()" placeholder="Team Name"
                           class="mcb-name-input">
                         <div class="mcb-score-row">
@@ -348,7 +348,7 @@
                 <!-- Team Column Labels -->
                 <div class="rp-team-bar">
                   <div class="rp-team-wrapper rp-wrapper-a">
-                    <div class="rp-team-tag rp-tag-a" id="label-teamA">TEAM A</div>
+                    <div class="rp-team-tag rp-tag-a" id="label-teamA">TEAM BLUE</div>
                     <div class="rp-team-score rp-score-a" id="scoreA-display">0</div>
                   </div>
                   <div class="rp-divider-space"></div>
@@ -356,7 +356,7 @@
                   <div class="rp-divider-space"></div>
                   <div class="rp-team-wrapper rp-wrapper-b">
                     <div class="rp-team-score rp-score-b" id="scoreB-display">0</div>
-                    <div class="rp-team-tag rp-tag-b" id="label-teamB">TEAM B</div>
+                    <div class="rp-team-tag rp-tag-b" id="label-teamB">TEAM RED</div>
                   </div>
                 </div>
 

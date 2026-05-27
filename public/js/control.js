@@ -233,6 +233,14 @@ async function resetMatch() {
   document.getElementById('bracket-label').value = defSubtitle;
   document.getElementById('break-duration').value = 5;
 
+  // Update rp-team-bar names and score displays instantly
+  document.getElementById('label-teamA').textContent = nA;
+  document.getElementById('label-teamB').textContent = nB;
+  const displayA = document.getElementById('scoreA-display');
+  const displayB = document.getElementById('scoreB-display');
+  if (displayA) displayA.textContent = 0;
+  if (displayB) displayB.textContent = 0;
+
   const scoreData = {
     teamA: { ...state.score.teamA, name: nA, score: 0 },
     teamB: { ...state.score.teamB, name: nB, score: 0 }
@@ -246,8 +254,8 @@ function updateMatch() {
   const nA = document.getElementById('nameA').value;
   const nB = document.getElementById('nameB').value;
 
-  document.getElementById('label-teamA').textContent = 'TEAM A: ' + nA;
-  document.getElementById('label-teamB').textContent = 'TEAM B: ' + nB;
+  document.getElementById('label-teamA').textContent = nA;
+  document.getElementById('label-teamB').textContent = nB;
 
   const scoreData = {
     teamA: { ...state.score.teamA, name: nA },
@@ -514,32 +522,32 @@ function drawPingChart() {
   const canvas = document.getElementById('sys-ping-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  
+
   const rect = canvas.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) return;
-  
+
   canvas.width = rect.width * window.devicePixelRatio;
   canvas.height = rect.height * window.devicePixelRatio;
   ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
   const w = rect.width;
   const h = rect.height;
-  
+
   ctx.clearRect(0, 0, w, h);
   if (pingHistory.length < 2) return;
-  
+
   let maxVal = Math.max(...pingHistory);
   let minVal = Math.min(...pingHistory);
   if (maxVal === minVal) {
     maxVal = minVal + 10;
     minVal = Math.max(0, minVal - 10);
   }
-  
+
   const range = maxVal - minVal;
   const padding = range * 0.1;
   const min = Math.max(0, minVal - padding);
   const max = maxVal + padding;
-  
+
   const points = pingHistory.map((val, idx) => {
     const x = (idx / (maxPingPoints - 1)) * w;
     const y = h - ((val - min) / (max - min)) * (h - 4) - 2;
@@ -549,7 +557,7 @@ function drawPingChart() {
   const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
   fillGrad.addColorStop(0, 'rgba(0, 245, 255, 0.2)');
   fillGrad.addColorStop(1, 'rgba(0, 245, 255, 0.0)');
-  
+
   ctx.beginPath();
   ctx.moveTo(points[0].x, h);
   points.forEach(pt => ctx.lineTo(pt.x, pt.y));
@@ -561,7 +569,7 @@ function drawPingChart() {
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
   points.forEach(pt => ctx.lineTo(pt.x, pt.y));
-  
+
   ctx.strokeStyle = '#00f5ff';
   ctx.lineWidth = 1.5;
   ctx.stroke();
@@ -571,7 +579,7 @@ function drawPingChart() {
   ctx.arc(lastPt.x, lastPt.y, 2.5, 0, 2 * Math.PI);
   ctx.fillStyle = '#00f5ff';
   ctx.fill();
-  
+
   ctx.beginPath();
   ctx.arc(lastPt.x, lastPt.y, 4, 0, 2 * Math.PI);
   ctx.strokeStyle = 'rgba(0, 245, 255, 0.4)';

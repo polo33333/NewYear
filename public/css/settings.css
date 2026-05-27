@@ -93,7 +93,7 @@
 }
 
 .btn-save {
-    background: var(--success);
+    background: #10b981;
     color: #000;
     border: none;
     padding: 12px 24px;
