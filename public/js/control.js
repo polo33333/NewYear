@@ -228,22 +228,16 @@ async function resetMatch() {
   const defSubtitle = 'GRAND FINALS — 2026';
   document.getElementById('nameA').value = nA;
   document.getElementById('nameB').value = nB;
-  document.getElementById('scoreA').value = 0;
-  document.getElementById('scoreB').value = 0;
   document.getElementById('bracket-label').value = defSubtitle;
   document.getElementById('break-duration').value = 5;
 
-  // Update rp-team-bar names and score displays instantly
+  // Update rp-team-bar names instantly
   document.getElementById('label-teamA').textContent = nA;
   document.getElementById('label-teamB').textContent = nB;
-  const displayA = document.getElementById('scoreA-display');
-  const displayB = document.getElementById('scoreB-display');
-  if (displayA) displayA.textContent = 0;
-  if (displayB) displayB.textContent = 0;
 
   const scoreData = {
-    teamA: { ...state.score.teamA, name: nA, score: 0 },
-    teamB: { ...state.score.teamB, name: nB, score: 0 }
+    teamA: { ...state.score.teamA, name: nA },
+    teamB: { ...state.score.teamB, name: nB }
   };
   send({ type: 'update_score', data: scoreData });
   send({ type: 'update_tournament', data: { bracketLabel: defSubtitle } });
