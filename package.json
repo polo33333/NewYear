@@ -2,7 +2,7 @@
   "name": "express-websocket-server",
   "version": "1.0.0",
   "description": "Node.js Express WebSocket Server",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.5.2",
     "ws": "^8.18.3"
   },
   "devDependencies": {

@@ -2326,6 +2326,338 @@
         "format": "Double Elimination",
         "bracketLabel": "GRAND FINALS — MATRIX CUP 2026"
       }
+    },
+    {
+      "id": "save_1779986105687",
+      "name": "TEAM A vs TEAM B (23:35, 28-05)",
+      "timestamp": 1779986105704,
+      "rosters": {
+        "teamA": {
+          "round1": {
+            "heroes": [
+              "Aemeath",
+              "Lynae",
+              "Mornye"
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "Everbright Polestar",
+              "Spectrum Blaster",
+              "Starfield Calibrator"
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 16000,
+            "deduction": 3000,
+            "buyPoints": 0
+          },
+          "round2": {
+            "heroes": [
+              "Cartethyia",
+              "Ciaccona",
+              "Chisa"
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "Defier's Thorn",
+              "Woodland Aria",
+              "Kumokiri"
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 12000,
+            "deduction": 3000,
+            "buyPoints": 0
+          },
+          "round3": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round4": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round5": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round6": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          }
+        },
+        "teamB": {
+          "round1": {
+            "heroes": [
+              "Cartethyia",
+              "Ciaccona",
+              "Chisa"
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "Defier's Thorn",
+              "Woodland Aria",
+              "Kumokiri"
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 11000,
+            "deduction": 3000,
+            "buyPoints": 0
+          },
+          "round2": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round3": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round4": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round5": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          },
+          "round6": {
+            "heroes": [
+              "",
+              "",
+              ""
+            ],
+            "heroRcs": [
+              "0",
+              "0",
+              "0"
+            ],
+            "weapons": [
+              "",
+              "",
+              ""
+            ],
+            "weaponRs": [
+              "1",
+              "1",
+              "1"
+            ],
+            "points": 0,
+            "deduction": 0,
+            "buyPoints": 0
+          }
+        }
+      },
+      "score": {
+        "teamA": {
+          "name": "TEAM A",
+          "logo": "",
+          "color": "#00aaff",
+          "score": 22000
+        },
+        "teamB": {
+          "name": "TEAM B",
+          "logo": "",
+          "color": "#ff4444",
+          "score": 8000
+        },
+        "matchTimer": 0
+      },
+      "tournament": {
+        "name": "MATRIX CUP 2026",
+        "game": "Wuthering Waves",
+        "format": "Double Elimination",
+        "bracketLabel": "GRAND FINALS — 2026"
+      }
     }
   ],
   "room_6agh793p": [

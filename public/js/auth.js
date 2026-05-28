@@ -39,7 +39,14 @@ window.fetch = function (url, options = {}) {
   });
 };
 
-window.logout = function () {
+window.logout = async function () {
+  // Hỏi xác nhận trước khi đăng xuất
+  const confirmed = typeof window.showConfirm === 'function'
+    ? await window.showConfirm('Đăng Xuất', 'Bạn có chắc chắn muốn đăng xuất không?')
+    : window.confirm('Bạn có chắc chắn muốn đăng xuất không?');
+
+  if (!confirmed) return;
+
   fetch('/api/reset-state', { method: 'POST' })
     .catch(err => console.error('Error resetting state on logout:', err))
     .finally(() => {

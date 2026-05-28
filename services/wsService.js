@@ -1,5 +1,4 @@
 const { WebSocketServer } = require('ws');
-const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -59,9 +58,10 @@ function init(server, states, handleMessage) {
   wss = new WebSocketServer({ server });
 
   wss.on('connection', (ws, req) => {
-    const parsedUrl = url.parse(req.url, true);
-    const token = parsedUrl.query.token || '';
-    const queryRoomId = parsedUrl.query.roomId || '';
+    // Dùng URL API chuẩn thay vì url.parse() đã deprecated
+    const parsedUrl = new URL(req.url, 'http://localhost');
+    const token = parsedUrl.searchParams.get('token') || '';
+    const queryRoomId = parsedUrl.searchParams.get('roomId') || '';
     const userId = getUserIdFromToken(token);
     const roomId = getRoomId(userId, token, queryRoomId);
     
@@ -97,6 +97,23 @@ function init(server, states, handleMessage) {
 
     ws.on('close', () => {
       console.log(`[WS] Disconnected | Room ID: ${ws.roomId}`);
+
+      // Dọn dẹp orphaned rooms: nếu không còn client nào trong room sau 5 phút, xóa state khỏi RAM
+      // (chỉ áp dụng cho rooms độc lập có ID ngẫu nhiên - không phải room_${userId})
+      const closedRoomId = ws.roomId;
+      const isUserRoom = /^room_\d+$/.test(closedRoomId); // room_1, room_2... là sync room
+      if (!isUserRoom) {
+        setTimeout(() => {
+          if (!wss) return;
+          const remainingClients = [...wss.clients].filter(
+            c => c.readyState === 1 && c.roomId === closedRoomId
+          );
+          if (remainingClients.length === 0 && states[closedRoomId]) {
+            console.log(`[WS] Orphaned room ${closedRoomId} has no clients. Cleaning up state from RAM.`);
+            delete states[closedRoomId];
+          }
+        }, 5 * 60 * 1000); // 5 phút
+      }
     });
   });
 

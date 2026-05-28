@@ -160,6 +160,9 @@ window.musicPlayerSetVolume = function (val) {
   localStorage.setItem('music-player-volume', numVal);
   mp.audio.volume = numVal / 100;
 
+  // Cập nhật GainNode để điều chỉnh âm thanh nghe thực tế
+  if (gainNode) gainNode.gain.value = numVal / 100;
+
   document.querySelectorAll('#music-volume').forEach(el => {
     el.value = numVal;
   });
@@ -241,6 +244,7 @@ function highlightRow(index) {
 // ── Audio Events ──────────────────────────────────────────────────────────────
 let audioCtx = null;
 let analyser = null;
+let gainNode = null;
 let dataArray = null;
 let visualizerActive = false;
 
@@ -252,11 +256,21 @@ function initVisualizer() {
   try {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const source = audioCtx.createMediaElementSource(mp.audio);
+
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
-    analyser.smoothingTimeConstant = 0.75; // ← smoothing giữa các frame (0=tắt, 1=rất mượt)
+    analyser.smoothingTimeConstant = 0.75;
+
+    // GainNode điều khiến âm lượng nghe được
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = mp.audio.volume;
+
+    // source → gainNode → destination (tiếng nghe, bị ảnh hưởng volume)
+    source.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    // source → analyser TRỰC TIẼP (visualizer độc lập, luôn nhận raw signal)
     source.connect(analyser);
-    analyser.connect(audioCtx.destination);
 
     const bufferLength = analyser.frequencyBinCount;
     dataArray = new Uint8Array(bufferLength);
@@ -289,16 +303,16 @@ function updateVisualizer() {
       const binIdx = Math.floor(2 + (idx / 60) * 80);
       const val = dataArray[binIdx] || 0;
 
-      // ── Tăng độ nhạy ──────────────────────────────────────────────
+      // Raw signal — không phụ thuộc volume, luôn phản ánh đúng nhịp nhạc
       const normalized = val / 255;
-      const boosted = Math.pow(normalized, 0.35); // khuếch đại tín hiệu yếu hơn nữa
-      const target = Math.max(2, Math.min(boosted * 32 + 2, 32)); // hard cap 34px < container 36px
+      const boosted = Math.pow(normalized, 0.35);
+      const target = Math.max(2, Math.min(boosted * 32 + 2, 32));
 
-      // Smoothing thủ công: lên nhanh, xuống chậm
+      // Smoothing: lên nhanh, xuống chậm
       if (target > smoothedBars[idx]) {
-        smoothedBars[idx] = smoothedBars[idx] * 0.3 + target * 0.7; // lên nhanh
+        smoothedBars[idx] = smoothedBars[idx] * 0.3 + target * 0.7;
       } else {
-        smoothedBars[idx] = smoothedBars[idx] * 0.75 + target * 0.25; // xuống chậm
+        smoothedBars[idx] = smoothedBars[idx] * 0.75 + target * 0.25;
       }
 
       bar.style.height = smoothedBars[idx] + 'px';

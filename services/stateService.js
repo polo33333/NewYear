@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { states, createDefaultState } = require('./state');
-const { broadcast } = require('./wsService');
+const { broadcast, getActiveClientsCount } = require('./wsService');
 
 const STATE_SAVE_FILE = path.join(__dirname, '../data/state_save.json');
 
@@ -17,6 +17,9 @@ function init() {
     for (const roomId in states) {
       const uState = states[roomId];
       if (!uState || !uState.isLive) continue;
+
+      // Tối ưu: bỏ qua broadcast nếu không có client nào đang kết nối trong room
+      if (getActiveClientsCount(roomId) === 0) continue;
       
       if (!uState.stats) {
         uState.stats = { viewers: 100, chatPerMin: 300, bitrate: 6000, fps: 60, cpu: 30, gpu: 60 };

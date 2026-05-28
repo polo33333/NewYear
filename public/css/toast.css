@@ -1,0 +1,188 @@
+/* toast.css - Custom global toast & confirmation system styles */
+
+/* ── Toast Container & Item ── */
+#nexus-toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.nexus-toast {
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    max-width: 450px;
+    pointer-events: auto;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    opacity: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.nexus-toast.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.nexus-toast.error,
+.nexus-toast.danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.nexus-toast.warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.nexus-toast.info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.nexus-toast-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px;
+    transition: 0.2s;
+    margin-left: auto;
+}
+.nexus-toast-close:hover {
+    color: #fff;
+}
+
+/* ── Modals (Confirm & Prompt) ── */
+.nexus-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(4, 6, 12, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.nexus-modal-card {
+    background: rgba(10, 15, 30, 0.95);
+    border: 1px solid rgba(0, 245, 255, 0.25);
+    border-radius: 12px;
+    width: 420px;
+    max-width: 90vw;
+    padding: 28px 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 245, 255, 0.05);
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+}
+
+/* Custom alignment for Prompt if needed */
+.nexus-modal-card.left-align {
+    text-align: left;
+}
+
+.nexus-modal-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #00f5ff;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.nexus-modal-title.center {
+    text-align: center;
+}
+
+.nexus-modal-message {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    white-space: pre-line;
+}
+
+.nexus-modal-prompt-input {
+    width: 100%;
+    height: 38px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 6px;
+    padding: 0 12px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    margin-bottom: 24px;
+    outline: none;
+    transition: 0.2s;
+    box-sizing: border-box;
+}
+
+.nexus-modal-prompt-input:focus {
+    border-color: #00f5ff;
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.15);
+}
+
+.nexus-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.nexus-modal-btn-cancel {
+    flex: 1;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+}
+.nexus-modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nexus-modal-btn-ok {
+    flex: 1;
+    height: 38px;
+    background: linear-gradient(135deg, #00f5ff 0%, #00b8d4 100%);
+    border: none;
+    border-radius: 6px;
+    color: #050811;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+}
+.nexus-modal-btn-ok:hover {
+    filter: brightness(1.15);
+}

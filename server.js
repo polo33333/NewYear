@@ -8,6 +8,7 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
@@ -43,7 +44,6 @@ app.get('/manifest.json', (req, res) => {
 // Serve raw templates for dynamic SPA loading, bypassing the Clean URLs redirects
 app.get('/templates/:page', (req, res) => {
   const page = req.params.page;
-  const fs = require('fs');
   const filePath = path.join(__dirname, 'public', `${page}.html`);
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath);

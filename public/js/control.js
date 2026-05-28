@@ -87,9 +87,13 @@ function syncUI() {
 
     // Only reload/update preview iframe if preview URL actually changed
     const previewUrl = host + '/live' + token;
-    if (document.getElementById('preview-iframe').getAttribute('data-current-url') !== previewUrl) {
-      document.getElementById('preview-iframe').setAttribute('data-current-url', previewUrl);
-      document.getElementById('preview-iframe').src = previewUrl + '&t=' + Date.now();
+    const iframe = document.getElementById('preview-iframe');
+    if (iframe.getAttribute('data-current-url') !== previewUrl) {
+      iframe.setAttribute('data-current-url', previewUrl);
+      const loader = document.getElementById('preview-loader');
+      if (loader) loader.style.display = 'flex';
+      iframe.style.opacity = '0';
+      iframe.src = previewUrl + '&t=' + Date.now();
     }
   }).catch(err => {
     const token = '?token=kdstream2026';
@@ -489,7 +493,7 @@ function initClientTelemetry() {
   setInterval(updateUptime, 1000);
   updateUptime();
 
-  window.addEventListener('resize', drawPingChart);
+  // Resize is handled in global event listener
 }
 
 function updateUptime() {
@@ -583,7 +587,8 @@ function drawPingChart() {
 
 function measurePing() {
   const start = Date.now();
-  fetch('/api/state')
+  // Dùng /api/ping thay vì /api/state để giảm bandwidth (chỉ trả về {ok:true,ts:...})
+  fetch('/api/ping')
     .then(() => {
       const ping = Date.now() - start;
       const badge = document.getElementById('sys-ping-badge');
@@ -624,10 +629,21 @@ measurePing();
 setInterval(measurePing, 5000);
 initClientTelemetry();
 
-window.addEventListener('resize', () => resizePreview());
-const previewIframe = document.getElementById('preview-iframe');
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    resizePreview();
+    if (typeof drawPingChart === 'function') drawPingChart();
+  }, 100);
+});const previewIframe = document.getElementById('preview-iframe');
 if (previewIframe) {
-  previewIframe.addEventListener('load', () => resizePreview());
+  previewIframe.addEventListener('load', () => {
+    resizePreview();
+    previewIframe.style.opacity = '1';
+    const loader = document.getElementById('preview-loader');
+    if (loader) loader.style.display = 'none';
+  });
 }
 
 // Fetch initial state via REST API to ensure it loads instantly and reliably on page load/refresh

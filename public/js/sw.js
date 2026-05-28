@@ -1,10 +1,10 @@
-const CACHE_NAME = 'kdstream-v2';
+const CACHE_NAME = 'kdstream-v3';
 const ASSETS = [
   '/',
-  '/css/control.css?v=14',
-  '/css/sidebar.css?v=4',
-  '/js/control.js',
-  '/js/sidebar.js'
+  '/css/control.css?v=15',
+  '/css/sidebar.css?v=5',
+  '/js/control.js?v=2',
+  '/js/sidebar.js?v=2'
 ];
 
 self.addEventListener('install', (e) => {

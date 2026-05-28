@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/css/character-editor.css">
   <link rel="stylesheet" href="/css/history.css">
   <link rel="stylesheet" href="/css/settings.css">
+  <link rel="stylesheet" href="/css/toast.css">
   <link rel="icon" type="image/webp" href="/images/icon/Yangyang.webp?v=2">
   <link rel="manifest" href="/manifest.json">
   <script src="/js/auth.js"></script>
@@ -50,18 +51,17 @@
       </nav>
     </aside>
 
-    <div class="main-content" style="padding: 0;">
+    <div class="main-content">
 
       <!-- TAB 1: MAIN CONTROL PANEL -->
-      <div class="main-content-tab" id="tab-control" style="padding: 0px;">
-        <header style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="main-content-tab active-tab" id="tab-control">
+        <header>
           <div class="brand">
             <h1>Control</h1>
             <p id="stats-summary">Control overlays for stream</p>
           </div>
           <div class="header-right">
-            <div class="header-status-group"
-              style="display: flex; align-items: flex-end; gap: 24px; margin-right: 8px;">
+            <div class="header-status-group">
               <div class="status-badge">
                 <div id="conn-dot" class="status-dot"></div> <span id="conn-text">OFFLINE</span>
               </div>
@@ -217,6 +217,10 @@
                     </button>
                   </div>
                   <div class="preview-box" id="preview-container">
+                    <div class="preview-loader" id="preview-loader">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      <span>Loading Preview...</span>
+                    </div>
                     <iframe id="preview-iframe"></iframe>
                   </div>
                 </div>

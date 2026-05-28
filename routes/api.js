@@ -2,8 +2,18 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const rateLimit = require('express-rate-limit');
 const { states, createDefaultState, getRoomId } = require('../services/state');
 const { broadcast } = require('../services/wsService');
+
+// Rate limiter: tối đa 10 lần login thất bại trong 15 phút
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  skipSuccessfulRequests: true,
+  message: { success: false, message: 'Quá nhiều lần thử đăng nhập. Vui lòng thử lại sau 15 phút.' }
+});
 
 const STATE_SAVE_FILE = path.join(__dirname, '../data/state_save.json');
 const SAVES_LIST_FILE = path.join(__dirname, '../data/saved_rosters.json');
@@ -279,18 +289,31 @@ function saveSaves(roomId, userSaves) {
 }
 
 // ── Auth Endpoint ──
-router.post('/login', (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: 'Username và password không được để trống.' });
+  }
   try {
     const usersPath = path.join(__dirname, '../data/users.json');
     if (!fs.existsSync(usersPath)) {
       return res.status(401).json({ success: false, message: 'No users configured' });
     }
     const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      // Cho phép duy trì phiên làm việc của user khi đăng nhập lại mà không tự động xóa sạch
+    const user = users.find(u => u.username === username);
 
+    // So sánh password: hỗ trợ cả bcrypt hash (bắt đầu bằng $2b$) và plain-text legacy
+    let passwordMatch = false;
+    if (user) {
+      if (user.password && user.password.startsWith('$2b$')) {
+        passwordMatch = await bcrypt.compare(password, user.password);
+      } else {
+        // Legacy plain-text (sẽ bị xóa sau khi migrate)
+        passwordMatch = user.password === password;
+      }
+    }
+
+    if (user && passwordMatch) {
       res.json({
         success: true,
         token: `kdone-token-${user.id}-${Date.now()}`,
@@ -301,9 +324,10 @@ router.post('/login', (req, res) => {
         }
       });
     } else {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
+      res.status(401).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
   } catch (err) {
+    console.error('[AUTH] Login error:', err.message);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
@@ -374,13 +398,11 @@ router.post('/reset-state', (req, res) => {
     }
 
     if (isSync) {
-      // Nếu là tài khoản sync, giữ nguyên state trên RAM để đăng nhập lại dùng tiếp, không xóa sạch
-      //console.log(`[SYSTEM] Last user of synced room ${roomId} logged out. Keeping state for persistence.`);
-      console.log(`[SYSTEM] Last user of independent room ${roomId} logged out. Deleting state.`);
-      delete states[roomId];
+      // Tài khoản sync: giữ state trên RAM để đăng nhập lại dùng tiếp (không xóa)
+      console.log(`[SYSTEM] Synced room ${roomId}: keeping state in RAM after logout.`);
     } else {
-      // Nếu là tài khoản độc lập (isSync == false), dọn sạch state của thiết bị này trên RAM (RAM-only)
-      console.log(`[SYSTEM] Last user of independent room ${roomId} logged out. Deleting state.`);
+      // Tài khoản độc lập (isSync == false): dọn sạch state khỏi RAM
+      console.log(`[SYSTEM] Independent room ${roomId}: deleting state after logout.`);
       delete states[roomId];
     }
 
@@ -629,11 +651,21 @@ router.post('/saves/:id/sync-sheets', async (req, res) => {
   }
 });
 
+// ── Ping endpoint (dùng để đo latency, không tải full state) ──
+router.get('/ping', (req, res) => {
+  res.json({ ok: true, ts: Date.now() });
+});
+
 // ── Character API ──
 router.get('/characters', (req, res) => {
   fs.readFile(CHAR_FILE, 'utf8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Failed to read character data' });
-    res.json(JSON.parse(data));
+    try {
+      res.json(JSON.parse(data));
+    } catch (e) {
+      console.error('[API] character_local.json parse error:', e.message);
+      res.status(500).json({ error: 'Character data file is corrupted' });
+    }
   });
 });
 
@@ -649,7 +681,12 @@ router.post('/characters', requireAdmin, (req, res) => {
 router.get('/weapons', (req, res) => {
   fs.readFile(WEAPON_FILE, 'utf8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Failed to read weapon data' });
-    res.json(JSON.parse(data));
+    try {
+      res.json(JSON.parse(data));
+    } catch (e) {
+      console.error('[API] weapons_local.json parse error:', e.message);
+      res.status(500).json({ error: 'Weapon data file is corrupted' });
+    }
   });
 });
 
