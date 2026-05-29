@@ -1,7 +1,8 @@
 {
   "1": {
     "obsToken": "kdstream_bw1h4hfj",
-    "googleAppsScriptUrl": "https://script.google.com/macros/s/AKfycbzI38LdysxEQvMf1Oy3rFFw7-5Zbn7u9KFwnhkyx53T9Lecv1TEdcNmU-VW_ItVJI4taQ/exec"
+    "googleAppsScriptUrl": "https://script.google.com/macros/s/AKfycbzI38LdysxEQvMf1Oy3rFFw7-5Zbn7u9KFwnhkyx53T9Lecv1TEdcNmU-VW_ItVJI4taQ/exec",
+    "uiTemplate": "minimal"
   },
   "2": {
     "obsToken": "kdone_vy2n7ht4"

@@ -3010,7 +3010,7 @@ span#music-duration {
 .main-content-tab {
   display: none;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   overflow: hidden;
   position: relative;

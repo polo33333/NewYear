@@ -272,3 +272,173 @@
     left: 22px;
     background: #000;
 }
+
+/* ── UI Template Picker ── */
+.sett-template-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.sett-template-option:hover {
+    border-color: rgba(167, 139, 250, 0.3);
+    background: rgba(167, 139, 250, 0.04);
+    transform: translateX(2px);
+}
+
+.sett-template-option.active {
+    border-color: rgba(167, 139, 250, 0.5);
+    background: rgba(167, 139, 250, 0.08);
+    box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.25), 0 4px 16px rgba(124, 58, 237, 0.15);
+}
+
+.sett-template-option.active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* Template mini preview box */
+.sett-template-preview {
+    flex-shrink: 0;
+    width: 120px;
+    height: 40px;
+    background: rgba(4, 8, 20, 0.8);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Matrix preview — progress bars */
+.sett-tpl-matrix {
+    gap: 3px;
+}
+
+.sett-tpl-bar {
+    height: 18px;
+    width: 30px;
+    border-radius: 1px;
+    opacity: 0.6;
+    position: relative;
+    overflow: hidden;
+}
+
+.sett-tpl-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 60%;
+    height: 100%;
+    background: inherit;
+    opacity: 0.8;
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 0 100%);
+}
+
+.sett-tpl-score {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 15px;
+    color: #00f5ff;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+    padding: 0 2px;
+}
+
+/* Minimal preview */
+.sett-tpl-minimal {
+    gap: 4px;
+}
+
+.sett-tpl-name-sm {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sett-tpl-big-score {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: #00f5ff;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+.sett-tpl-sep {
+    font-size: 7px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 1px;
+}
+
+/* Classic preview */
+.sett-tpl-classic {
+    gap: 6px;
+    background: rgba(6, 10, 24, 0.95);
+}
+
+.sett-tpl-box {
+    background: rgba(6, 10, 24, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Template info text */
+.sett-template-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sett-tpl-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.sett-tpl-desc {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.4;
+}
+
+/* Checkmark */
+.sett-tpl-check {
+    font-size: 13px;
+    color: #a78bfa;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: scale(0.7);
+    flex-shrink: 0;
+}
+
+.sett-template-option.active .sett-tpl-check {
+    opacity: 1;
+    transform: scale(1);
+}
+.sett-color-option input[type='radio']:checked + .color-preview { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.3); transform: scale(1.15); }
+.sett-color-option:hover .color-preview { transform: scale(1.1); }
+
+input[type='color']::-webkit-color-swatch-wrapper { padding: 0; }
+input[type='color']::-webkit-color-swatch { border: none; border-radius: 50%; }
+input[type='color'] { -webkit-appearance: none; border: none; border-radius: 50%; overflow: hidden; }

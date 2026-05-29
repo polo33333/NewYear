@@ -94,6 +94,7 @@ router.get('/stats', requireObsToken, (req, res) => res.sendFile(path.join(__dir
 router.get('/character-editor', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
 router.get('/weapon-editor', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
 router.get('/history', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
+router.get('/bracket', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
 router.get('/settings', (req, res) => res.sendFile(path.join(__dirname, '../public/control.html')));
 
 // Public bracket viewer

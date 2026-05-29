@@ -28,16 +28,34 @@ document.addEventListener('DOMContentLoaded', () => {
     window.switchTab = function(tabName) {
         window.currentTab = tabName;
 
-        // 1. Hide all tabs
-        const tabs = document.querySelectorAll('.main-content-tab');
-        tabs.forEach(tab => {
-            tab.style.display = 'none';
+        let targetTab = document.getElementById('tab-' + tabName);
+        
+        // 1. If tab container doesn't exist, create it dynamically
+        if (!targetTab) {
+            targetTab = document.createElement('div');
+            targetTab.id = 'tab-' + tabName;
+            targetTab.className = 'main-content-tab custom-scroll';
+            targetTab.style.display = 'none';
+            targetTab.style.overflowY = 'auto'; // FIX: Enable scrolling for dynamic tabs like Settings
+            targetTab.style.paddingBottom = '32px';
+            // Append it to the main-content wrapper
+            document.querySelector('.main-content').appendChild(targetTab);
+        }
+
+        // 2. Hide all tabs, show target tab
+        const allTabs = document.querySelectorAll('.main-content-tab');
+        allTabs.forEach(tab => {
+            if (tab.id === 'tab-' + tabName) {
+                tab.style.display = 'flex'; // Use flex so inner contents expand properly
+                tab.classList.add('active-tab');
+            } else {
+                tab.style.display = 'none';
+                tab.classList.remove('active-tab');
+            }
         });
 
-        // 2. Show targeted tab
-        const targetTab = document.getElementById('tab-' + tabName);
+        // 3. Check if we need to load this tab dynamically
         if (targetTab) {
-            targetTab.style.display = 'flex';
             
             // Check if we need to load this tab dynamically
             if (tabName !== 'control' && targetTab.innerHTML.trim() === '') {
@@ -49,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 
-                // Fetch the static HTML page directly
-                fetch('/templates/' + tabName)
+                // Fetch the static HTML page directly (with cache buster)
+                fetch('/templates/' + tabName + '?t=' + new Date().getTime())
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to fetch page');
                         return response.text();
@@ -74,6 +92,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Strip any inner scripts from being executed immediately in HTML
                             mainContent.querySelectorAll('script').forEach(s => s.remove());
                             targetTab.innerHTML = mainContent.innerHTML;
+                            
+                            // After injecting HTML:
+                            // 1. Update Welcome text across all headers
+                            if (typeof window.updateUserWelcome === 'function') {
+                                window.updateUserWelcome();
+                            }
+                            
+                            // 2. Sync connection status from control tab
+                            const controlDot = document.querySelector('#tab-control .conn-dot');
+                            const isOnline = controlDot && controlDot.classList.contains('online');
+                            targetTab.querySelectorAll('.conn-dot').forEach(el => el.className = 'conn-dot status-dot ' + (isOnline ? 'online' : ''));
+                            targetTab.querySelectorAll('.conn-text').forEach(el => el.textContent = isOnline ? 'CONNECTED' : 'OFFLINE');
                         } else {
                             targetTab.innerHTML = htmlText;
                         }
@@ -154,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (path === '/weapon-editor') tabName = 'weapon-editor';
         else if (path === '/history') tabName = 'history';
         else if (path === '/settings') tabName = 'settings';
+        else if (path === '/bracket') tabName = 'bracket';
         
         window.switchTab(tabName);
     });
@@ -165,6 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (initPath === '/weapon-editor') initialTab = 'weapon-editor';
     else if (initPath === '/history') initialTab = 'history';
     else if (initPath === '/settings') initialTab = 'settings';
+    else if (initPath === '/bracket') initialTab = 'bracket';
+
+    // Apply saved accent color globally
+    const savedAccent = localStorage.getItem('uiAccentColor');
+    if (savedAccent) {
+        document.documentElement.style.setProperty('--accent', savedAccent);
+    }
 
     // Activate the initial tab
     window.switchTab(initialTab);

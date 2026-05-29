@@ -1,3 +1,10 @@
+// Apply UI Mode immediately to avoid flickering
+const savedUIMode = localStorage.getItem('uiMode') || 'dark';
+document.documentElement.setAttribute('data-ui-mode', savedUIMode);
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.setAttribute('data-ui-mode', savedUIMode);
+});
+
 const token = localStorage.getItem('kdone_auth_token');
 const userId = localStorage.getItem('kdone_user_id');
 
@@ -60,9 +67,12 @@ window.logout = async function () {
 };
 
 window.updateUserWelcome = function () {
-  const username = localStorage.getItem('kdone_username') || 'User';
+  const username = localStorage.getItem('matrix_username') || 'ADMIN';
   const headerRights = document.querySelectorAll('.header-right');
+
   headerRights.forEach(headerRight => {
+    const statusGroup = headerRight.querySelector('.header-status-group');
+
     if (!headerRight.querySelector('.user-welcome-text')) {
       const welcomeSpan = document.createElement('span');
       welcomeSpan.className = 'user-welcome-text';
@@ -75,8 +85,8 @@ window.updateUserWelcome = function () {
       welcomeSpan.style.display = 'inline-flex';
       welcomeSpan.style.alignItems = 'center';
       welcomeSpan.innerHTML = `WELCOME, <span style="font-weight: 900; color: var(--accent); margin-left: 4px;">${username.toUpperCase()}</span>`;
-
-      const statusGroup = headerRight.querySelector('.header-status-group');
+      
+      // Try to insert before status dot, or if no status dot, at the beginning of header-right
       if (statusGroup) {
         welcomeSpan.style.marginRight = '0';
         statusGroup.insertBefore(welcomeSpan, statusGroup.firstChild);

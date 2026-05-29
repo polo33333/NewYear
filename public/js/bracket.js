@@ -75,7 +75,7 @@
     let currentHistoryView = 'table'; // 'table' | 'card'
 
     // Set view mode (table vs card)
-    window.setHistoryView = function(view) {
+    window.setHistoryView = function (view) {
         currentHistoryView = view;
         document.querySelectorAll('.hist-view-btn').forEach(btn => btn.classList.remove('active'));
         const btn = document.getElementById('btn-view-' + view);
@@ -782,7 +782,7 @@
     window.showMatchDetails = showMatchDetails;
     window.closeDetailsModal = closeDetailsModal;
     window.syncMatchToSheets = syncMatchToSheets;
-    window.refreshHistory = loadData;
+    window.refreshBracket = loadData;
     window.bindMatchToNode = bindMatchToNode;
     window.unbindMatchFromNode = unbindMatchFromNode;
     window.unbindActiveMatch = unbindActiveMatch;
@@ -806,36 +806,10 @@
     let startCanvasY = 0;
     let tempRegionHelper = null;
 
-    // Sub-tab toggling logic
-    function switchHistorySubTab(tabName) {
-        activeSubTab = tabName;
-
-        // Toggle buttons class
-        document.querySelectorAll('.history-subtabs-nav .subtab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.id === 'btn-subtab-' + tabName);
-        });
-
-        // Toggle content panes
-        document.getElementById('history-list-view').style.display = tabName === 'list' ? 'block' : 'none';
-        document.getElementById('history-bracket-view').style.display = tabName === 'bracket' ? 'flex' : 'none';
-
-        // Adjust parent container scroll behavior
-        const tabEl = document.getElementById('tab-history');
-        if (tabEl) {
-            if (tabName === 'bracket') {
-                tabEl.style.padding = '12px';
-                tabEl.style.overflow = 'hidden';
-                initBracketDesigner();
-                
-                // Redraw connections after the tab display turns flex and layout settles
-                setTimeout(() => {
-                    drawConnections();
-                }, 100);
-            } else {
-                tabEl.style.padding = '24px';
-                tabEl.style.overflow = 'auto';
-            }
-        }
+    // Initialize tab styles for Bracket View
+    const tabEl = document.getElementById('tab-bracket');
+    if (tabEl) {
+        tabEl.style.overflow = 'hidden';
     }
 
     // Initialize Bracket Designer Viewport Listeners
@@ -860,11 +834,11 @@
             select.innerHTML = `
                 <option value="">-- Chọn Trận Đấu --</option>
                 ${savedMatches.map(s => {
-                    const nameA = s.score?.teamA?.name || 'TEAM A';
-                    const nameB = s.score?.teamB?.name || 'TEAM B';
-                    const bracket = s.tournament?.bracketLabel || 'Trận';
-                    return `<option value="${s.id}">${nameA} vs ${nameB} (${bracket})</option>`;
-                }).join('')}
+                const nameA = s.score?.teamA?.name || 'TEAM A';
+                const nameB = s.score?.teamB?.name || 'TEAM B';
+                const bracket = s.tournament?.bracketLabel || 'Trận';
+                return `<option value="${s.id}">${nameA} vs ${nameB} (${bracket})</option>`;
+            }).join('')}
             `;
             select.value = currentVal;
         });
@@ -899,7 +873,7 @@
                 tempRegionHelper.style.width = '0px';
                 tempRegionHelper.style.height = '0px';
                 tempRegionHelper.style.zIndex = '1000';
-                
+
                 const container = document.getElementById('bracket-nodes-container');
                 if (container) container.appendChild(tempRegionHelper);
                 return;
@@ -1406,7 +1380,7 @@
                 const portType = outPort.getAttribute('data-port-type'); // 'winner' or 'loser'
                 const coords = getPortCoordinates(node.id, portType);
                 if (!coords) return;
-                
+
                 activeDragConnection = {
                     fromNodeId: node.id,
                     fromPort: portType,
@@ -1493,7 +1467,7 @@
                     const teamB = sourceNode.computedTeamB || save?.score?.teamB?.name || 'TEAM B';
                     const scoreA = save?.score?.teamA?.score ?? 0;
                     const scoreB = save?.score?.teamB?.score ?? 0;
-                    
+
                     const winner = scoreA > scoreB ? teamA : (scoreB > scoreA ? teamB : '');
                     const loser = scoreA > scoreB ? teamB : (scoreB > scoreA ? teamA : '');
 
@@ -1608,10 +1582,10 @@
 
                 const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 pathEl.setAttribute('class', 'bracket-svg-path');
-                
+
                 const dx = Math.abs(p2.x - p1.x) * 0.55;
                 const pathString = `M ${p1.x} ${p1.y} C ${p1.x + dx} ${p1.y}, ${p2.x - dx} ${p2.y}, ${p2.x} ${p2.y}`;
-                
+
                 pathEl.setAttribute('d', pathString);
 
                 // Create a wider invisible interaction helper path for easy hover
@@ -1647,7 +1621,7 @@
 
                 deleteBtn.appendChild(circle);
                 deleteBtn.appendChild(text);
-                
+
                 groupEl.appendChild(pathEl);
                 groupEl.appendChild(helperPath);
                 groupEl.appendChild(deleteBtn);
@@ -1658,7 +1632,7 @@
                     const totalLength = pathEl.getTotalLength();
                     const midPoint = pathEl.getPointAtLength(totalLength / 2);
                     deleteBtn.setAttribute('transform', `translate(${midPoint.x}, ${midPoint.y})`);
-                } catch(e) {
+                } catch (e) {
                     const midX = (p1.x + p2.x) / 2;
                     const midY = (p1.y + p2.y) / 2;
                     deleteBtn.setAttribute('transform', `translate(${midX}, ${midY})`);
@@ -1823,7 +1797,7 @@
                     roomId = 'room_' + parts[2];
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
 
         const publicUrl = `${window.location.origin}/bracket-view?roomId=${roomId}`;
         navigator.clipboard.writeText(publicUrl).then(() => {
@@ -1834,7 +1808,6 @@
     }
 
     // Bind bracket editor helpers to window
-    window.switchHistorySubTab = switchHistorySubTab;
     window.addSeedNode = addSeedNode;
     window.addMatchNode = addMatchNode;
     window.toggleHudCollapse = toggleHudCollapse;
@@ -1851,21 +1824,7 @@
     window.clearBracketConfig = clearBracketConfig;
 
     // Initialize immediately
-    const searchInput = document.getElementById('hist-search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', renderHistory);
-    }
-    const sortSelect = document.getElementById('hist-sort-order');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', () => {
-            renderHistory();
-            renderBracketSidebarMatches();
-        });
-    }
-    const bracketFilterSelect = document.getElementById('hist-bracket-filter');
-    if (bracketFilterSelect) {
-        bracketFilterSelect.addEventListener('change', renderHistory);
-    }
+    initBracketDesigner();
     loadData();
 })();
 

@@ -22,9 +22,16 @@ function connect() {
   const currentToken = localStorage.getItem('kdone_auth_token') || '';
   const currentRoomId = sessionStorage.getItem('kdone_current_room_id') || '';
   ws = new WebSocket(`${protocol}//${location.host}/ws/control?token=${currentToken}&roomId=${currentRoomId}`);
-  ws.onopen = () => { document.getElementById('conn-dot').className = 'status-dot online'; document.getElementById('conn-text').textContent = 'CONNECTED'; };
+  ws.onopen = () => { 
+    document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot online');
+    document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'CONNECTED');
+  };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
-  ws.onclose = () => { document.getElementById('conn-dot').className = 'status-dot'; document.getElementById('conn-text').textContent = 'OFFLINE'; setTimeout(connect, 2000); };
+  ws.onclose = () => { 
+    document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot');
+    document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'OFFLINE');
+    setTimeout(connect, 2000); 
+  };
 }
 
 function handleMessage(msg) {

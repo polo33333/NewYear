@@ -18,6 +18,7 @@
   <link rel="icon" type="image/webp" href="/images/icon/Yangyang.webp?v=2">
   <link rel="manifest" href="/manifest.json">
   <script src="/js/auth.js"></script>
+    <link rel="stylesheet" href="/css/light-mode.css">
 </head>
 
 <body>
@@ -44,6 +45,10 @@
           <span class="nav-icon"><i class="fas fa-history"></i></span>
           <span class="nav-text">History</span>
         </a>
+        <a href="/bracket" class="nav-link" data-tab="bracket">
+          <span class="nav-icon"><i class="fas fa-sitemap"></i></span>
+          <span class="nav-text">Bracket</span>
+        </a>
         <a href="/settings" class="nav-link" data-tab="settings">
           <span class="nav-icon"><i class="fas fa-cog"></i></span>
           <span class="nav-text">Settings</span>
@@ -63,7 +68,7 @@
           <div class="header-right">
             <div class="header-status-group">
               <div class="status-badge">
-                <div id="conn-dot" class="status-dot"></div> <span id="conn-text">OFFLINE</span>
+                <div id="conn-dot" class="conn-dot status-dot"></div> <span id="conn-text" class="conn-text">OFFLINE</span>
               </div>
             </div>
             <button class="btn-logout" onclick="logout()" title="Logout"><i class="fas fa-power-off"></i></button>
@@ -468,7 +473,7 @@
       <!-- Core SPA Scripts -->
       <script src="/js/toast.js?v=3"></script>
       <script src="/js/music-player.js?v=3"></script>
-      <script src="/js/sidebar.js?v=3"></script>
+      <script src="/js/sidebar.js?v=4"></script>
 
       <!-- Tab Modules (Properly scoped inside IIFEs) -->
       <script src="/js/control.js?v=4"></script>

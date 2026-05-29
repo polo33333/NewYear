@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/sidebar.css?v=4">
     <link rel="stylesheet" href="css/toast.css">
     <script src="js/auth.js"></script>
+    <link rel="stylesheet" href="/css/light-mode.css">
 </head>
 
 <body>
@@ -41,6 +42,10 @@
                     <span class="nav-icon"><i class="fas fa-history"></i></span>
                     <span class="nav-text">History</span>
                 </a>
+                <a href="/bracket" class="nav-link" data-tab="bracket">
+                    <span class="nav-icon"><i class="fas fa-sitemap"></i></span>
+                    <span class="nav-text">Bracket</span>
+                </a>
                 <a href="/settings" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-cog"></i></span>
                     <span class="nav-text">Settings</span>
@@ -49,12 +54,17 @@
         </aside>
 
         <div class="main-content">
-            <header style="display: flex; justify-content: space-between; align-items: center;">
+            <header>
                 <div class="brand">
                     <h1>Character Editor</h1>
                     <p id="char-stats-summary">Loading data...</p>
                 </div>
                 <div class="header-right">
+                    <div class="header-status-group">
+                        <div class="status-badge">
+                            <div class="conn-dot status-dot"></div> <span class="conn-text">OFFLINE</span>
+                        </div>
+                    </div>
                     <button class="btn-logout" onclick="logout()" title="Logout"><i
                             class="fas fa-power-off"></i></button>
                 </div>
@@ -63,6 +73,7 @@
             <div id="char-editor-container">
                 <div class="controls">
                     <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
                         <input type="text" id="char-search-input" placeholder="Search by name...">
                     </div>
 
@@ -83,10 +94,12 @@
                     </div>
 
                     <div class="actions">
-                        <button class="btn btn-outline-danger" id="char-reset-btn">Reset All RC</button>
-                        <button class="btn btn-primary" id="char-save-server-btn"
-                            style="background: var(--success); color: var(--bg-body);">Save to Server</button>
-                        <!-- <button class="btn btn-primary" id="char-export-btn">Export JSON</button> -->
+                        <button class="btn btn-outline-danger" id="char-reset-btn">
+                            <i class="fas fa-trash-alt"></i> Reset All Values
+                        </button>
+                        <button class="btn btn-primary" id="char-save-server-btn">
+                            <i class="fas fa-save"></i> Save to Server
+                        </button>
                     </div>
                 </div>
 
@@ -130,7 +143,7 @@
 
             <footer>
                 <div id="char-footer-stats">Total: 0 | Filtered: 0</div>
-                <div>Created for project-livebox</div>
+                <div>Created for MATRIX HUD</div>
             </footer>
 
             <div id="toast" class="save-toast">JSON Exported Successfully!</div>

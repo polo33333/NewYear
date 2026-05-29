@@ -117,42 +117,52 @@ div#char-editor-container {
     overflow: hidden;
 }
 
-/* Controls */
+/* Controls (Matching .hist-toolbar) */
 .controls {
     display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
     align-items: center;
-    background: rgba(26, 29, 46, 0.4);
-    padding: 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .search-box {
     position: relative;
     flex: 1;
     min-width: 200px;
+    max-width: 380px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 12px;
+    pointer-events: none;
 }
 
 .search-box input {
     width: 100%;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 10px 16px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    padding: 9px 14px 9px 36px;
     border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
     outline: none;
     transition: all 0.2s;
 }
 
 .search-box input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.1);
+    border-color: rgba(0, 245, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.08);
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
 }
 
 .filter-group {
@@ -170,27 +180,44 @@ div#char-editor-container {
 }
 
 .filter-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
-    background: transparent;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
     color: var(--text-dim);
     cursor: pointer;
     font-size: 12px;
+    font-weight: 600;
     font-family: inherit;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
 }
 
 .filter-btn.active {
-    border-color: currentColor;
-    color: var(--text-main);
+    color: var(--accent);
+    border-color: rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.08);
+    text-shadow: 0 0 8px currentColor;
+}
+
+/* Ensure rank colors override active color if present */
+.filter-btn.active.rank5 {
+    color: var(--rank5);
+}
+
+.filter-btn.active.rank4 {
+    color: var(--rank4);
+}
+
+.filter-btn.active.rank3 {
+    color: var(--rank3);
 }
 
 .filter-btn:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
     color: var(--text-main);
+    transform: translateY(-1px);
 }
 
 .actions {
@@ -200,38 +227,46 @@ div#char-editor-container {
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
     font-family: inherit;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.2s;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .btn-primary {
-    background: var(--accent);
-    color: var(--bg-body);
+    background: rgba(166, 227, 161, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(166, 227, 161, 0.3);
 }
 
 .btn-primary:hover {
-    filter: brightness(1.1);
+    background: rgba(166, 227, 161, 0.2);
+    border-color: rgba(166, 227, 161, 0.5);
+    box-shadow: 0 0 12px rgba(166, 227, 161, 0.2);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(137, 180, 250, 0.2);
 }
 
 .btn-outline-danger {
-    background: transparent;
+    background: rgba(243, 139, 168, 0.05);
     color: var(--danger);
-    border: 1px solid var(--danger);
+    border: 1px solid rgba(243, 139, 168, 0.2);
 }
 
 .btn-outline-danger:hover {
-    background: rgba(243, 139, 168, 0.1);
+    background: rgba(243, 139, 168, 0.15);
+    border-color: rgba(243, 139, 168, 0.4);
+    box-shadow: 0 0 12px rgba(243, 139, 168, 0.15);
+    transform: translateY(-1px);
 }
 
 .main-content {
@@ -243,7 +278,7 @@ div#char-editor-container {
     overflow-x: auto;
     overflow-y: auto;
     max-height: calc(100vh - 290px);
-    background: var(--bg-card);
+    background: rgba(15, 23, 42, 0.15);
     border-radius: 12px;
     border: 1px solid var(--border-color);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -420,7 +455,7 @@ button.btn-logout {
 }
 
 footer {
-    margin-top: 24px;
+    margin: 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;

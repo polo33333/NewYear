@@ -1,0 +1,152 @@
+/* ── LIGHT MODE OVERRIDES ── */
+body[data-ui-mode="light"] {
+    --bg: #f3f4f6; /* Lighter background */
+    --panel: #ffffff;
+    --accent: #0ea5e9; /* Light blue accent */
+    --text: #1f2937; /* Dark text */
+    --text-dim: #6b7280;
+    --success: #059669;
+    --danger: #dc2626;
+
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Sidebar */
+body[data-ui-mode="light"] .sidebar {
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+}
+body[data-ui-mode="light"] .nav-link {
+    color: var(--text-dim);
+}
+body[data-ui-mode="light"] .nav-link:hover,
+body[data-ui-mode="light"] .nav-link.active {
+    background: #f3f4f6;
+    color: var(--accent);
+}
+body[data-ui-mode="light"] .sidebar-toggle {
+    color: var(--accent);
+}
+
+/* Header */
+body[data-ui-mode="light"] header,
+body[data-ui-mode="light"] .hist-page-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+body[data-ui-mode="light"] .brand h1,
+body[data-ui-mode="light"] .hist-page-brand h1 {
+    color: var(--accent);
+}
+
+/* Panels / Cards */
+body[data-ui-mode="light"] .panel,
+body[data-ui-mode="light"] .settings-card,
+body[data-ui-mode="light"] .sp-section {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Inputs & Buttons */
+body[data-ui-mode="light"] input,
+body[data-ui-mode="light"] textarea,
+body[data-ui-mode="light"] select {
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    color: var(--text);
+}
+body[data-ui-mode="light"] input:focus,
+body[data-ui-mode="light"] textarea:focus {
+    border-color: var(--accent);
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
+}
+body[data-ui-mode="light"] button {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: var(--text);
+}
+body[data-ui-mode="light"] button:hover {
+    background: #e5e7eb;
+    border-color: var(--accent);
+    color: var(--accent);
+}
+body[data-ui-mode="light"] button.active,
+body[data-ui-mode="light"] .scene-btn.active {
+    background: #e0f2fe !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+    box-shadow: none !important;
+}
+
+/* Table / Grid items */
+body[data-ui-mode="light"] .history-table th {
+    background: #f3f4f6;
+    color: var(--text-dim);
+    border-bottom: 2px solid #e5e7eb;
+}
+body[data-ui-mode="light"] .history-table td {
+    border-bottom: 1px solid #e5e7eb;
+}
+body[data-ui-mode="light"] .history-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* Modals */
+body[data-ui-mode="light"] .modal-content {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+body[data-ui-mode="light"] .modal-header,
+body[data-ui-mode="light"] .modal-footer {
+    border-color: #e5e7eb;
+    background: #f9fafb;
+}
+body[data-ui-mode="light"] .modal-title {
+    color: var(--text);
+}
+
+/* Misc Tweaks */
+body[data-ui-mode="light"] .char-square {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+}
+body[data-ui-mode="light"] .char-square:hover {
+    border-color: var(--accent);
+}
+body[data-ui-mode="light"] .char-square.filled {
+    background: #e0f2fe;
+    border-color: var(--accent);
+    color: var(--text);
+}
+body[data-ui-mode="light"] .char-label {
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-dim);
+}
+body[data-ui-mode="light"] .divider,
+body[data-ui-mode="light"] .divider-v {
+    background: #e5e7eb;
+}
+body[data-ui-mode="light"] .score-val {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    color: var(--text);
+}
+body[data-ui-mode="light"] .subtab-btn {
+    color: var(--text-dim);
+}
+body[data-ui-mode="light"] .subtab-btn:hover {
+    background: #f3f4f6;
+}
+body[data-ui-mode="light"] .subtab-btn.active {
+    background: #e0f2fe;
+    color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+}
+body[data-ui-mode="light"] .subtab-pill-group {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+}

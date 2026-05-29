@@ -456,4 +456,74 @@ function mergeStyle(sheet, r1,c1, r2,c2, value, bg, fg, bold, align) {
     // Load settings immediately
     window.refreshSettings = loadSettings;
     loadSettings();
+
+    // ── UI Accent Color Logic ──
+    function initAccentColorPicker() {
+        const colorRadios = document.querySelectorAll('input[name="uiAccent"]');
+        const customColorInput = document.getElementById('uiAccentCustom');
+        let selectedAccent = localStorage.getItem('uiAccentColor') || '#00f5ff';
+
+        if (!colorRadios.length) return; // Not on settings page
+
+        // Highlight selected on load
+        function updateAccentSelection() {
+            let matched = false;
+            colorRadios.forEach(r => {
+                if (r.value.toLowerCase() === selectedAccent.toLowerCase()) {
+                    r.checked = true;
+                    matched = true;
+                }
+            });
+            if (!matched && customColorInput) {
+                customColorInput.value = selectedAccent;
+                colorRadios.forEach(r => r.checked = false);
+            }
+        }
+        
+        updateAccentSelection();
+
+        colorRadios.forEach(r => {
+            r.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    selectedAccent = e.target.value;
+                    document.documentElement.style.setProperty('--accent', selectedAccent);
+                }
+            });
+        });
+
+        if (customColorInput) {
+            customColorInput.addEventListener('input', (e) => {
+                colorRadios.forEach(r => r.checked = false);
+                selectedAccent = e.target.value;
+                document.documentElement.style.setProperty('--accent', selectedAccent);
+            });
+        }
+
+        const saveAccentBtn = document.getElementById('sett-btn-save-accent');
+        if (saveAccentBtn) {
+            saveAccentBtn.addEventListener('click', () => {
+                const oldHtml = saveAccentBtn.innerHTML;
+                saveAccentBtn.disabled = true;
+                saveAccentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    localStorage.setItem('uiAccentColor', selectedAccent);
+                    showToast(`Đã lưu màu chủ đạo!`, 'success');
+                    saveAccentBtn.innerHTML = '<i class="fas fa-check-circle"></i> Saved!';
+                    saveAccentBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                } catch (e) {
+                    showToast('Lỗi lưu màu chủ đạo: ' + e.message, 'error');
+                    saveAccentBtn.innerHTML = oldHtml;
+                }
+
+                saveAccentBtn.disabled = false;
+                setTimeout(() => {
+                    saveAccentBtn.innerHTML = oldHtml;
+                    saveAccentBtn.style.background = '';
+                }, 2500);
+            });
+        }
+    }
+
+    initAccentColorPicker();
 })();
