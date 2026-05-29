@@ -1,6 +1,6 @@
 [
   {
-    "id": 24,
+    "id": 1,
     "name": "Aalto",
     "rank": 4,
     "element": 4,
@@ -17,7 +17,7 @@
     "rc6": 0
   },
   {
-    "id": 15,
+    "id": 2,
     "name": "Aemeath",
     "rank": 5,
     "element": 2,
@@ -34,7 +34,7 @@
     "rc6": 36000
   },
   {
-    "id": 21,
+    "id": 3,
     "name": "Augusta",
     "rank": 5,
     "element": 3,
@@ -51,7 +51,7 @@
     "rc6": 36000
   },
   {
-    "id": 2,
+    "id": 4,
     "name": "Baizhi",
     "rank": 4,
     "element": 1,
@@ -68,7 +68,7 @@
     "rc6": 0
   },
   {
-    "id": 11,
+    "id": 5,
     "name": "Brant",
     "rank": 5,
     "element": 2,
@@ -85,7 +85,7 @@
     "rc6": 36000
   },
   {
-    "id": 22,
+    "id": 6,
     "name": "Buling",
     "rank": 4,
     "element": 3,
@@ -102,7 +102,7 @@
     "rc6": 0
   },
   {
-    "id": 16,
+    "id": 7,
     "name": "Calcharo",
     "rank": 5,
     "element": 3,
@@ -119,7 +119,7 @@
     "rc6": 0
   },
   {
-    "id": 43,
+    "id": 8,
     "name": "Camellya",
     "rank": 5,
     "element": 6,
@@ -136,7 +136,7 @@
     "rc6": 36000
   },
   {
-    "id": 46,
+    "id": 9,
     "name": "Cantarella",
     "rank": 5,
     "element": 6,
@@ -153,7 +153,7 @@
     "rc6": 36000
   },
   {
-    "id": 6,
+    "id": 10,
     "name": "Carlotta",
     "rank": 5,
     "element": 1,
@@ -170,7 +170,7 @@
     "rc6": 36000
   },
   {
-    "id": 29,
+    "id": 11,
     "name": "Cartethyia",
     "rank": 5,
     "element": 4,
@@ -187,7 +187,7 @@
     "rc6": 36000
   },
   {
-    "id": 10,
+    "id": 12,
     "name": "Changli",
     "rank": 5,
     "element": 2,
@@ -204,7 +204,7 @@
     "rc6": 36000
   },
   {
-    "id": 38,
+    "id": 13,
     "name": "Chisa",
     "rank": 5,
     "element": 6,
@@ -221,7 +221,7 @@
     "rc6": 36000
   },
   {
-    "id": 7,
+    "id": 14,
     "name": "Chixia",
     "rank": 4,
     "element": 2,
@@ -238,7 +238,7 @@
     "rc6": 0
   },
   {
-    "id": 28,
+    "id": 15,
     "name": "Ciaccona",
     "rank": 5,
     "element": 4,
@@ -255,7 +255,7 @@
     "rc6": 36000
   },
   {
-    "id": 42,
+    "id": 16,
     "name": "Danjin",
     "rank": 4,
     "element": 6,
@@ -272,7 +272,7 @@
     "rc6": 0
   },
   {
-    "id": 50,
+    "id": 17,
     "name": "Denia",
     "rank": 5,
     "element": 2,
@@ -289,7 +289,7 @@
     "rc6": 36000
   },
   {
-    "id": 8,
+    "id": 18,
     "name": "Encore",
     "rank": 5,
     "element": 2,
@@ -306,7 +306,7 @@
     "rc6": 0
   },
   {
-    "id": 13,
+    "id": 19,
     "name": "Galbrena",
     "rank": 5,
     "element": 2,
@@ -323,7 +323,7 @@
     "rc6": 36000
   },
   {
-    "id": 49,
+    "id": 20,
     "name": "Hiyuki",
     "rank": 5,
     "element": 1,
@@ -340,7 +340,7 @@
     "rc6": 36000
   },
   {
-    "id": 30,
+    "id": 21,
     "name": "Iuno",
     "rank": 5,
     "element": 4,
@@ -357,7 +357,7 @@
     "rc6": 36000
   },
   {
-    "id": 26,
+    "id": 22,
     "name": "Jianxin",
     "rank": 5,
     "element": 4,
@@ -374,7 +374,7 @@
     "rc6": 0
   },
   {
-    "id": 19,
+    "id": 23,
     "name": "Jinhsi",
     "rank": 5,
     "element": 5,
@@ -391,7 +391,7 @@
     "rc6": 36000
   },
   {
-    "id": 25,
+    "id": 24,
     "name": "Jiyan",
     "rank": 5,
     "element": 4,
@@ -408,7 +408,7 @@
     "rc6": 36000
   },
   {
-    "id": 3,
+    "id": 25,
     "name": "Lingyang",
     "rank": 5,
     "element": 1,
@@ -425,7 +425,41 @@
     "rc6": 0
   },
   {
-    "id": 34,
+    "id": 26,
+    "name": "Lucilla",
+    "rank": 5,
+    "element": 1,
+    "weapon": 5,
+    "icon": "/icon/Lucilla.webp",
+    "energy": 1,
+    "isActive": true,
+    "rc0": 0,
+    "rc1": 2000,
+    "rc2": 6000,
+    "rc3": 12000,
+    "rc4": 19000,
+    "rc5": 27000,
+    "rc6": 36000
+  },
+  {
+    "id": 27,
+    "name": "Lucy",
+    "rank": 5,
+    "element": 5,
+    "weapon": 3,
+    "icon": "/icon/Lucy.webp",
+    "energy": 1,
+    "isActive": true,
+    "rc0": 0,
+    "rc1": 2000,
+    "rc2": 6000,
+    "rc3": 12000,
+    "rc4": 19000,
+    "rc5": 27000,
+    "rc6": 36000
+  },
+  {
+    "id": 28,
     "name": "Lumi",
     "rank": 4,
     "element": 3,
@@ -442,7 +476,7 @@
     "rc6": 0
   },
   {
-    "id": 12,
+    "id": 29,
     "name": "Lupa",
     "rank": 5,
     "element": 2,
@@ -459,7 +493,7 @@
     "rc6": 36000
   },
   {
-    "id": 40,
+    "id": 30,
     "name": "Luuk Herssen",
     "rank": 5,
     "element": 5,
@@ -476,7 +510,7 @@
     "rc6": 36000
   },
   {
-    "id": 39,
+    "id": 31,
     "name": "Lynae",
     "rank": 5,
     "element": 5,
@@ -493,7 +527,7 @@
     "rc6": 36000
   },
   {
-    "id": 14,
+    "id": 32,
     "name": "Mornye",
     "rank": 5,
     "element": 2,
@@ -510,7 +544,7 @@
     "rc6": 36000
   },
   {
-    "id": 9,
+    "id": 33,
     "name": "Mortefi",
     "rank": 4,
     "element": 2,
@@ -527,7 +561,7 @@
     "rc6": 0
   },
   {
-    "id": 36,
+    "id": 34,
     "name": "Phoebe",
     "rank": 5,
     "element": 5,
@@ -544,7 +578,7 @@
     "rc6": 36000
   },
   {
-    "id": 47,
+    "id": 35,
     "name": "Phrolova",
     "rank": 5,
     "element": 6,
@@ -561,7 +595,7 @@
     "rc6": 36000
   },
   {
-    "id": 31,
+    "id": 36,
     "name": "Qiuyuan",
     "rank": 5,
     "element": 4,
@@ -578,7 +612,24 @@
     "rc6": 36000
   },
   {
-    "id": 45,
+    "id": 37,
+    "name": "Rebecca",
+    "rank": 5,
+    "element": 3,
+    "weapon": 3,
+    "icon": "/icon/Rebecca.webp",
+    "energy": 1,
+    "isActive": true,
+    "rc0": 0,
+    "rc1": 2000,
+    "rc2": 6000,
+    "rc3": 12000,
+    "rc4": 19000,
+    "rc5": 27000,
+    "rc6": 36000
+  },
+  {
+    "id": 38,
     "name": "Roccia",
     "rank": 5,
     "element": 6,
@@ -595,7 +646,7 @@
     "rc6": 36000
   },
   {
-    "id": 27,
+    "id": 39,
     "name": "Rover",
     "rank": 5,
     "element": 0,
@@ -612,7 +663,7 @@
     "rc6": 0
   },
   {
-    "id": 1,
+    "id": 40,
     "name": "Sanhua",
     "rank": 4,
     "element": 1,
@@ -629,7 +680,7 @@
     "rc6": 0
   },
   {
-    "id": 35,
+    "id": 41,
     "name": "Shorekeeper",
     "rank": 5,
     "element": 5,
@@ -646,7 +697,7 @@
     "rc6": 36000
   },
   {
-    "id": 48,
+    "id": 42,
     "name": "Sigrika",
     "rank": 5,
     "element": 4,
@@ -663,7 +714,7 @@
     "rc6": 36000
   },
   {
-    "id": 41,
+    "id": 43,
     "name": "Taoqi",
     "rank": 4,
     "element": 6,
@@ -680,7 +731,7 @@
     "rc6": 0
   },
   {
-    "id": 33,
+    "id": 44,
     "name": "Verina",
     "rank": 5,
     "element": 5,
@@ -697,7 +748,7 @@
     "rc6": 2000
   },
   {
-    "id": 20,
+    "id": 45,
     "name": "Xiangli Yao",
     "rank": 5,
     "element": 3,
@@ -714,7 +765,7 @@
     "rc6": 36000
   },
   {
-    "id": 23,
+    "id": 46,
     "name": "Yangyang",
     "rank": 4,
     "element": 4,
@@ -731,7 +782,7 @@
     "rc6": 0
   },
   {
-    "id": 17,
+    "id": 47,
     "name": "Yinlin",
     "rank": 5,
     "element": 3,
@@ -748,7 +799,7 @@
     "rc6": 36000
   },
   {
-    "id": 5,
+    "id": 48,
     "name": "Youhu",
     "rank": 4,
     "element": 1,
@@ -765,7 +816,7 @@
     "rc6": 0
   },
   {
-    "id": 18,
+    "id": 49,
     "name": "Yuanwu",
     "rank": 4,
     "element": 3,
@@ -782,7 +833,7 @@
     "rc6": 0
   },
   {
-    "id": 37,
+    "id": 50,
     "name": "Zani",
     "rank": 5,
     "element": 5,
@@ -799,7 +850,7 @@
     "rc6": 36000
   },
   {
-    "id": 4,
+    "id": 51,
     "name": "Zhezhi",
     "rank": 5,
     "element": 1,

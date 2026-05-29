@@ -158,8 +158,14 @@
                     `;
                 });
 
+                let imgSrc = c.icon || c.image || '';
+                if (imgSrc) imgSrc = imgSrc.replace(/^\/?icon\//, 'images/icon/');
+
                 tr.innerHTML = `
                     <td class="text-center" style="color: var(--text-dim)">${c.id}</td>
+                    <td class="text-center">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${c.name}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">` : ''}
+                    </td>
                     <td style="font-weight: 600">${c.name}</td>
                     <td class="text-center">
                         <span class="rank${c.rank}">${c.rank}★</span>
