@@ -1,6 +1,6 @@
 (() => {
     const ELEMENT_MAP = {
-        0: { name: "Multi", color: "#ffffff", bg: "linear-gradient(90deg, #7affd4 0%, #ffe168 50%, #e05cff 100%)" },
+        0: { name: "Multi", color: "#ffffff", bg: "linear-gradient(90deg, #7affd4 0%, #000000 50%, #e05cff 100%)" },
         1: { name: "Glacio", color: "#7ecfef", bg: "#0e2a3a" },
         2: { name: "Fusion", color: "#f97c4f", bg: "#3a1a0a" },
         3: { name: "Electro", color: "#b98fff", bg: "#1e1040" },
@@ -55,7 +55,7 @@
             if (id === "0") return; // Skip multi since it's already there or we don't want duplicate
             const btn = document.createElement('button');
             btn.className = 'filter-btn';
-            btn.textContent = data.name;
+            btn.innerHTML = `<img src="images/element/${data.name.toLowerCase()}.webp" alt="${data.name}" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; border-radius: 50%;"> ${data.name}`;
             btn.style.color = data.color;
             btn.dataset.element = id;
             btn.onclick = () => {

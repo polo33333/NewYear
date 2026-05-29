@@ -131,7 +131,7 @@
                 tr.innerHTML = `
                     <td class="text-center" style="color: var(--text-dim)">${w.id}</td>
                     <td class="text-center">
-                        <div class="wp-img-preview" style="background-image: url('${imgPath}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); margin: 0 auto; background-color: #222;"></div>
+                        <div class="wp-img-preview" style="background-image: url('${imgPath}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 4px; margin: 0 auto; background-color: #222;"></div>
                     </td>
                     <td style="font-weight: 600">${w.name}</td>
                     <td class="text-center">
