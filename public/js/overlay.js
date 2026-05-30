@@ -304,6 +304,14 @@ function switchScene(scene, instant = false) {
   if (stats) stats.classList.remove('visible');
 
   clearInterval(breakInterval);
+  if (breakAnimFrame) {
+    cancelAnimationFrame(breakAnimFrame);
+    breakAnimFrame = null;
+  }
+  if (bracketAnimFrame) {
+    cancelAnimationFrame(bracketAnimFrame);
+    bracketAnimFrame = null;
+  }
   const showScore = scene === 'gameplay';
   const sb = document.getElementById('scoreboard');
   if (sb) sb.classList.toggle('hidden', !showScore || !(state.overlays.scoreboard));
@@ -317,7 +325,9 @@ function switchScene(scene, instant = false) {
     document.body.style.background = needsBg ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)';
   }
 
-  if (scene === 'bracket' && bracket) bracket.classList.add('visible');
+  if (scene === 'bracket' && bracket) {
+    bracket.classList.add('visible');
+  }
   if (scene === 'stats' && stats) stats.classList.add('visible');
   if (scene === 'break' && brk) {
     brk.classList.add('visible');
@@ -327,9 +337,218 @@ function switchScene(scene, instant = false) {
 }
 
 function updateBreakTimer() {
-  const m = Math.floor(breakSeconds / 60), s = String(breakSeconds % 60).padStart(2, '0');
+  const m = String(Math.floor(breakSeconds / 60)).padStart(2, '0');
+  const s = String(breakSeconds % 60).padStart(2, '0');
   const bt = document.getElementById('breakTimer');
   if (bt) bt.textContent = `${m}:${s}`;
+}
+
+// ── 3D Octahedron Wireframe Renderer for Break Scene ──
+let breakCanvas = null;
+let breakCtx = null;
+let breakAnimFrame = null;
+let rotX = 0.5;
+let rotY = 0.5;
+
+const octahedronVertices = [
+  { x: 0, y: -2.2, z: 0 },  // Top
+  { x: 0, y: 2.2, z: 0 },   // Bottom
+  { x: 2.6, y: 0, z: 0 },   // Right
+  { x: -2.6, y: 0, z: 0 },  // Left
+  { x: 0, y: 0, z: 2.2 },   // Front
+  { x: 0, y: 0, z: -2.2 }   // Back
+];
+
+const octahedronEdges = [
+  [0, 2], [0, 3], [0, 4], [0, 5],
+  [1, 2], [1, 3], [1, 4], [1, 5],
+  [2, 4], [4, 3], [3, 5], [5, 2]
+];
+
+function initBreakCanvas() {
+  breakCanvas = document.getElementById('breakCanvas');
+  if (!breakCanvas) return;
+  breakCtx = breakCanvas.getContext('2d');
+  
+  // Set resolution based on device pixel ratio
+  const dpr = window.devicePixelRatio || 1;
+  breakCanvas.width = 600 * dpr;
+  breakCanvas.height = 600 * dpr;
+  breakCtx.scale(dpr, dpr);
+}
+
+function renderBreakScene() {
+  if (!breakCanvas || !breakCtx) return;
+  
+  const width = 600;
+  const height = 600;
+  breakCtx.clearRect(0, 0, width, height);
+  
+  // Rotate angles slowly
+  rotX += 0.004;
+  rotY += 0.007;
+  
+  // Project vertices
+  const projected = [];
+  const cx = width / 2;
+  const cy = height / 2;
+  const fov = 350;
+  const cameraDist = 4.0;
+  
+  octahedronVertices.forEach(v => {
+    // Rotate Y
+    let x1 = v.x * Math.cos(rotY) - v.z * Math.sin(rotY);
+    let z1 = v.x * Math.sin(rotY) + v.z * Math.cos(rotY);
+    
+    // Rotate X
+    let y2 = v.y * Math.cos(rotX) - z1 * Math.sin(rotX);
+    let z2 = v.y * Math.sin(rotX) + z1 * Math.cos(rotX);
+    
+    // Perspective projection
+    const scaleFactor = fov / (cameraDist + z2);
+    projected.push({
+      x: cx + x1 * scaleFactor,
+      y: cy + y2 * scaleFactor,
+      z: z2
+    });
+  });
+  
+  // Reset shadow attributes for lines
+  breakCtx.shadowColor = '#00f5ff';
+  
+  // Draw edges
+  octahedronEdges.forEach(edge => {
+    const p1 = projected[edge[0]];
+    const p2 = projected[edge[1]];
+    
+    // Average depth for opacity sorting/fading of background lines
+    const avgZ = (p1.z + p2.z) / 2;
+    const alpha = Math.max(0.15, Math.min(0.65, 0.5 - avgZ * 0.2));
+    
+    breakCtx.beginPath();
+    breakCtx.moveTo(p1.x, p1.y);
+    breakCtx.lineTo(p2.x, p2.y);
+    breakCtx.strokeStyle = `rgba(0, 245, 255, ${alpha})`;
+    breakCtx.lineWidth = 1.2;
+    breakCtx.shadowBlur = 6;
+    breakCtx.stroke();
+  });
+  
+  // Draw vertices (glowing points)
+  projected.forEach(p => {
+    const size = 3;
+    const alpha = Math.max(0.2, Math.min(1.0, 0.7 - p.z * 0.2));
+    
+    // Draw white center dot
+    breakCtx.beginPath();
+    breakCtx.arc(p.x, p.y, size, 0, Math.PI * 2);
+    breakCtx.fillStyle = '#ffffff';
+    breakCtx.shadowBlur = 10;
+    breakCtx.shadowColor = '#00f5ff';
+    breakCtx.fill();
+    
+    // Draw outer cyan ring
+    breakCtx.beginPath();
+    breakCtx.arc(p.x, p.y, size * 2.5, 0, Math.PI * 2);
+    breakCtx.strokeStyle = `rgba(0, 245, 255, ${alpha})`;
+    breakCtx.lineWidth = 1;
+    breakCtx.shadowBlur = 0; // turn off shadow for outer ring to keep it clean
+    breakCtx.stroke();
+  });
+  
+  if (state && state.scene === 'break') {
+    breakAnimFrame = requestAnimationFrame(renderBreakScene);
+  }
+}
+
+// ── 3D Octahedron Wireframe Renderer for Bracket Scene ──
+let bracketCanvas = null;
+let bracketCtx = null;
+let bracketAnimFrame = null;
+let bracketRotX = 0.5;
+let bracketRotY = 0.5;
+
+function initBracketCanvas() {
+  bracketCanvas = document.getElementById('bracketCanvas');
+  if (!bracketCanvas) return;
+  bracketCtx = bracketCanvas.getContext('2d');
+  
+  const dpr = window.devicePixelRatio || 1;
+  bracketCanvas.width = 600 * dpr;
+  bracketCanvas.height = 600 * dpr;
+  bracketCtx.scale(dpr, dpr);
+}
+
+function renderBracketScene() {
+  if (!bracketCanvas || !bracketCtx) return;
+  
+  const width = 600;
+  const height = 600;
+  bracketCtx.clearRect(0, 0, width, height);
+  
+  bracketRotX += 0.003;
+  bracketRotY += 0.005;
+  
+  const projected = [];
+  const cx = width / 2;
+  const cy = height / 2;
+  const fov = 350;
+  const cameraDist = 4.0;
+  
+  octahedronVertices.forEach(v => {
+    let x1 = v.x * Math.cos(bracketRotY) - v.z * Math.sin(bracketRotY);
+    let z1 = v.x * Math.sin(bracketRotY) + v.z * Math.cos(bracketRotY);
+    
+    let y2 = v.y * Math.cos(bracketRotX) - z1 * Math.sin(bracketRotX);
+    let z2 = v.y * Math.sin(bracketRotX) + z1 * Math.cos(bracketRotX);
+    
+    const scaleFactor = fov / (cameraDist + z2);
+    projected.push({
+      x: cx + x1 * scaleFactor,
+      y: cy + y2 * scaleFactor,
+      z: z2
+    });
+  });
+  
+  bracketCtx.shadowColor = '#00f5ff';
+  
+  octahedronEdges.forEach(edge => {
+    const p1 = projected[edge[0]];
+    const p2 = projected[edge[1]];
+    const avgZ = (p1.z + p2.z) / 2;
+    const alpha = Math.max(0.12, Math.min(0.55, 0.4 - avgZ * 0.15));
+    
+    bracketCtx.beginPath();
+    bracketCtx.moveTo(p1.x, p1.y);
+    bracketCtx.lineTo(p2.x, p2.y);
+    bracketCtx.strokeStyle = `rgba(0, 245, 255, ${alpha})`;
+    bracketCtx.lineWidth = 1.0;
+    bracketCtx.shadowBlur = 5;
+    bracketCtx.stroke();
+  });
+  
+  projected.forEach(p => {
+    const size = 2.5;
+    const alpha = Math.max(0.2, Math.min(0.9, 0.6 - p.z * 0.15));
+    
+    bracketCtx.beginPath();
+    bracketCtx.arc(p.x, p.y, size, 0, Math.PI * 2);
+    bracketCtx.fillStyle = '#ffffff';
+    bracketCtx.shadowBlur = 8;
+    bracketCtx.shadowColor = '#00f5ff';
+    bracketCtx.fill();
+    
+    bracketCtx.beginPath();
+    bracketCtx.arc(p.x, p.y, size * 2.5, 0, Math.PI * 2);
+    bracketCtx.strokeStyle = `rgba(0, 245, 255, ${alpha})`;
+    bracketCtx.lineWidth = 0.8;
+    bracketCtx.shadowBlur = 0;
+    bracketCtx.stroke();
+  });
+  
+  if (state && state.scene === 'bracket') {
+    bracketAnimFrame = requestAnimationFrame(renderBracketScene);
+  }
 }
 
 connect();
