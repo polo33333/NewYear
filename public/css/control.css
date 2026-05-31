@@ -205,7 +205,8 @@ input[type=number] {
   transform-origin: 0 0;
   display: block;
   pointer-events: none;
-  opacity: 0; /* Hidden initially, shown when loaded */
+  opacity: 0;
+  /* Hidden initially, shown when loaded */
   transition: opacity 0.3s;
 }
 
@@ -832,34 +833,43 @@ input[type=number] {
     grid-template-columns: 1fr;
     overflow-y: auto;
   }
+
   .scenes-panel {
     width: 100%;
     height: auto;
     overflow: visible;
   }
+
   .main-panel {
     overflow: visible;
   }
+
   .top-row-controls {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
+
   .preview-section {
     width: 100%;
   }
+
   .preview-box {
     max-width: 100%;
   }
+
   .right-controls-column {
     width: 100%;
   }
+
   .mcb-teams {
     flex-direction: column;
     gap: 16px;
   }
+
   .mcb-vs {
     flex-direction: row;
     padding: 10px 0;
   }
+
   .mcb-vs-line {
     width: 100px;
     height: 1px;
@@ -870,15 +880,20 @@ input[type=number] {
   header {
     padding: 10px 12px;
   }
+
   .brand h1 {
     font-size: 14px;
   }
+
   .status-badge {
-    display: none; /* Hide on very small screens to save space */
+    display: none;
+    /* Hide on very small screens to save space */
   }
+
   .scene-grid {
     grid-template-columns: 1fr;
   }
+
   .music-time-row {
     flex-direction: column;
     gap: 4px;
@@ -1676,7 +1691,7 @@ input[type=number] {
 
 .rp-team-score {
   font-family: 'Outfit', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 900;
   padding: 2px 8px;
   border-radius: 4px;
@@ -3143,5 +3158,136 @@ span#music-duration {
   100% {
     transform: translate(var(--tx), var(--ty)) scale(0);
     opacity: 0;
+  }
+}
+
+/* ── Mobile & Tablet Responsive Layout Rules ── */
+@media (max-width: 1024px) {
+  .roster-rounds-container {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .divider-v {
+    display: none !important;
+  }
+
+  #roundsA-container::before {
+    content: "TEAM BLUE" !important;
+    display: block !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    color: #00aaff !important;
+    letter-spacing: 2px !important;
+    padding: 8px 4px !important;
+    border-bottom: 2px solid rgba(0, 170, 255, 0.4) !important;
+    margin-bottom: 10px !important;
+  }
+
+  #roundsB-container::before {
+    content: "TEAM RED" !important;
+    display: block !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    color: #ff4444 !important;
+    letter-spacing: 2px !important;
+    padding: 8px 4px !important;
+    border-bottom: 2px solid rgba(255, 68, 68, 0.4) !important;
+    margin-bottom: 10px !important;
+  }
+
+  .rp-team-bar {
+    display: none !important;
+  }
+
+  /* Make modal responsive */
+  .modal-content {
+    width: 95% !important;
+    max-height: 90vh !important;
+  }
+
+  .modal-body-top {
+    padding: 12px 16px !important;
+  }
+
+  .filter-group {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .filter-label {
+    width: auto !important;
+    margin-right: 8px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .round-row {
+    display: grid !important;
+    grid-template-areas:
+      "label slots"
+      "label weapons"
+      "scores scores" !important;
+    grid-template-columns: 32px 1fr !important;
+    gap: 10px !important;
+    padding: 12px 10px !important;
+  }
+
+  .round-label {
+    grid-area: label;
+    align-self: center;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    text-align: center;
+    color: var(--accent);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .round-row>.round-heroes-container:nth-of-type(1) {
+    grid-area: slots;
+  }
+
+  .round-row>.round-heroes-container:nth-of-type(2) {
+    grid-area: weapons;
+  }
+
+  .round-row>.divider-v-short {
+    display: none !important;
+  }
+
+  .round-row>.flex-1 {
+    display: none !important;
+  }
+
+  .score-inputs-wrapper {
+    grid-area: scores;
+    margin-left: 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
+    padding-top: 10px !important;
+    width: 100% !important;
+  }
+
+  .step-container {
+    gap: 2px !important;
+  }
+
+  .step-btn {
+    width: 15px !important;
+    height: 15px !important;
+    font-size: 8px !important;
+  }
+
+  .char-square,
+  .weapon-square {
+    width: 48px !important;
+    height: 48px !important;
   }
 }

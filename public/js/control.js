@@ -22,15 +22,15 @@ function connect() {
   const currentToken = localStorage.getItem('kdone_auth_token') || '';
   const currentRoomId = sessionStorage.getItem('kdone_current_room_id') || '';
   ws = new WebSocket(`${protocol}//${location.host}/ws/control?token=${currentToken}&roomId=${currentRoomId}`);
-  ws.onopen = () => { 
+  ws.onopen = () => {
     document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot online');
     document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'CONNECTED');
   };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
-  ws.onclose = () => { 
+  ws.onclose = () => {
     document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot');
     document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'OFFLINE');
-    setTimeout(connect, 2000); 
+    setTimeout(connect, 2000);
   };
 }
 
@@ -643,7 +643,7 @@ window.addEventListener('resize', () => {
     resizePreview();
     if (typeof drawPingChart === 'function') drawPingChart();
   }, 100);
-});const previewIframe = document.getElementById('preview-iframe');
+}); const previewIframe = document.getElementById('preview-iframe');
 if (previewIframe) {
   previewIframe.addEventListener('load', () => {
     resizePreview();
@@ -1097,7 +1097,7 @@ function applyAutoFill(targetId, name) {
         sqElement.classList.add('magic-filled');
         setTimeout(() => {
           sqElement.classList.remove('magic-filled');
-        }, 1500);
+        }, 800);
 
         // Spawn particle sparkles!
         createSparkles(sqElement);
