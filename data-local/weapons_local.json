@@ -1483,5 +1483,35 @@
     "r4": 0,
     "r5": 0,
     "isActive": true
+  },
+  {
+    "id": 100,
+    "name": "Spectral Trigger",
+    "rank": 5,
+    "type": "Pistols",
+    "typeid": 3,
+    "image": "/images/weapons/100px/spectral-trigger.webp",
+    "imagebig": "/images/weapons/256px/spectral-trigger.webp",
+    "r1": 1000,
+    "r2": 2000,
+    "r3": 3000,
+    "r4": 4000,
+    "r5": 5000,
+    "isActive": true
+  },
+  {
+    "id": 101,
+    "name": "Skull Thrasher",
+    "rank": 5,
+    "type": "Pistols",
+    "typeid": 3,
+    "image": "/images/weapons/100px/skull-thrasher.webp",
+    "imagebig": "/images/weapons/256px/skull-thrasher.webp",
+    "r1": 1000,
+    "r2": 2000,
+    "r3": 3000,
+    "r4": 4000,
+    "r5": 5000,
+    "isActive": true
   }
 ]

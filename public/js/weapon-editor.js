@@ -126,7 +126,7 @@
                 });
 
                 // Weapon Image fallback to dynamic placeholder or default
-                const imgPath = w.image ? w.image : 'images/weapons/placeholder.png';
+                const imgPath = w.imagebig || w.image || 'images/weapons/placeholder.png';
 
                 tr.innerHTML = `
                     <td class="text-center" style="color: var(--text-dim)">${w.id}</td>
