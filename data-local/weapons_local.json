@@ -1513,5 +1513,20 @@
     "r4": 4000,
     "r5": 5000,
     "isActive": true
+  },
+  {
+    "id": 102,
+    "name": "Freeze Frame",
+    "rank": 5,
+    "type": "Rectifier",
+    "typeid": 5,
+    "image": "/images/weapons/100px/freeze-frame.webp",
+    "imagebig": "/images/weapons/256px/freeze-frame.webp",
+    "r1": 1000,
+    "r2": 2000,
+    "r3": 3000,
+    "r4": 4000,
+    "r5": 5000,
+    "isActive": true
   }
 ]
