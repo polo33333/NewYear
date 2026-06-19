@@ -18,44 +18,24 @@
   <div id="scoreboard" class="hidden">
     <div class="sb-container">
       
-      <!-- TEAM A (LEFT - GREEN) -->
+      <!-- TEAM A (LEFT - GREEN/RED) -->
       <div class="sb-side left" id="teamA">
         <div class="sb-bar-row">
-          <!-- Progress bar container -->
-          <div class="sb-progress-container">
-            <!-- Team Name inside -->
-            <span class="sb-team-name" id="nameA">DRAGONS</span>
-            <div class="sb-progress-bar">
-              <div class="sb-progress-fill" id="progressFillA"></div>
-            </div>
-            <!-- Net points difference value inside container -->
-            <span class="sb-net-points" id="netPointsA"></span>
+          <div class="sb-pill-container left-pill">
+            <div class="sb-pill-score" id="scoreA">0</div>
           </div>
-          
-          <!-- Score Badge Chevron -->
-          <div class="sb-badge-chevron" id="badgeA">
-            <span class="sb-score-val" id="scoreA">0</span>
-          </div>
+          <span class="sb-team-name" id="nameA">DRAGONS</span>
+          <span class="sb-pill-net" id="netPointsA"></span>
         </div>
       </div>
       
-      <!-- TEAM B (RIGHT - RED) -->
+      <!-- TEAM B (RIGHT - BLUE) -->
       <div class="sb-side right" id="teamB">
         <div class="sb-bar-row">
-          <!-- Score Badge Chevron -->
-          <div class="sb-badge-chevron" id="badgeB">
-            <span class="sb-score-val" id="scoreB">0</span>
-          </div>
-          
-          <!-- Progress bar container -->
-          <div class="sb-progress-container">
-            <!-- Net points difference value inside container -->
-            <span class="sb-net-points" id="netPointsB"></span>
-            <div class="sb-progress-bar">
-              <div class="sb-progress-fill" id="progressFillB"></div>
-            </div>
-            <!-- Team Name inside -->
-            <span class="sb-team-name" id="nameB">PHANTOMS</span>
+          <span class="sb-pill-net" id="netPointsB"></span>
+          <span class="sb-team-name" id="nameB">PHANTOMS</span>
+          <div class="sb-pill-container right-pill">
+            <div class="sb-pill-score" id="scoreB">0</div>
           </div>
         </div>
       </div>
@@ -97,17 +77,15 @@
   <div id="bracket-scene">
     <div class="bracket-container">
       <div class="bracket-content">
-        <div class="bracket-title" id="bracketLabel">TOURNAMENT</div>
+        <div class="bracket-title" id="bracketLabel">MATCH UP</div>
         <div class="bracket-matchup">
-          <div class="bm-team left">
+          <div class="bm-team left" id="bmTeam1">
             <div class="bm-name" id="bName1">DRAGONS</div>
           </div>
           <div class="bm-vs-container">
-            <div class="bm-vs-diamond">
-              <span class="bm-vs-text">VS</span>
-            </div>
+            <div class="bm-vs-badge">VS</div>
           </div>
-          <div class="bm-team right">
+          <div class="bm-team right" id="bmTeam2">
             <div class="bm-name" id="bName2">PHANTOMS</div>
           </div>
         </div>
