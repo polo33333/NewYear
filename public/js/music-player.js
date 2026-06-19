@@ -108,6 +108,10 @@ function mpLoad(index) {
   mpEl('music-duration').textContent = '0:00';
 
   highlightRow(index);
+  
+  if (typeof send === 'function' && mp.playlist[mp.currentIndex]) {
+    send({ type: 'song', data: { name: mp.playlist[mp.currentIndex].name, isPlaying: !mp.audio.paused } });
+  }
 }
 
 // ── Play / Pause ─────────────────────────────────────────────────────────────
@@ -361,6 +365,9 @@ mp.audio.addEventListener('play', () => {
   if (typeof window.updateMiniPlayerVisibility === 'function') {
     window.updateMiniPlayerVisibility();
   }
+  if (typeof send === 'function' && mp.playlist[mp.currentIndex]) {
+    send({ type: 'song', data: { name: mp.playlist[mp.currentIndex].name, isPlaying: true } });
+  }
 });
 
 mp.audio.addEventListener('pause', () => {
@@ -374,6 +381,9 @@ mp.audio.addEventListener('pause', () => {
 
   if (typeof window.updateMiniPlayerVisibility === 'function') {
     window.updateMiniPlayerVisibility();
+  }
+  if (typeof send === 'function' && mp.playlist[mp.currentIndex]) {
+    send({ type: 'song', data: { name: mp.playlist[mp.currentIndex].name, isPlaying: false } });
   }
 });
 

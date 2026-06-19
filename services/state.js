@@ -1,8 +1,8 @@
 // ── State toàn bộ app ──
 const fs = require('fs');
 const path = require('path');
+const db = require('./db');
 
-const USERS_FILE = path.join(__dirname, '../data/users.json');
 const states = {};
 
 function createDefaultState() {
@@ -14,11 +14,14 @@ function createDefaultState() {
       ticker: false,
       rosterA: false,
       rosterB: false,
+      show_song: false
     },
+    song: { name: '', isPlaying: false },
     rosters: {
       teamA: {},
       teamB: {},
     },
+
     score: {
       teamA: { name: 'Team A', logo: '', color: '#00aaff', score: 0 },
       teamB: { name: 'Team B', logo: '', color: '#ff4444', score: 0 },
@@ -47,19 +50,12 @@ function createDefaultState() {
 function getRoomId(userId, token, queryRoomId) {
   if (!userId) return '1';
   try {
-    if (fs.existsSync(USERS_FILE)) {
-      const content = fs.readFileSync(USERS_FILE, 'utf8');
-      if (content.trim()) {
-        const users = JSON.parse(content);
-        const user = users.find(u => String(u.id) === String(userId));
-        if (user && user.isSync === true) {
-          // isSync === true: return room_${userId} so all devices of that user sync together
-          return `room_${userId}`;
-        }
-      }
+    const row = db.prepare('SELECT isSync FROM users WHERE id = ?').get(String(userId));
+    if (row && row.isSync === 1) {
+      return `room_${userId}`;
     }
   } catch (err) {
-    console.error('[STATE] Error reading users.json for roomId:', err.message);
+    console.error('[STATE] Error reading users for roomId:', err.message);
   }
 
   // isSync === false or not configured (independent devices):

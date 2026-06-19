@@ -9,6 +9,47 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/overlay.css">
+  <style>
+    @keyframes spin-disc {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spin-anim {
+      animation: spin-disc 3s linear infinite;
+    }
+    .song-marquee-container {
+      width: auto;
+      max-width: 250px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .song-marquee-text {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    .song-marquee-text.scrolling {
+      padding-left: 100%;
+      animation: song-marquee 10s linear infinite;
+      text-overflow: clip;
+    }
+    @keyframes song-marquee {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-100%, 0); }
+    }
+    #song-overlay {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: translateY(0);
+      opacity: 1;
+    }
+    #song-overlay.hidden {
+      opacity: 0 !important;
+      transform: translateY(20px) !important;
+      pointer-events: none !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -55,6 +96,16 @@
     <div class="roster-title" id="rosterNameB">TEAM B</div>
     <div class="hero-list" id="heroListB"></div>
     <div class="roster-points"><span class="roster-points-label">ROUND POINTS</span><span id="rosterPointsB">0</span>
+    </div>
+  </div>
+
+  <div id="song-overlay" class="hidden" style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(5, 5, 10, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 8px 24px; color: #fff; display: flex; align-items: center; gap: 16px; border-top: 1px solid rgba(0, 245, 255, 0.2); z-index: 9999; font-family: 'Outfit', sans-serif; box-shadow: 0 -5px 25px rgba(0,0,0,0.4);">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <i class="fas fa-compact-disc spin-anim" style="color: #00f5ff; font-size: 16px;"></i>
+      <span style="font-size: 12px; font-weight: 800; color: #00f5ff; letter-spacing: 2px; text-transform: uppercase;">Playing:</span>
+    </div>
+    <div class="song-marquee-container">
+      <span id="overlay-song-name" class="song-marquee-text"></span>
     </div>
   </div>
 

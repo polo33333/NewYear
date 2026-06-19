@@ -159,6 +159,12 @@ function handleWSMessage(msg, roomId) {
       broadcast({ type: 'rosters', data: uState.rosters, senderId: msg.senderId }, roomId);
       stateChanged = true;
       break;
+
+    case 'song':
+      uState.song = msg.data;
+      broadcast({ type: 'song', data: uState.song, senderId: msg.senderId }, roomId);
+      stateChanged = true;
+      break;
   }
 
   if (stateChanged) {

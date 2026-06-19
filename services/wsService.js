@@ -2,9 +2,9 @@ const { WebSocketServer } = require('ws');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const db = require('./db');
 const { createDefaultState, getRoomId } = require('./state');
 
-const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
 let wss = null;
 
 /**
@@ -19,30 +19,14 @@ function getUserIdFromToken(token) {
     return String(parts[2]);
   }
 
-  // 2. Token OBS Overlay: Kiểm tra settings.json
+  // 2. Token OBS Overlay: Kiểm tra database SQLite
   try {
-    if (fs.existsSync(SETTINGS_FILE)) {
-      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
-      if (content.trim()) {
-        const allSettings = JSON.parse(content);
-        
-        // Cấu trúc cũ legacy
-        if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
-          if (allSettings.obsToken === token) {
-            return '1';
-          }
-        } else {
-          // Duyệt tìm user có obsToken trùng khớp
-          for (const uId in allSettings) {
-            if (allSettings[uId] && allSettings[uId].obsToken === token) {
-              return String(uId);
-            }
-          }
-        }
-      }
+    const row = db.prepare('SELECT userId FROM settings WHERE obsToken = ?').get(token);
+    if (row && row.userId) {
+      return String(row.userId);
     }
   } catch (e) {
-    console.error('[WS] Error parsing settings for token:', e.message);
+    console.error('[WS] Error reading settings for token:', e.message);
   }
 
   // Token mặc định

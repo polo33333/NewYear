@@ -29,6 +29,7 @@ function handleMessage(msg) {
     case 'rosters': if (state) state.rosters = msg.data; updateRosters(msg.data); break;
     case 'tournament': if (state) state.tournament = msg.data; if (document.getElementById('bracketLabel')) document.getElementById('bracketLabel').textContent = state.tournament.bracketLabel; break;
     case 'break': if (state) state.break = msg.data; if (state.scene === 'break') { breakSeconds = state.break.duration; updateBreakTimer(); } break;
+    case 'song': if (state) state.song = msg.data; updateSongDisplay(state.song); break;
   }
 }
 
@@ -38,6 +39,7 @@ function syncUI() {
   updateOverlays(state.overlays);
   updateTicker(state.ticker);
   updateRosters(state.rosters);
+  updateSongDisplay(state.song);
   if (state.tournament && document.getElementById('bracketLabel')) document.getElementById('bracketLabel').textContent = state.tournament.bracketLabel;
 }
 
@@ -109,6 +111,28 @@ function updateOverlays(overlays) {
   toggle('ticker', overlays.ticker !== false);
   toggle('roster-left', overlays.rosterA === true);
   toggle('roster-right', overlays.rosterB === true);
+  
+  if (state && state.song) {
+    updateSongDisplay(state.song);
+  }
+}
+
+function updateSongDisplay(song) {
+  if (!song) return;
+  const nameEl = document.getElementById('overlay-song-name');
+  if (nameEl) {
+    nameEl.textContent = song.name;
+    nameEl.classList.remove('scrolling');
+    requestAnimationFrame(() => {
+      const container = nameEl.parentElement;
+      if (nameEl.scrollWidth > container.clientWidth) {
+        nameEl.classList.add('scrolling');
+      }
+    });
+  }
+  
+  const toggle = (id, v) => document.getElementById(id)?.classList.toggle('hidden', !v);
+  toggle('song-overlay', state.overlays?.show_song === true && song.isPlaying === true);
 }
 
 function updateRosters(data) {

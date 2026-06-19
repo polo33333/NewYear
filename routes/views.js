@@ -2,22 +2,16 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
-
-const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
+const db = require('../services/db');
 
 /**
  * Lấy token OBS của một user (mặc định user ID 1) để tương thích hiển thị thông báo khởi động server
  */
 const getObsToken = (userId = '1') => {
   try {
-    if (fs.existsSync(SETTINGS_FILE)) {
-      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
-      if (!content.trim()) return 'kdstream2026';
-      const allSettings = JSON.parse(content);
-      if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
-        return allSettings.obsToken || 'kdstream2026';
-      }
-      return (allSettings[userId] && allSettings[userId].obsToken) || 'kdstream2026';
+    const row = db.prepare('SELECT obsToken FROM settings WHERE userId = ?').get(String(userId));
+    if (row && row.obsToken) {
+      return row.obsToken;
     }
     return 'kdstream2026';
   } catch (e) {
@@ -38,25 +32,9 @@ const isValidObsToken = (token) => {
       return true;
     }
 
-    if (!fs.existsSync(SETTINGS_FILE)) {
-      return token === 'kdstream2026';
-    }
-    const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
-    if (!content.trim()) {
-      return token === 'kdstream2026';
-    }
-    const allSettings = JSON.parse(content);
-    
-    // Legacy check
-    if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
-      return token === (allSettings.obsToken || 'kdstream2026');
-    }
-    
-    // Quét qua tất cả user
-    for (const userId in allSettings) {
-      if (allSettings[userId] && allSettings[userId].obsToken === token) {
-        return true;
-      }
+    const row = db.prepare('SELECT obsToken FROM settings WHERE obsToken = ?').get(token);
+    if (row) {
+      return true;
     }
     
     return token === 'kdstream2026';

@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
 const { states, createDefaultState, getRoomId } = require('../services/state');
 const { broadcast } = require('../services/wsService');
+const db = require('../services/db');
+const CHAR_FILE = path.join(__dirname, '../data-local/character_local.json');
+const WEAPON_FILE = path.join(__dirname, '../data-local/weapons_local.json');
 
 // Rate limiter: tối đa 10 lần login thất bại trong 15 phút
 const loginLimiter = rateLimit({
@@ -15,12 +18,6 @@ const loginLimiter = rateLimit({
   message: { success: false, message: 'Quá nhiều lần thử đăng nhập. Vui lòng thử lại sau 15 phút.' }
 });
 
-const STATE_SAVE_FILE = path.join(__dirname, '../data/state_save.json');
-const SAVES_LIST_FILE = path.join(__dirname, '../data/saved_rosters.json');
-const CHAR_FILE = path.join(__dirname, '../data-local/character_local.json');
-const WEAPON_FILE = path.join(__dirname, '../data-local/weapons_local.json');
-const SETTINGS_FILE = path.join(__dirname, '../data/settings.json');
-const BRACKET_FILE = path.join(__dirname, '../data/bracket_save.json');
 
 /**
  * Trích xuất User ID từ Request (Header X-User-Id hoặc Authorization token hoặc Query param)
@@ -66,11 +63,8 @@ function getTokenFromRequest(req) {
 function checkIfAdmin(req) {
   const userId = getUserIdFromRequest(req);
   try {
-    const usersPath = path.join(__dirname, '../data/users.json');
-    if (!fs.existsSync(usersPath)) return false;
-    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-    const user = users.find(u => String(u.id) === String(userId));
-    return user && user.isAdmin === true;
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(String(userId));
+    return user && user.isAdmin === 1;
   } catch (e) {
     return false;
   }
@@ -82,15 +76,9 @@ function checkIfAdmin(req) {
 function checkIfAdminOrStream(req) {
   const userId = getUserIdFromRequest(req);
   try {
-    const usersPath = path.join(__dirname, '../data/users.json');
-    if (!fs.existsSync(usersPath)) return false;
-    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-    const user = users.find(u => String(u.id) === String(userId));
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(String(userId));
     if (!user) return false;
-    return user.isAdmin === true || 
-           user.isStream === true || 
-           user.isStreamer === true || 
-           user.username === 'streamer';
+    return user.isAdmin === 1 || user.isStream === 1 || user.isStreamer === 1 || user.username === 'streamer';
   } catch (e) {
     return false;
   }
@@ -114,70 +102,26 @@ function requireAdmin(req, res, next) {
  */
 function getSettings(userId) {
   let settingsObj = { "obsToken": "kdstream2026" };
-  try {
-    if (!fs.existsSync(SETTINGS_FILE)) {
-      const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-      const def = { "1": { "obsToken": "kdstream2026" } };
-      if (userId !== '1') {
-        def[userId] = { "obsToken": defToken };
-      }
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
-      settingsObj = def[userId] || { "obsToken": "kdstream2026" };
-    } else {
-      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
-      if (!content.trim()) {
-        const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-        const def = {};
-        def[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
-        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(def, null, 2), 'utf8');
-        settingsObj = def[userId];
-      } else {
-        const allSettings = JSON.parse(content);
-
-        // Legacy migration
-        if (allSettings && !allSettings['1'] && (allSettings.obsToken || allSettings.googleAppsScriptUrl)) {
-          if (userId === '1') {
-            settingsObj = allSettings;
-          } else {
-            const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-            const migrated = { '1': allSettings };
-            migrated[userId] = { "obsToken": defToken };
-            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(migrated, null, 2), 'utf8');
-            settingsObj = migrated[userId];
-          }
-        } else {
-          // Generate obsToken if not exists for the user
-          if (!allSettings[userId]) {
-            const defToken = 'kdone_' + Math.random().toString(36).substring(2, 10);
-            allSettings[userId] = { "obsToken": userId === '1' ? 'kdstream2026' : defToken };
-            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
-          } else if (!allSettings[userId].obsToken) {
-            allSettings[userId].obsToken = userId === '1' ? 'kdstream2026' : ('kdone_' + Math.random().toString(36).substring(2, 10));
-            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
-          }
-          settingsObj = allSettings[userId];
-        }
-      }
-    }
-  } catch (e) {
-    settingsObj = { "obsToken": "kdstream2026" };
-  }
-
-  // Đọc thêm isSync từ users.json
   let isSync = false;
   try {
-    const usersPath = path.join(__dirname, '../data/users.json');
-    if (fs.existsSync(usersPath)) {
-      const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
-      const user = users.find(u => String(u.id) === String(userId));
-      if (user) {
-        isSync = !!user.isSync;
-      }
+    const row = db.prepare('SELECT * FROM settings WHERE userId = ?').get(String(userId));
+    if (row) {
+      settingsObj = { obsToken: row.obsToken, googleAppsScriptUrl: row.googleAppsScriptUrl };
+      isSync = row.isSync === 1;
+    } else {
+      const defToken = userId === '1' ? 'kdstream2026' : ('kdone_' + Math.random().toString(36).substring(2, 10));
+      settingsObj = { obsToken: defToken };
+      db.prepare('INSERT INTO settings (userId, obsToken) VALUES (?, ?)').run(String(userId), defToken);
+    }
+    
+    // Also read isSync from users table
+    const userRow = db.prepare('SELECT isSync FROM users WHERE id = ?').get(String(userId));
+    if (userRow) {
+      isSync = userRow.isSync === 1;
     }
   } catch (e) {
-    console.error('[API] Error reading users.json for settings:', e.message);
+    console.error('[API] Error reading settings:', e.message);
   }
-
   return { ...settingsObj, isSync };
 }
 
@@ -186,20 +130,22 @@ function getSettings(userId) {
  */
 function saveSettings(userId, userSettings) {
   try {
-    let allSettings = {};
-    if (fs.existsSync(SETTINGS_FILE)) {
-      const content = fs.readFileSync(SETTINGS_FILE, 'utf8');
-      if (content.trim()) {
-        const parsed = JSON.parse(content);
-        if (parsed && !parsed['1'] && (parsed.obsToken || parsed.googleAppsScriptUrl)) {
-          allSettings = { '1': parsed };
-        } else {
-          allSettings = parsed;
-        }
-      }
+    const row = db.prepare('SELECT * FROM settings WHERE userId = ?').get(String(userId));
+    if (row) {
+      db.prepare('UPDATE settings SET obsToken = ?, googleAppsScriptUrl = ?, isSync = ? WHERE userId = ?').run(
+        userSettings.obsToken !== undefined ? userSettings.obsToken : row.obsToken,
+        userSettings.googleAppsScriptUrl !== undefined ? userSettings.googleAppsScriptUrl : row.googleAppsScriptUrl,
+        userSettings.isSync !== undefined ? (userSettings.isSync ? 1 : 0) : row.isSync,
+        String(userId)
+      );
+    } else {
+      db.prepare('INSERT INTO settings (userId, obsToken, googleAppsScriptUrl, isSync) VALUES (?, ?, ?, ?)').run(
+        String(userId),
+        userSettings.obsToken || '',
+        userSettings.googleAppsScriptUrl || '',
+        userSettings.isSync ? 1 : 0
+      );
     }
-    allSettings[userId] = { ...allSettings[userId], ...userSettings };
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(allSettings, null, 2), 'utf8');
   } catch (e) {
     console.error('[SYSTEM] Error saving settings:', e);
   }
@@ -209,17 +155,15 @@ function saveSettings(userId, userSettings) {
  * Lọc cấu hình sơ đồ giải đấu theo Room ID
  */
 function getBracket(roomId) {
+  const defaultBracket = { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
   try {
-    if (!fs.existsSync(BRACKET_FILE)) {
-      fs.writeFileSync(BRACKET_FILE, '{}', 'utf8');
-      return { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+    const row = db.prepare('SELECT data FROM brackets WHERE roomId = ?').get(String(roomId));
+    if (row && row.data) {
+      return JSON.parse(row.data);
     }
-    const content = fs.readFileSync(BRACKET_FILE, 'utf8');
-    if (!content.trim()) return { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
-    const allBrackets = JSON.parse(content);
-    return allBrackets[roomId] || { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+    return defaultBracket;
   } catch (e) {
-    return { nodes: [], connections: [], panZoom: { x: 0, y: 0, scale: 1 } };
+    return defaultBracket;
   }
 }
 
@@ -228,15 +172,10 @@ function getBracket(roomId) {
  */
 function saveBracket(roomId, bracketData) {
   try {
-    let allBrackets = {};
-    if (fs.existsSync(BRACKET_FILE)) {
-      const content = fs.readFileSync(BRACKET_FILE, 'utf8');
-      if (content.trim()) {
-        allBrackets = JSON.parse(content);
-      }
-    }
-    allBrackets[roomId] = bracketData;
-    fs.writeFileSync(BRACKET_FILE, JSON.stringify(allBrackets, null, 2), 'utf8');
+    db.prepare('INSERT INTO brackets (roomId, data) VALUES (?, ?) ON CONFLICT(roomId) DO UPDATE SET data=excluded.data').run(
+      String(roomId),
+      JSON.stringify(bracketData)
+    );
   } catch (e) {
     console.error('[SYSTEM] Error saving bracket:', e);
   }
@@ -247,18 +186,11 @@ function saveBracket(roomId, bracketData) {
  */
 function getSaves(roomId) {
   try {
-    if (!fs.existsSync(SAVES_LIST_FILE)) {
-      fs.writeFileSync(SAVES_LIST_FILE, '{}', 'utf8');
-      return [];
+    const row = db.prepare('SELECT data FROM saves WHERE roomId = ?').get(String(roomId));
+    if (row && row.data) {
+      return JSON.parse(row.data);
     }
-    const content = fs.readFileSync(SAVES_LIST_FILE, 'utf8');
-    if (!content.trim()) return [];
-    const allSaves = JSON.parse(content);
-    if (Array.isArray(allSaves)) {
-      // Legacy format migration
-      return roomId === '1' ? allSaves : [];
-    }
-    return allSaves[roomId] || [];
+    return [];
   } catch (e) {
     return [];
   }
@@ -269,20 +201,10 @@ function getSaves(roomId) {
  */
 function saveSaves(roomId, userSaves) {
   try {
-    let allSaves = {};
-    if (fs.existsSync(SAVES_LIST_FILE)) {
-      const content = fs.readFileSync(SAVES_LIST_FILE, 'utf8');
-      if (content.trim()) {
-        const parsed = JSON.parse(content);
-        if (Array.isArray(parsed)) {
-          allSaves = { '1': parsed };
-        } else {
-          allSaves = parsed;
-        }
-      }
-    }
-    allSaves[roomId] = userSaves;
-    fs.writeFileSync(SAVES_LIST_FILE, JSON.stringify(allSaves, null, 2), 'utf8');
+    db.prepare('INSERT INTO saves (roomId, data) VALUES (?, ?) ON CONFLICT(roomId) DO UPDATE SET data=excluded.data').run(
+      String(roomId),
+      JSON.stringify(userSaves)
+    );
   } catch (e) {
     console.error('[SYSTEM] Error saving saves:', e);
   }
@@ -295,12 +217,7 @@ router.post('/login', loginLimiter, async (req, res) => {
     return res.status(400).json({ success: false, message: 'Username và password không được để trống.' });
   }
   try {
-    const usersPath = path.join(__dirname, '../data/users.json');
-    if (!fs.existsSync(usersPath)) {
-      return res.status(401).json({ success: false, message: 'No users configured' });
-    }
-    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-    const user = users.find(u => u.username === username);
+    const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
 
     // So sánh password: hỗ trợ cả bcrypt hash (bắt đầu bằng $2b$) và plain-text legacy
     let passwordMatch = false;
@@ -380,16 +297,10 @@ router.post('/reset-state', (req, res) => {
     // Kiểm tra cấu hình isSync của user trong users.json
     let isSync = false;
     try {
-      const usersPath = path.join(__dirname, '../data/users.json');
-      if (fs.existsSync(usersPath)) {
-        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
-        const user = users.find(u => String(u.id) === String(userId));
-        if (user) {
-          isSync = !!user.isSync;
-        }
-      }
+      const user = db.prepare('SELECT isSync FROM users WHERE id = ?').get(String(userId));
+      if (user) isSync = user.isSync === 1;
     } catch (e) {
-      console.error('[API] Error reading users.json for reset-state:', e.message);
+      console.error('[API] Error reading users for reset-state:', e.message);
     }
 
     if (states[roomId]) {
@@ -670,8 +581,7 @@ router.get('/characters', (req, res) => {
 });
 
 router.post('/characters', requireAdmin, (req, res) => {
-  const data = JSON.stringify(req.body, null, 2);
-  fs.writeFile(CHAR_FILE, data, (err) => {
+  fs.writeFile(CHAR_FILE, JSON.stringify(req.body, null, 2), (err) => {
     if (err) return res.status(500).json({ error: 'Failed to save character data' });
     res.json({ ok: true });
   });
@@ -691,8 +601,7 @@ router.get('/weapons', (req, res) => {
 });
 
 router.post('/weapons', requireAdmin, (req, res) => {
-  const data = JSON.stringify(req.body, null, 2);
-  fs.writeFile(WEAPON_FILE, data, (err) => {
+  fs.writeFile(WEAPON_FILE, JSON.stringify(req.body, null, 2), (err) => {
     if (err) return res.status(500).json({ error: 'Failed to save weapon data' });
     res.json({ ok: true });
   });
@@ -719,14 +628,10 @@ router.post('/settings', (req, res) => {
 
     // Lưu isSync vào users.json nếu được truyền lên
     if (isSync !== undefined) {
-      const usersPath = path.join(__dirname, '../data/users.json');
-      if (fs.existsSync(usersPath)) {
-        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
-        const user = users.find(u => String(u.id) === String(userId));
-        if (user) {
-          user.isSync = !!isSync;
-          fs.writeFileSync(usersPath, JSON.stringify(users, null, 2), 'utf8');
-        }
+      try {
+        db.prepare('UPDATE users SET isSync = ? WHERE id = ?').run(isSync ? 1 : 0, String(userId));
+      } catch(e) {
+        console.error('Error updating isSync in users table:', e.message);
       }
     }
 
