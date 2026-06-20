@@ -474,8 +474,9 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 1400px;
-  gap: 40px;
+  max-width: 100%;
+  padding: 0;
+  margin-top: -50px;
   flex: 1;
 }
 
@@ -483,92 +484,87 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  gap: 20px;
+  width: 100%;
+  gap: 0;
 }
 
 .vct-team {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 250px;
-  height: 250px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  height: 200px;
+  flex: 1;
+  min-width: 0; /* Prevents flex items from expanding beyond parent width */
+  transition: all 0.3s;
   position: relative;
-  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-.vct-team::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-  opacity: 0;
-  transition: opacity 0.3s;
+.vct-team.left {
+  justify-content: flex-end;
+  padding-right: 40px;
+  border-right: 6px solid var(--color, #00aaff);
+  border-left: none;
+  background: linear-gradient(to left, var(--color, #00aaff) 0%, rgba(5, 9, 20, 0.95) 60%, rgba(5, 9, 20, 0) 100%);
+  border-radius: 4px 0 0 4px;
 }
 
-.vct-team:hover::before {
-  opacity: 1;
+.vct-team.right {
+  justify-content: flex-start;
+  padding-left: 40px;
+  border-left: 6px solid var(--color, #ff4444);
+  border-right: none;
+  background: linear-gradient(to right, var(--color, #ff4444) 0%, rgba(5, 9, 20, 0.95) 60%, rgba(5, 9, 20, 0) 100%);
+  border-radius: 0 4px 4px 0;
 }
 
 .vct-team-blue {
-  background: rgba(0, 170, 255, 0.15);
-  border: 2px solid rgba(0, 170, 255, 0.6);
-  border-top: 6px solid #00aaff;
-  box-shadow: inset 0 0 50px rgba(0, 170, 255, 0.2), 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 170, 255, 0.2);
-}
-
-.vct-team-blue:hover {
-  border-color: rgba(0, 170, 255, 0.9);
-  box-shadow: inset 0 0 60px rgba(0, 170, 255, 0.3), 0 10px 30px rgba(0, 170, 255, 0.3), 0 0 40px rgba(0, 170, 255, 0.4);
+  /* Dynamic gradient handles the theme colors */
 }
 
 .vct-team-red {
-  background: rgba(255, 68, 68, 0.15);
-  border: 2px solid rgba(255, 68, 68, 0.6);
-  border-top: 6px solid #ff4444;
-  box-shadow: inset 0 0 50px rgba(255, 68, 68, 0.2), 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 68, 68, 0.2);
-}
-
-.vct-team-red:hover {
-  border-color: rgba(255, 68, 68, 0.9);
-  box-shadow: inset 0 0 60px rgba(255, 68, 68, 0.3), 0 10px 30px rgba(255, 68, 68, 0.3), 0 0 40px rgba(255, 68, 68, 0.4);
+  /* Dynamic gradient handles the theme colors */
 }
 
 .vct-team-name {
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 900;
-  text-align: center;
-  text-transform: uppercase;
   letter-spacing: 2px;
   color: #fff;
-  z-index: 2;
-  padding: 0 20px;
-  word-break: break-word;
+  text-transform: uppercase;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
 }
 
 .vct-vs {
-  font-size: 24px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 2px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  background: #090e1a;
+  /* border: 2px solid rgba(0, 245, 255, 0.3); */
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 10;
+  margin: 10px 40px;
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 245, 255, 0.2); */
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .vct-divider {
-  width: 2px;
-  height: 250px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+  display: none;
 }
 
 /* Coming Up Timer */
 .vct-timer-wrapper {
-  margin-top: auto;
-  margin-bottom: 60px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -595,7 +591,7 @@ body {
 
 /* Footer */
 .vct-footer {
-  margin-top: 20px;
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -618,6 +614,106 @@ body {
 
 
 
+
+/* Background Decor Elements */
+.vct-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vct-bg-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vct-bg-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  font-size: 16vw;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.015);
+  text-transform: uppercase;
+  letter-spacing: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+/* HUD Frame styling */
+.vct-hud-frame {
+  position: absolute;
+  inset: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vct-hud-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 245, 255, 0.35);
+}
+
+.vct-hud-corner.tl {
+  top: -2px;
+  left: -2px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.vct-hud-corner.tr {
+  top: -2px;
+  right: -2px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.vct-hud-corner.bl {
+  bottom: -2px;
+  left: -2px;
+  border-right: none;
+  border-top: none;
+}
+
+.vct-hud-corner.br {
+  bottom: -2px;
+  right: -2px;
+  border-left: none;
+  border-top: none;
+}
+
+.vct-hud-side-line {
+  position: absolute;
+  background: linear-gradient(to bottom, transparent, rgba(0, 245, 255, 0.3), transparent);
+}
+
+.vct-hud-side-line.left {
+  left: -2px;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+}
+
+.vct-hud-side-line.right {
+  right: -2px;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+}
 
 /* ── STATS SCENE ── */
 #stats-scene {
@@ -647,7 +743,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   max-width: none;
   background: transparent;
   border: none;
@@ -656,7 +752,7 @@ body {
   color: #fff;
   transform: none;
   /* remove scale */
-  padding: 60px 80px;
+  padding: 40px 120px;
   /* Padding from edge of screen */
   box-sizing: border-box;
 }
@@ -670,7 +766,7 @@ body {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 100%;
+  height: auto;
   flex: 1;
   gap: 0;
 }
@@ -690,7 +786,7 @@ body {
   /* Align text towards the table */
   text-align: right;
   padding: 40px;
-  margin: 12px 0;
+  margin: 6px 0;
   background: linear-gradient(90deg, rgba(var(--color-rgb, 255, 255, 255), 0.2) 0%, rgba(var(--color-rgb, 255, 255, 255), 0.8) 100%);
   box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.2), 0 5px 20px rgba(0, 0, 0, 0.5);
   border-right: 6px solid var(--color, #ef4444);
@@ -799,16 +895,15 @@ body {
   flex-direction: column;
   flex: 1;
   padding: 0;
-  gap: 0;
+  gap: 0px;
 }
 
 .stats-team-group {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 12px 20px;
-  gap: 4px;
+  justify-content: flex-start;
+  padding: 6px 20px;
+  gap: 6px;
 }
 
 .stats-row {
@@ -819,7 +914,7 @@ body {
   background: rgb(12 12 12 / 80%);
   border: 1px solid rgba(255, 255, 255, 0.02);
   border-radius: 4px;
-  padding: 6px 10px;
+  padding: 4px 10px;
 }
 
 .stats-row.empty-row {
@@ -855,8 +950,8 @@ body {
 }
 
 .stats-icon-sq {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   background-color: rgba(255, 255, 255, 0.05);
   background-size: cover;
   background-position: center;
@@ -1204,7 +1299,7 @@ body[data-template="classic"] .sb-container {
 }
 
 .sb2-score-right {
-  background: linear-gradient(135deg, var(--color-right, #dd3838) 0%, rgba(221, 56, 56, 0.6) 100%);
+  background: linear-gradient(225deg, var(--color-right, #dd3838) 0%, rgba(221, 56, 56, 0.6) 100%);
   color: #fff;
   font-size: 32px;
   font-weight: 900;

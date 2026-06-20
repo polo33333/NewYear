@@ -131,7 +131,8 @@
     <div style="display: flex; align-items: center; gap: 8px;">
       <i class="fas fa-compact-disc spin-anim" style="color: #00f5ff; font-size: 16px;"></i>
       <span
-        style="font-size: 12px; font-weight: 800; color: #00f5ff; letter-spacing: 2px; text-transform: uppercase;">Đang phát:</span>
+        style="font-size: 12px; font-weight: 800; color: #00f5ff; letter-spacing: 2px; text-transform: uppercase;">Đang
+        phát</span>
     </div>
     <div class="song-marquee-container">
       <span id="overlay-song-name" class="song-marquee-text"></span>
@@ -155,10 +156,29 @@
   </div>
 
   <div id="break-scene" class="vct-bracket">
+    <!-- Background Decor -->
+    <div class="vct-bg-grid"></div>
+    <div class="vct-bg-dots"></div>
+    <div class="vct-bg-watermark">MATRIX LEAGUE</div>
+    <div class="vct-hud-frame">
+      <div class="vct-hud-corner tl"></div>
+      <div class="vct-hud-corner tr"></div>
+      <div class="vct-hud-corner bl"></div>
+      <div class="vct-hud-corner br"></div>
+      <div class="vct-hud-side-line left"></div>
+      <div class="vct-hud-side-line right"></div>
+    </div>
+
     <!-- Top Header -->
     <div class="vct-header">
       <div class="vct-title" id="bracketLabel">WUTHERING WAVES</div>
       <div class="vct-subtitle" id="bracketSubtitle">REGULAR SEASON - WEEK 1</div>
+    </div>
+
+    <!-- Coming Up Timer -->
+    <div class="vct-timer-wrapper">
+      <div class="vct-timer-label">COMING UP</div>
+      <div class="vct-timer-value" id="breakTimer">00:00</div>
     </div>
 
     <!-- Matchup Body -->
@@ -173,12 +193,6 @@
           <div class="vct-team-name" id="bName2">DRX</div>
         </div>
       </div>
-    </div>
-
-    <!-- Coming Up Timer -->
-    <div class="vct-timer-wrapper">
-      <div class="vct-timer-label">COMING UP</div>
-      <div class="vct-timer-value" id="breakTimer">00:00</div>
     </div>
 
     <!-- Footer -->

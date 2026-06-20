@@ -29,10 +29,11 @@ function createDefaultState() {
       matchTimer: 0
     },
     tournament: {
-      name: 'MATRIX CUP 2026',
+      name: 'MATRIX LEAGUE 2026',
       game: 'Wuthering Waves',
       format: 'Double Elimination',
-      bracketLabel: 'GRAND FINALS — MATRIX CUP 2026',
+      bracketLabel: 'MATRIX LEAGUE',
+      bracketSubtitle: 'SEASON 3',
     },
     break: {
       duration: 300, // seconds

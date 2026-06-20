@@ -28,7 +28,7 @@ function handleMessage(msg) {
     case 'ticker': if (state) state.ticker = msg.data; updateTicker(msg.data); break;
     case 'rosters': if (state) state.rosters = msg.data; updateRosters(msg.data); break;
     case 'tournament': if (state) state.tournament = msg.data; if (document.getElementById('bracketLabel')) document.getElementById('bracketLabel').textContent = state.tournament.bracketLabel; if (document.getElementById('bracketSubtitle')) document.getElementById('bracketSubtitle').textContent = state.tournament.bracketSubtitle || ''; break;
-    case 'break': if (state) state.break = msg.data; if (state.scene === 'break') { breakSeconds = state.break.duration; updateBreakTimer(); } break;
+    case 'break': if (state) state.break = msg.data; if (state.scene === 'break') { breakSeconds = (state.break && typeof state.break.duration === 'number') ? state.break.duration : 300; updateBreakTimer(); } break;
     case 'song': if (state) state.song = msg.data; updateSongDisplay(state.song); break;
   }
 }
@@ -483,8 +483,15 @@ function switchScene(scene, instant = false) {
   if (scene === 'stats' && stats) stats.classList.add('visible');
   if (scene === 'break' && brk) {
     brk.classList.add('visible');
-    breakSeconds = state.break.duration; updateBreakTimer();
-    breakInterval = setInterval(() => { breakSeconds = Math.max(0, breakSeconds - 1); updateBreakTimer(); }, 1000);
+    breakSeconds = (state && state.break && typeof state.break.duration === 'number') ? state.break.duration : 300; 
+    updateBreakTimer();
+    breakInterval = setInterval(() => { 
+      breakSeconds = Math.max(0, breakSeconds - 1); 
+      updateBreakTimer(); 
+      if (breakSeconds <= 0) {
+        clearInterval(breakInterval);
+      }
+    }, 1000);
   }
 }
 

@@ -924,7 +924,7 @@ window.renderModalItems = function (items) {
   // Cập nhật text nút confirm
   const confirmBtn = document.querySelector('#selection-modal button[onclick="confirmMultiSelection()"]');
   if (confirmBtn) {
-    confirmBtn.innerText = `CONFIRM (${multiSelection.length}/${maxAllowed})`;
+    confirmBtn.innerText = `XÁC NHẬN (${multiSelection.length}/${maxAllowed})`;
   }
 
   items.forEach(item => {
