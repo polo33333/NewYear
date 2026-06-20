@@ -259,11 +259,18 @@ function updateStatsScene(data) {
   let teamARows = '', teamBRows = '';
 
   let totalScores = { A: 0, B: 0 };
+  let allRoundsCompleted = true;
   ['A', 'B'].forEach(teamCode => {
     const teamData = data['team' + teamCode] || {};
     for (let r = 1; r <= 6; r++) {
       const rd = teamData['round' + r] || {};
       totalScores[teamCode] += (rd.points || 0) - (rd.deduction || 0) - (rd.buyPoints || 0);
+      
+      const hasHero = rd.heroes && rd.heroes.some(h => h && h.trim() !== '');
+      const hasScore = rd.points !== 0 && rd.points !== undefined && rd.points !== null;
+      if (!hasHero && !hasScore) {
+        allRoundsCompleted = false;
+      }
     }
   });
 
@@ -332,15 +339,17 @@ function updateStatsScene(data) {
 
     let resultText = '';
     let resultClass = '';
-    if (totalScores.A > totalScores.B) {
-      resultText = teamCode === 'A' ? 'VICTORY' : 'DEFEAT';
-      resultClass = teamCode === 'A' ? 'win' : 'lose';
-    } else if (totalScores.B > totalScores.A) {
-      resultText = teamCode === 'B' ? 'VICTORY' : 'DEFEAT';
-      resultClass = teamCode === 'B' ? 'win' : 'lose';
-    } else {
-      resultText = 'DRAW';
-      resultClass = 'draw';
+    if (allRoundsCompleted) {
+      if (totalScores.A > totalScores.B) {
+        resultText = teamCode === 'A' ? 'VICTORY' : 'DEFEAT';
+        resultClass = teamCode === 'A' ? 'win' : 'lose';
+      } else if (totalScores.B > totalScores.A) {
+        resultText = teamCode === 'B' ? 'VICTORY' : 'DEFEAT';
+        resultClass = teamCode === 'B' ? 'win' : 'lose';
+      } else {
+        resultText = 'DRAW';
+        resultClass = 'draw';
+      }
     }
 
     const blockHtml = `
