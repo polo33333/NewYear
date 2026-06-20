@@ -76,7 +76,7 @@
             render();
         } catch (e) {
             console.error("Failed to load weapons:", e);
-            if (statsSummary) statsSummary.textContent = "Error loading data from server.";
+            if (statsSummary) statsSummary.textContent = "Lỗi khi tải dữ liệu từ máy chủ.";
         }
     }
 
@@ -150,11 +150,11 @@
         // Update stats
         const total = weapons.length;
         const count = filtered.length;
-        if (statsSummary) statsSummary.textContent = `${total} weapons | Click Active để bật/tắt`;
-        if (footerStats) footerStats.textContent = `Total: ${total} | Filtered: ${count}`;
+        if (statsSummary) statsSummary.textContent = `${total} vũ khí | Bấm Kích hoạt để bật/tắt`;
+        if (footerStats) footerStats.textContent = `Tổng số: ${total} | Đã lọc: ${count}`;
 
         // Update pagination UI
-        if (pageDisplay) pageDisplay.textContent = `Page ${currentPage} of ${totalPages}`;
+        if (pageDisplay) pageDisplay.textContent = `Trang ${currentPage} / ${totalPages}`;
         if (prevPageBtn) prevPageBtn.disabled = currentPage === 1;
         if (nextPageBtn) nextPageBtn.disabled = currentPage === totalPages;
 
@@ -243,17 +243,17 @@
                     body: JSON.stringify(weapons)
                 });
                 if (res.ok) {
-                    showToast("✓ Data Saved to Server!", "success");
+                    showToast("✓ Đã lưu dữ liệu lên máy chủ!", "success");
                 } else {
-                    showToast("Failed to save data to server.", "error");
+                    showToast("Không thể lưu dữ liệu lên máy chủ.", "error");
                 }
             } catch (e) {
                 console.error(e);
-                showToast("Error connecting to server.", "error");
+                showToast("Lỗi kết nối tới máy chủ.", "error");
             }
         };
     }
-
+ 
     if (exportBtn) {
         exportBtn.onclick = () => {
             const blob = new Blob([JSON.stringify(weapons, null, 2)], { type: "application/json" });
@@ -263,7 +263,7 @@
             a.download = "weapon_updated.json";
             a.click();
             URL.revokeObjectURL(url);
-            showToast("✓ JSON Exported Successfully!", "success");
+            showToast("✓ Xuất JSON thành công!", "success");
         };
     }
 

@@ -25,6 +25,12 @@ function connect() {
   ws.onopen = () => {
     document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot online');
     document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'CONNECTED');
+    
+    if (typeof mp !== 'undefined' && mp.audio) {
+      const isPlaying = !mp.audio.paused;
+      const name = (mp.playlist && mp.playlist[mp.currentIndex]) ? mp.playlist[mp.currentIndex].name : '';
+      send({ type: 'song', data: { name, isPlaying } });
+    }
   };
   ws.onmessage = (e) => handleMessage(JSON.parse(e.data));
   ws.onclose = () => {
@@ -70,6 +76,7 @@ function syncUI() {
   document.getElementById('label-teamB').textContent = nB || 'TEAM B';
 
   document.getElementById('bracket-label').value = state.tournament?.bracketLabel || '';
+  document.getElementById('bracket-subtitle').value = state.tournament?.bracketSubtitle || '';
   document.getElementById('break-duration').value = state.break?.duration / 60 || 5;
   document.getElementById('ticker-input').value = state.ticker?.items.join('\n') || '';
 
@@ -251,7 +258,7 @@ async function resetMatch() {
     teamB: { ...state.score.teamB, name: nB }
   };
   send({ type: 'update_score', data: scoreData });
-  send({ type: 'update_tournament', data: { bracketLabel: defSubtitle } });
+  send({ type: 'update_tournament', data: { bracketLabel: defSubtitle, bracketSubtitle: '' } });
   send({ type: 'update_break', data: { duration: 300 } });
 }
 
@@ -267,7 +274,7 @@ function updateMatch() {
     teamB: { ...state.score.teamB, name: nB }
   };
   send({ type: 'update_score', data: scoreData });
-  send({ type: 'update_tournament', data: { bracketLabel: document.getElementById('bracket-label').value } });
+  send({ type: 'update_tournament', data: { bracketLabel: document.getElementById('bracket-label').value, bracketSubtitle: document.getElementById('bracket-subtitle').value } });
   send({ type: 'update_break', data: { duration: (parseFloat(document.getElementById('break-duration').value) || 5) * 60 } });
 }
 
@@ -470,7 +477,7 @@ function copyUrl(id, btn) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
     const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-check"></i> COPIED';
+    btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ SAO CHÉP';
     btn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
     btn.style.color = '#10b981';
     setTimeout(() => {

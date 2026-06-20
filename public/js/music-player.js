@@ -405,6 +405,9 @@ mp.audio.addEventListener('ended', () => {
     if (typeof window.updateMiniPlayerVisibility === 'function') {
       window.updateMiniPlayerVisibility();
     }
+    if (typeof send === 'function' && mp.playlist[mp.currentIndex]) {
+      send({ type: 'song', data: { name: mp.playlist[mp.currentIndex].name, isPlaying: false } });
+    }
   }
 });
 

@@ -70,6 +70,9 @@ function handleWSMessage(msg, roomId) {
     case 'set_scene':
       uState.scene = msg.value;
       uState.overlays.scoreboard = (uState.scene === 'gameplay');
+      if (uState.scene === 'end') {
+        uState.overlays.show_song = false;
+      }
       broadcast({ type: 'scene', value: uState.scene, senderId: msg.senderId }, roomId);
       broadcast({ type: 'overlays', data: uState.overlays, senderId: msg.senderId }, roomId);
       stateChanged = true;

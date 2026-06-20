@@ -101,6 +101,16 @@
     </div>
   </div>
 
+  <div id="scoreboard2" class="hidden">
+    <div class="sb2-container">
+      <div class="sb2-score-left" id="scoreA2">0</div>
+      <div class="sb2-team-name-left" id="nameA2">DRAGONS</div>
+      <div class="sb2-diff-pill" id="scoreDiff">0</div>
+      <div class="sb2-team-name-right" id="nameB2">PHANTOMS</div>
+      <div class="sb2-score-right" id="scoreB2">0</div>
+    </div>
+  </div>
+
 
   <div id="roster-left" class="roster-panel left hidden">
     <div class="roster-title" id="rosterNameA">TEAM A</div>
@@ -121,7 +131,7 @@
     <div style="display: flex; align-items: center; gap: 8px;">
       <i class="fas fa-compact-disc spin-anim" style="color: #00f5ff; font-size: 16px;"></i>
       <span
-        style="font-size: 12px; font-weight: 800; color: #00f5ff; letter-spacing: 2px; text-transform: uppercase;">Playing:</span>
+        style="font-size: 12px; font-weight: 800; color: #00f5ff; letter-spacing: 2px; text-transform: uppercase;">Đang phát:</span>
     </div>
     <div class="song-marquee-container">
       <span id="overlay-song-name" class="song-marquee-text"></span>
@@ -144,83 +154,43 @@
     </div>
   </div>
 
-  <div id="bracket-scene" class="sci-fi-bracket">
+  <div id="break-scene" class="vct-bracket">
     <!-- Top Header -->
-    <div class="bracket-header">
-      <div class="bh-compass"><i class="far fa-compass"></i></div>
-      <div class="bh-title-row">
-        <div class="bh-line left"></div>
-        <div class="bh-title" id="bracketLabel">GRAND FINALS — 2026</div>
-        <div class="bh-line right"></div>
-      </div>
-      <div class="bh-subtitle">
-        <span class="bh-sub-icon">✧</span>
-        THE MATRIX LEAGUE
-        <span class="bh-sub-icon">✧</span>
-      </div>
+    <div class="vct-header">
+      <div class="vct-title" id="bracketLabel">WUTHERING WAVES</div>
+      <div class="vct-subtitle" id="bracketSubtitle">REGULAR SEASON - WEEK 1</div>
     </div>
 
     <!-- Matchup Body -->
-    <div class="bracket-body">
-      <!-- Team A -->
-      <div class="bracket-team-wrapper left">
-        <div class="bracket-seed-label">
-          <span class="seed-text">SEED 01</span>
+    <div class="vct-matchups">
+      <!-- Match 1 -->
+      <div class="vct-match">
+        <div class="vct-team vct-team-blue left" id="bmTeam1">
+          <div class="vct-team-name" id="bName1">ZETA DIVISION</div>
         </div>
-        <div class="bm-team left" id="bmTeam1">
-          <div class="bm-bg-char"></div>
-          <div class="bm-content">
-            <div class="bm-name" id="bName1">TEAM A</div>
-          </div>
+        <div class="vct-vs">[vs]</div>
+        <div class="vct-team vct-team-red right" id="bmTeam2">
+          <div class="vct-team-name" id="bName2">DRX</div>
         </div>
       </div>
+    </div>
 
-      <!-- VS Badge -->
-      <div class="bm-vs-wrapper">
-        <div class="bm-vs-container">
-          <div class="bm-vs-badge">VS</div>
-        </div>
-      </div>
-
-      <!-- Team B -->
-      <div class="bracket-team-wrapper right">
-        <div class="bracket-seed-label">
-          <span class="seed-text">SEED 02</span>
-        </div>
-        <div class="bm-team right" id="bmTeam2">
-          <div class="bm-bg-char"></div>
-          <div class="bm-content">
-            <div class="bm-name" id="bName2">TEAM B</div>
-          </div>
-        </div>
-      </div>
+    <!-- Coming Up Timer -->
+    <div class="vct-timer-wrapper">
+      <div class="vct-timer-label">COMING UP</div>
+      <div class="vct-timer-value" id="breakTimer">00:00</div>
     </div>
 
     <!-- Footer -->
-    <div class="bracket-footer">
-      <div class="bf-top">
-        <div class="bf-center-box">
-          <span class="bf-cross">+</span>
-          ONLY ONE WILL STAND
-          <span class="bf-cross">+</span>
-        </div>
-      </div>
-      <div class="bf-bottom">
-        <div class="bf-left-text"><i class="fas fa-snowflake"></i> WUTHERING WAVES <i class="fas fa-asterisk"></i></div>
-        <div class="bf-center-text">HONOR - GLORY - VICTORY</div>
-        <div class="bf-right-text"><i class="fas fa-asterisk"></i> <i class="fas fa-snowflake"></i> RESONATOR BATTLE
-        </div>
+    <div class="vct-footer">
+      <div class="vct-footer-logo-placeholder">
+        <i class="fas fa-asterisk"></i> Wuthering Waves
       </div>
     </div>
   </div>
 
-  <div id="break-scene">
-    <div class="break-container">
-      <div class="break-content">
-        <div class="break-timer" id="breakTimer">00:00</div>
-      </div>
-    </div>
-  </div>
+
+
 
   <script src="js/overlay.js"></script>
 </body>

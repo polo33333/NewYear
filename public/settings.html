@@ -29,27 +29,27 @@
             <nav>
                 <a href="/" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
-                    <span class="nav-text">Control</span>
+                    <span class="nav-text">Điều khiển</span>
                 </a>
                 <a href="/character-editor" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-user"></i></span>
-                    <span class="nav-text">Character</span>
+                    <span class="nav-text">Nhân vật</span>
                 </a>
                 <a href="/weapon-editor" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-gavel"></i></span>
-                    <span class="nav-text">Weapon</span>
+                    <span class="nav-text">Vũ khí</span>
                 </a>
                 <a href="/history" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-history"></i></span>
-                    <span class="nav-text">History</span>
+                    <span class="nav-text">Lịch sử</span>
                 </a>
-        <a href="/bracket" class="nav-link" data-tab="bracket">
+        <a href="/bracket" class="nav-link" data-tab="bracket" style="display: none;">
           <span class="nav-icon"><i class="fas fa-sitemap"></i></span>
           <span class="nav-text">Bracket</span>
         </a>
                 <a href="/settings" class="nav-link active">
                     <span class="nav-icon"><i class="fas fa-cog"></i></span>
-                    <span class="nav-text">Settings</span>
+                    <span class="nav-text">Cài đặt</span>
                 </a>
             </nav>
         </aside>
@@ -57,8 +57,8 @@
         <div class="main-content">
             <header>
                 <div class="brand">
-                    <h1>Settings</h1>
-                    <p>Configuration for MATRIX HUD</p>
+                    <h1>Cài đặt</h1>
+                    <p>Cấu hình cho MATRIX HUD</p>
                 </div>
                 <div class="header-right">
                     <div class="header-status-group">
@@ -75,14 +75,14 @@
                 <div class="settings-col">
                     <!-- OBS Security Card -->
                     <div class="settings-card">
-                        <div class="settings-title"><i class="fas fa-shield-alt"></i> Overlay Settings</div>
+                        <div class="settings-title"><i class="fas fa-shield-alt"></i> Cài đặt Overlay</div>
 
                         <div class="form-group">
-                            <label class="form-label">Overlay Token URL</label>
+                            <label class="form-label">Mã Token cho Overlay URL</label>
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <div style="position: relative; flex: 1;">
                                     <input type="text" id="sett-token-input" class="form-input"
-                                        placeholder="Enter new token (e.g. kdstream2026)"
+                                        placeholder="Nhập mã token mới (ví dụ: kdstream2026)"
                                         style="padding-right: 40px; width: 100%; -webkit-text-security: disc;">
                                     <button type="button" id="sett-btn-toggle-token"
                                         style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 5px; font-size: 14px; transition: 0.2s;"
@@ -94,7 +94,7 @@
                                     style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px; padding: 0 20px; height: 40px; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: 0.2s;"
                                     onmouseover="this.style.background='rgba(255,255,255,0.1)'"
                                     onmouseout="this.style.background='rgba(255,255,255,0.05)'">
-                                    <i class="fas fa-sync-alt"></i> Random
+                                    <i class="fas fa-sync-alt"></i> Ngẫu nhiên
                                 </button>
                             </div>
                             <div class="form-desc">
@@ -117,18 +117,18 @@
                             </div>
                         </div>
 
-                        <button id="sett-btn-save-settings" class="btn-save"><i class="fas fa-save"></i> Save</button>
+                        <button id="sett-btn-save-settings" class="btn-save"><i class="fas fa-save"></i> Lưu</button>
                     </div>
 
                     <!-- Google Sheets Card -->
                     <div class="settings-card">
                         <div class="settings-title">
-                            <i class="fab fa-google-drive" style="color: #10b981;"></i> Google Sheet Sync
+                            <i class="fab fa-google-drive" style="color: #10b981;"></i> Đồng bộ Google Sheet
                         </div>
 
                         <!-- Match Result Apps Script Sync -->
                         <div class="form-group">
-                            <label class="form-label">Google Apps Script Web App URL (Match Result Sync)</label>
+                            <label class="form-label">Google Apps Script Web App URL (Đồng bộ kết quả)</label>
                             <div style="position: relative;">
                                 <input type="text" id="sett-apps-script-url-input" class="form-input"
                                     placeholder="https://script.google.com/macros/s/.../exec"
@@ -150,12 +150,12 @@
 
                         <button id="sett-btn-save-sheets" class="btn-save"
                             style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: 1px solid rgba(16, 185, 129, 0.2);"><i
-                                class="fas fa-save"></i> Save</button>
+                                class="fas fa-save"></i> Lưu</button>
                     </div>
 
                     <!-- Accent Color Card -->
                     <div class="settings-card">
-                        <div class="settings-title"><i class="fas fa-palette" style="color: #a78bfa;"></i> Accent Color — Control Panel</div>
+                        <div class="settings-title"><i class="fas fa-palette" style="color: #a78bfa;"></i> Màu chủ đạo — Bảng điều khiển</div>
 
                         <div class="form-group">
                             <label class="form-label">Chọn màu chủ đạo cho giao diện quản lý</label>
@@ -210,8 +210,7 @@
                     <!-- App Info Card -->
                     <div class="settings-card">
                         <div class="settings-title">
-                            <i class="fas fa-gamepad" style="color: var(--accent); font-size: 18px;"></i> MATRIX HUD
-                            Info
+                            <i class="fas fa-gamepad" style="color: var(--accent); font-size: 18px;"></i> Thông tin MATRIX HUD
                         </div>
 
                         <div style="display: flex; flex-direction: column; gap: 16px; font-size: 14px;">
@@ -257,7 +256,7 @@
                 </div>
             </div>
 
-            <div id="toast" class="save-toast" style="display: none;">✓ Settings Saved Successfully!</div>
+            <div id="toast" class="save-toast" style="display: none;">✓ Đã lưu cài đặt thành công!</div>
 
             <script src="js/sidebar.js?v=3"></script>
             <script src="js/toast.js?v=3"></script>

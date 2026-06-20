@@ -28,27 +28,27 @@
             <nav>
                 <a href="/" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
-                    <span class="nav-text">Control</span>
+                    <span class="nav-text">Điều khiển</span>
                 </a>
                 <a href="/character-editor" class="nav-link active">
                     <span class="nav-icon"><i class="fas fa-user"></i></span>
-                    <span class="nav-text">Character</span>
+                    <span class="nav-text">Nhân vật</span>
                 </a>
                 <a href="/weapon-editor" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-gavel"></i></span>
-                    <span class="nav-text">Weapon</span>
+                    <span class="nav-text">Vũ khí</span>
                 </a>
                 <a href="/history" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-history"></i></span>
-                    <span class="nav-text">History</span>
+                    <span class="nav-text">Lịch sử</span>
                 </a>
-                <a href="/bracket" class="nav-link" data-tab="bracket">
+                <a href="/bracket" class="nav-link" data-tab="bracket" style="display: none;">
                     <span class="nav-icon"><i class="fas fa-sitemap"></i></span>
                     <span class="nav-text">Bracket</span>
                 </a>
                 <a href="/settings" class="nav-link">
                     <span class="nav-icon"><i class="fas fa-cog"></i></span>
-                    <span class="nav-text">Settings</span>
+                    <span class="nav-text">Cài đặt</span>
                 </a>
             </nav>
         </aside>
@@ -56,8 +56,8 @@
         <div class="main-content">
             <header>
                 <div class="brand">
-                    <h1>Character Editor</h1>
-                    <p id="char-stats-summary">Loading data...</p>
+                    <h1>Quản lý Nhân vật</h1>
+                    <p id="char-stats-summary">Đang tải dữ liệu...</p>
                 </div>
                 <div class="header-right">
                     <div class="header-status-group">
@@ -74,20 +74,20 @@
                 <div class="controls">
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="char-search-input" placeholder="Search by name...">
+                        <input type="text" id="char-search-input" placeholder="Tìm kiếm theo tên...">
                     </div>
 
                     <div class="filter-group">
-                        <span class="filter-label">Element:</span>
+                        <span class="filter-label">Nguyên tố:</span>
                         <div id="char-element-filters" class="filter-group">
-                            <button class="filter-btn active" data-element="0">All</button>
+                            <button class="filter-btn active" data-element="0">Tất cả</button>
                         </div>
                     </div>
 
                     <div class="filter-group">
-                        <span class="filter-label">Rank:</span>
+                        <span class="filter-label">Độ hiếm:</span>
                         <div id="char-rank-filters" class="filter-group">
-                            <button class="filter-btn active" data-rank="0">All</button>
+                            <button class="filter-btn active" data-rank="0">Tất cả</button>
                             <button class="filter-btn rank5" data-rank="5">5★</button>
                             <button class="filter-btn rank4" data-rank="4">4★</button>
                         </div>
@@ -95,10 +95,10 @@
 
                     <div class="actions">
                         <button class="btn btn-outline-danger" id="char-reset-btn">
-                            <i class="fas fa-trash-alt"></i> Reset All Values
+                            <i class="fas fa-trash-alt"></i> Đặt lại tất cả giá trị
                         </button>
                         <button class="btn btn-primary" id="char-save-server-btn">
-                            <i class="fas fa-save"></i> Save to Server
+                            <i class="fas fa-save"></i> Lưu lên máy chủ
                         </button>
                     </div>
                 </div>
@@ -109,11 +109,11 @@
                             <tr>
                                 <th class="text-center">#</th>
                                 <th class="text-center" title="Image"><i class="fas fa-image"></i></th>
-                                <th>Name</th>
-                                <th class="text-center">Rank</th>
-                                <th>Element</th>
-                                <th>Weapon</th>
-                                <th class="text-center">Energy</th>
+                                <th>Tên</th>
+                                <th class="text-center">Độ hiếm</th>
+                                <th>Nguyên tố</th>
+                                <th>Vũ khí</th>
+                                <th class="text-center">Năng lượng</th>
                                 <th class="text-center">RC0</th>
                                 <th class="text-center">RC1</th>
                                 <th class="text-center">RC2</th>
@@ -121,7 +121,7 @@
                                 <th class="text-center">RC4</th>
                                 <th class="text-center">RC5</th>
                                 <th class="text-center">RC6</th>
-                                <th class="text-center">Active</th>
+                                <th class="text-center">Kích hoạt</th>
                             </tr>
                         </thead>
                         <tbody id="char-table-body">
@@ -129,25 +129,25 @@
                         </tbody>
                     </table>
                     <div id="char-empty-message" class="empty-state" style="display: none;">
-                        No resonance found in the current frequency...
+                        Không tìm thấy bộ cộng hưởng nào trong tần số hiện tại...
                     </div>
                 </div>
 
                 <div class="pagination" id="char-pagination-controls">
-                    <button class="page-btn" id="char-prev-page" disabled>Previous</button>
-                    <span class="page-info" id="char-page-display">Page 1 of 1</span>
-                    <button class="page-btn" id="char-next-page" disabled>Next</button>
+                    <button class="page-btn" id="char-prev-page" disabled>Trước</button>
+                    <span class="page-info" id="char-page-display">Trang 1 / 1</span>
+                    <button class="page-btn" id="char-next-page" disabled>Sau</button>
                 </div>
             </div>
 
 
 
             <footer>
-                <div id="char-footer-stats">Total: 0 | Filtered: 0</div>
-                <div>Created for MATRIX HUD</div>
+                <div id="char-footer-stats">Tổng số: 0 | Đã lọc: 0</div>
+                <div>Được tạo cho MATRIX HUD</div>
             </footer>
 
-            <div id="toast" class="save-toast">JSON Exported Successfully!</div>
+            <div id="toast" class="save-toast">Xuất JSON thành công!</div>
 
             <script src="js/toast.js"></script>
             <script src="js/character-editor.js?v=3"></script>

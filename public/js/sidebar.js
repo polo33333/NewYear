@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetTab.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; color: var(--accent);">
                         <i class="fas fa-circle-notch fa-spin" style="font-size: 32px; filter: drop-shadow(0 0 8px var(--accent));"></i>
-                        <span style="font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8;">Loading page...</span>
+                        <span style="font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8;">Đang tải trang...</span>
                     </div>
                 `;
                 
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         targetTab.innerHTML = `
                             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; color: var(--danger);">
                                 <i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>
-                                <span style="font-family: 'Outfit', sans-serif; font-size: 14px;">Failed to load tab. Please refresh.</span>
+                                <span style="font-family: 'Outfit', sans-serif; font-size: 14px;">Không thể tải trang. Vui lòng làm mới trang.</span>
                             </div>
                         `;
                     });

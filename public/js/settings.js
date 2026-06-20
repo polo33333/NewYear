@@ -91,14 +91,14 @@
             const isSync = syncSwitch ? syncSwitch.classList.contains('on') : false;
 
             if (!token) {
-                showToast('OBS Token cannot be empty!', 'error');
+                showToast('OBS Token không được để trống!', 'error');
                 return;
             }
 
             const btn = document.getElementById('sett-btn-save-settings');
             btn.disabled = true;
             const oldHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
 
             try {
                 const res = await fetch('/api/settings', {
@@ -131,7 +131,7 @@
             const btn = document.getElementById('sett-btn-save-sheets');
             btn.disabled = true;
             const oldHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
 
             try {
                 const res = await fetch('/api/settings', {
@@ -504,7 +504,7 @@ function mergeStyle(sheet, r1,c1, r2,c2, value, bg, fg, bold, align) {
             saveAccentBtn.addEventListener('click', () => {
                 const oldHtml = saveAccentBtn.innerHTML;
                 saveAccentBtn.disabled = true;
-                saveAccentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveAccentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
 
                 try {
                     localStorage.setItem('uiAccentColor', selectedAccent);

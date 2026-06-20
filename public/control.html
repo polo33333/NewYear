@@ -31,27 +31,27 @@
       <nav>
         <a href="/" class="nav-link" data-tab="control">
           <span class="nav-icon"><i class="fas fa-gamepad"></i></span>
-          <span class="nav-text">Control</span>
+          <span class="nav-text">Điều khiển</span>
         </a>
         <a href="/character-editor" class="nav-link" data-tab="character-editor">
           <span class="nav-icon"><i class="fas fa-user"></i></span>
-          <span class="nav-text">Character</span>
+          <span class="nav-text">Nhân vật</span>
         </a>
         <a href="/weapon-editor" class="nav-link" data-tab="weapon-editor">
           <span class="nav-icon"><i class="fas fa-gavel"></i></span>
-          <span class="nav-text">Weapon</span>
+          <span class="nav-text">Vũ khí</span>
         </a>
         <a href="/history" class="nav-link" data-tab="history">
           <span class="nav-icon"><i class="fas fa-history"></i></span>
-          <span class="nav-text">History</span>
+          <span class="nav-text">Lịch sử</span>
         </a>
-        <a href="/bracket" class="nav-link" data-tab="bracket">
+        <a href="/bracket" class="nav-link" data-tab="bracket" style="display: none;">
           <span class="nav-icon"><i class="fas fa-sitemap"></i></span>
-          <span class="nav-text">Bracket</span>
+          <span class="nav-text">Nhánh đấu</span>
         </a>
         <a href="/settings" class="nav-link" data-tab="settings">
           <span class="nav-icon"><i class="fas fa-cog"></i></span>
-          <span class="nav-text">Settings</span>
+          <span class="nav-text">Cài đặt</span>
         </a>
       </nav>
     </aside>
@@ -62,8 +62,8 @@
       <div class="main-content-tab active-tab" id="tab-control">
         <header>
           <div class="brand">
-            <h1>Control</h1>
-            <p id="stats-summary">Control overlays for stream</p>
+            <h1>Điều khiển</h1>
+            <p id="stats-summary">Điều khiển overlay phát trực tiếp</p>
           </div>
           <div class="header-right">
             <div class="header-status-group">
@@ -85,9 +85,6 @@
                 <button onclick="setScene('gameplay')" data-scene="gameplay" class="scene-btn">
                   <i class="fas fa-gamepad"></i><span>Gameplay</span>
                 </button>
-                <button onclick="setScene('bracket')" data-scene="bracket" class="scene-btn">
-                  <i class="fas fa-trophy"></i><span>Bracket</span>
-                </button>
                 <button onclick="setScene('break')" data-scene="break" class="scene-btn">
                   <i class="fas fa-mug-hot"></i><span>Break</span>
                 </button>
@@ -95,7 +92,7 @@
                   <i class="fas fa-chart-bar"></i><span>Stats</span>
                 </button>
                 <button onclick="setScene('end')" data-scene="end" class="scene-btn scene-btn-end">
-                  <span>End</span>
+                  <i class="fas fa-stop-circle"></i><span>End</span>
                 </button>
               </div>
             </div>
@@ -109,7 +106,11 @@
                   <div class="switch" onclick="toggleOverlay('scoreboard')" id="tog-scoreboard"></div>
                 </div>
                 <div class="sp-overlay-row">
-                  <span>Show Song</span>
+                  <span>Scoreboard Kiểu 2</span>
+                  <div class="switch" onclick="toggleOverlay('scoreboard2')" id="tog-scoreboard2"></div>
+                </div>
+                <div class="sp-overlay-row">
+                  <span>Hiện bài hát</span>
                   <div class="switch" onclick="toggleOverlay('show_song')" id="tog-show_song"></div>
                 </div>
                 <!-- <div class="sp-overlay-row">
@@ -132,16 +133,16 @@
               <div class="sp-section-title"><i class="fas fa-link"></i> OBS LINKS</div>
               <div class="sp-links">
                 <div class="sp-link-row">
-                  <span class="sp-link-name">Full Overlay</span>
+                  <span class="sp-link-name">Overlay đầy đủ</span>
                   <code id="url-full" style="display: none;">...</code>
                   <button class="sp-copy-link-btn" onclick="copyUrl('url-full', this)"><i class="fas fa-copy"></i>
-                    COPY</button>
+                    SAO CHÉP</button>
                 </div>
                 <div class="sp-link-row">
-                  <span class="sp-link-name">Scoreboard Overlay</span>
+                  <span class="sp-link-name">Overlay Scoreboard</span>
                   <code id="url-sb" style="display: none;">...</code>
                   <button class="sp-copy-link-btn" onclick="copyUrl('url-sb', this)"><i class="fas fa-copy"></i>
-                    COPY</button>
+                    SAO CHÉP</button>
                 </div>
                 <!-- <div class="sp-link-row">
                   <span class="sp-link-name">Ticker</span>
@@ -150,10 +151,10 @@
                     COPY</button>
                 </div> -->
                 <div class="sp-link-row">
-                  <span class="sp-link-name">Stats Overlay</span>
+                  <span class="sp-link-name">Overlay Thống kê</span>
                   <code id="url-stats" style="display: none;">...</code>
                   <button class="sp-copy-link-btn" onclick="copyUrl('url-stats', this)"><i class="fas fa-copy"></i>
-                    COPY</button>
+                    SAO CHÉP</button>
                 </div>
               </div>
             </div>
@@ -161,7 +162,7 @@
             <!-- MUSIC PLAYER -->
             <div class="sp-section">
               <div class="sp-section-title" id="sp-music-title">
-                <span><i class="fas fa-music"></i> MUSIC PLAYER</span>
+                <span><i class="fas fa-music"></i> TRÌNH PHÁT NHẠC</span>
               </div>
               <div class="music-player-panel">
                 <label class="btn-pick-folder" title="Chọn các tệp nhạc từ máy tính">
@@ -228,7 +229,7 @@
                   <div class="preview-box" id="preview-container">
                     <div class="preview-loader" id="preview-loader">
                       <i class="fas fa-spinner fa-spin"></i>
-                      <span>Loading Preview...</span>
+                      <span>Đang tải bản xem trước...</span>
                     </div>
                     <iframe id="preview-iframe"></iframe>
                   </div>
@@ -239,14 +240,14 @@
                   <!-- Client Telemetry Monitor -->
                   <div class="system-monitor-box">
                     <div class="mcb-header">
-                      <span class="mcb-title"><i class="fas fa-desktop"></i> CLIENT INFO</span>
+                      <span class="mcb-title"><i class="fas fa-desktop"></i> THÔNG TIN KẾT NỐI</span>
                       <!-- <span id="sys-ping-badge" class="sys-badge-ping">-- ms</span> -->
                     </div>
                     <div class="sys-stats-grid">
                       <!-- Network Latency Chart -->
                       <div class="sys-client-card sys-network-card">
                         <div class="sys-network-header">
-                          <span class="sys-stat-name">Latency</span>
+                          <span class="sys-stat-name">Độ trễ</span>
                           <span id="chart-ping-val" class="sys-stat-val">-- ms</span>
                         </div>
                         <div class="sys-canvas-wrapper">
@@ -256,7 +257,7 @@
 
                       <!-- Session Uptime -->
                       <div class="sys-client-card">
-                        <span class="sys-stat-name">Uptime</span>
+                        <span class="sys-stat-name">Thời gian chạy</span>
                         <span id="client-uptime-val" class="sys-stat-val">00:00:00</span>
                       </div>
                     </div>
@@ -266,7 +267,7 @@
                   <div class="match-controls-box">
                     <!-- Header -->
                     <div class="mcb-header">
-                      <span class="mcb-title"><i class="fas fa-sliders"></i> MATCH CONTROL</span>
+                      <span class="mcb-title"><i class="fas fa-sliders"></i> ĐIỀU KHIỂN TRẬN ĐẤU</span>
                       <button onclick="resetMatch()" class="mcb-reset-btn" title="Reset Match">
                         <i class="fas fa-arrow-rotate-right"></i>
                       </button>
@@ -313,12 +314,17 @@
                     <!-- Subtitle + Break inline -->
                     <div class="mcb-meta-row">
                       <div class="mcb-meta-field mcb-meta-flex">
-                        <label class="mcb-meta-label">Subtitle</label>
-                        <input type="text" id="bracket-label" placeholder="GRAND FINALS — 2026" onchange="updateMatch()"
+                        <label class="mcb-meta-label">Tiêu đề</label>
+                        <input type="text" id="bracket-label" placeholder="WUTHERING WAVES" onchange="updateMatch()"
+                          class="mcb-meta-input">
+                      </div>
+                      <div class="mcb-meta-field mcb-meta-flex">
+                        <label class="mcb-meta-label">Tiêu đề phụ</label>
+                        <input type="text" id="bracket-subtitle" placeholder="REGULAR SEASON - WEEK 1" onchange="updateMatch()"
                           class="mcb-meta-input">
                       </div>
                       <div class="mcb-meta-field mcb-meta-break">
-                        <label class="mcb-meta-label">Break</label>
+                        <label class="mcb-meta-label">Nghỉ</label>
                         <div class="mcb-break-wrap">
                           <input type="number" id="break-duration" onchange="updateMatch()"
                             class="mcb-meta-input text-center">
@@ -347,10 +353,10 @@
               <div class="roster-panel">
                 <!-- Roster Header -->
                 <div class="rp-header">
-                  <span class="rp-title"><i class="fas fa-users"></i> SQUAD &amp; WEAPON</span>
+                  <span class="rp-title"><i class="fas fa-users"></i> ĐỘI HÌNH &amp; VŨ KHÍ</span>
                   <div class="rp-actions">
                     <button onclick="saveRoster()" class="rp-action-btn rp-save-btn" title="Lưu Kết Quả">
-                      <i class="fas fa-save"></i><span>Save</span>
+                      <i class="fas fa-save"></i><span>Lưu</span>
                     </button>
                     <button onclick="clearRoster()" class="rp-action-btn rp-clear-btn" title="Xóa tất cả">
                       <i class="fas fa-arrow-rotate-right"></i>
@@ -409,7 +415,7 @@
           <div class="mini-music-marquee">
             <span id="mini-track-name">Chưa phát nhạc</span>
           </div>
-          <div class="mini-music-status">Now Playing</div>
+          <div class="mini-music-status">Đang phát</div>
         </div>
         <div class="mini-music-controls" onclick="event.stopPropagation()">
           <button onclick="musicPlayerPrev()" class="mini-control-btn"><i class="fas fa-backward-step"></i></button>
@@ -424,16 +430,16 @@
       <div id="selection-modal" class="modal-overlay">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 id="modal-title" class="modal-title">Select Item</h3>
+            <h3 id="modal-title" class="modal-title">Chọn vật phẩm</h3>
             <button onclick="closeSelectionModal()" class="modal-close">&times;</button>
           </div>
           <div class="modal-body-top">
-            <input type="text" id="modal-search" placeholder="Search..." oninput="filterModalItems()"
+            <input type="text" id="modal-search" placeholder="Tìm kiếm..." oninput="filterModalItems()"
               class="modal-search-input">
 
             <div class="filter-group" id="modal-filter-rank-group">
               <div class="filter-label">RANK:</div>
-              <div class="filter-btn active" onclick="setFilter('rank', '', this)">All</div>
+              <div class="filter-btn active" onclick="setFilter('rank', '', this)">Tất cả</div>
               <div class="filter-btn" onclick="setFilter('rank', '5', this)">5★</div>
               <div class="filter-btn" onclick="setFilter('rank', '4', this)">4★</div>
               <div class="filter-btn" id="filter-rank-3" onclick="setFilter('rank', '3', this)">3★</div>
@@ -443,7 +449,7 @@
 
             <div class="filter-group" id="modal-filter-element-group">
               <div class="filter-label">ELEMENT:</div>
-              <div class="filter-btn active" onclick="setFilter('element', '', this)">All</div>
+              <div class="filter-btn active" onclick="setFilter('element', '', this)">Tất cả</div>
               <div class="filter-btn" onclick="setFilter('element', '1', this)"><img src="/images/element/glacio.webp" alt="Glacio" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; border-radius: 50%;"> Glacio</div>
               <div class="filter-btn" onclick="setFilter('element', '2', this)"><img src="/images/element/fusion.webp" alt="Fusion" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; border-radius: 50%;"> Fusion</div>
               <div class="filter-btn" onclick="setFilter('element', '3', this)"><img src="/images/element/electro.webp" alt="Electro" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; border-radius: 50%;"> Electro</div>
@@ -454,9 +460,9 @@
 
             <div class="filter-group" id="modal-filter-weapon-group">
               <div class="filter-label">WEAPON:</div>
-              <div class="filter-btn active" id="filter-weapon-smart" onclick="setFilter('weapon', 'smart', this)">Smart
+              <div class="filter-btn active" id="filter-weapon-smart" onclick="setFilter('weapon', 'smart', this)">Thông minh
               </div>
-              <div class="filter-btn" onclick="setFilter('weapon', '', this)">All</div>
+              <div class="filter-btn" onclick="setFilter('weapon', '', this)">Tất cả</div>
               <div class="filter-btn" onclick="setFilter('weapon', '1', this)"><img src="/images/weapon-type/broadblade-icon.webp" alt="Broadblade" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px;"> Broadblade</div>
               <div class="filter-btn" onclick="setFilter('weapon', '2', this)"><img src="/images/weapon-type/sword-icon.webp" alt="Sword" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px;"> Sword</div>
               <div class="filter-btn" onclick="setFilter('weapon', '3', this)"><img src="/images/weapon-type/pistols-icon.webp" alt="Pistols" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px;"> Pistols</div>
@@ -468,8 +474,8 @@
             <!-- Items sẽ render ở đây -->
           </div>
           <div class="modal-footer">
-            <button onclick="clearSquare()" class="btn-clear">CLEAR</button>
-            <button onclick="confirmMultiSelection()" class="btn-confirm">CONFIRM (0/3)</button>
+            <button onclick="clearSquare()" class="btn-clear">XÓA</button>
+            <button onclick="confirmMultiSelection()" class="btn-confirm">XÁC NHẬN (0/3)</button>
           </div>
         </div>
       </div>

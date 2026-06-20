@@ -680,12 +680,8 @@ input[type=number] {
   box-shadow: 0 0 12px rgba(0, 245, 255, 0.15), inset 0 0 8px rgba(0, 245, 255, 0.05) !important;
 }
 
-/* End scene full-width + red theme */
+/* End scene red theme */
 .scene-btn-end {
-  grid-column: 1 / -1;
-  flex-direction: row;
-  gap: 8px;
-  padding: 12px;
   border-color: rgba(239, 68, 68, 0.25);
   color: #ef4444;
   background: rgba(239, 68, 68, 0.04);

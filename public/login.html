@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MATRIX HUD — Login</title>
+  <title>MATRIX HUD — Đăng nhập</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -630,7 +630,7 @@
 
       <button class="btn-submit" id="btn-login" onclick="doLogin()">
         <span class="spinner" id="btn-spinner"></span>
-        <span id="btn-text">Access System</span>
+        <span id="btn-text">Truy cập Hệ thống</span>
         <i class="fas fa-arrow-right" id="btn-arrow"></i>
       </button>
 
@@ -674,7 +674,7 @@
 
       btn.disabled = true;
       spinner.style.display = 'block';
-      btnText.innerText = 'Authenticating...';
+      btnText.innerText = 'Đang xác thực...';
       btnArrow.style.display = 'none';
       document.getElementById('error-msg').style.display = 'none';
 
@@ -714,7 +714,7 @@
       const btn = document.getElementById('btn-login');
       btn.disabled = false;
       document.getElementById('btn-spinner').style.display = 'none';
-      document.getElementById('btn-text').innerText = 'Access System';
+      document.getElementById('btn-text').innerText = 'Truy cập Hệ thống';
       document.getElementById('btn-arrow').style.display = '';
     }
 

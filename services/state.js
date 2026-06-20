@@ -11,6 +11,7 @@ function createDefaultState() {
     scene: 'end',         // gameplay | bracket | stats | break | end
     overlays: {
       scoreboard: true,
+      scoreboard2: false,
       ticker: false,
       rosterA: false,
       rosterB: false,

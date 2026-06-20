@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const dbPath = path.join(__dirname, '../data/database.sqlite');
-const db = new Database(dbPath, { verbose: console.log });
+const db = new Database(dbPath);
 
 // Enable WAL mode for better performance
 db.pragma('journal_mode = WAL');
@@ -37,16 +37,6 @@ db.exec(`
     data TEXT
   );
 
-  CREATE TABLE IF NOT EXISTS characters (
-    name TEXT PRIMARY KEY,
-    element INTEGER,
-    data TEXT
-  );
-
-  CREATE TABLE IF NOT EXISTS weapons (
-    name TEXT PRIMARY KEY,
-    data TEXT
-  );
 `);
 
 // Migration function from JSON to SQLite
@@ -65,7 +55,7 @@ function migrateData() {
       const insertMany = db.transaction((usersList) => {
         for (const u of usersList) {
           insertUser.run(
-            String(u.id), u.username, u.password, 
+            String(u.id), u.username, u.password,
             u.isAdmin ? 1 : 0, u.isStream ? 1 : 0, u.isStreamer ? 1 : 0, u.isSync ? 1 : 0
           );
         }

@@ -596,7 +596,7 @@
 
         const oldHtml = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đồng bộ...';
 
         try {
             const res = await fetch(`/api/saves/${id}/sync-sheets`, {
