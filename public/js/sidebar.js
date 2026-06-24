@@ -8,6 +8,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Dynamic Theme Toggle Button
+    if (sidebar) {
+        const themeToggle = document.createElement('div');
+        themeToggle.className = 'nav-link theme-toggle-btn';
+        themeToggle.style.cursor = 'pointer';
+        themeToggle.style.marginTop = 'auto'; // Push to the bottom of the flex nav
+        themeToggle.style.marginBottom = '15px';
+        themeToggle.style.borderTop = '1px solid rgba(255, 255, 255, 0.05)';
+        themeToggle.style.paddingTop = '15px';
+        themeToggle.style.borderRadius = '0';
+        themeToggle.style.marginLeft = '10px';
+        themeToggle.style.marginRight = '10px';
+
+        const currentMode = localStorage.getItem('uiMode') || 'dark';
+        themeToggle.innerHTML = `
+            <span class="nav-icon"><i class="fas ${currentMode === 'light' ? 'fa-sun' : 'fa-moon'}" style="color: ${currentMode === 'light' ? '#f59e0b' : '#a78bfa'}"></i></span>
+            <span class="nav-text" style="font-size: 13px;">${currentMode === 'light' ? 'Giao diện: Sáng' : 'Giao diện: Tối'}</span>
+        `;
+
+        const nav = sidebar.querySelector('nav');
+        if (nav) {
+            // Adjust nav styling to allow flex push
+            nav.style.display = 'flex';
+            nav.style.flexDirection = 'column';
+            nav.style.flex = '1';
+            nav.appendChild(themeToggle);
+        }
+
+        themeToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const newMode = (localStorage.getItem('uiMode') || 'dark') === 'light' ? 'dark' : 'light';
+            localStorage.setItem('uiMode', newMode);
+            document.documentElement.setAttribute('data-ui-mode', newMode);
+            document.body.setAttribute('data-ui-mode', newMode);
+
+            // Update icon and text
+            const icon = themeToggle.querySelector('.nav-icon i');
+            const text = themeToggle.querySelector('.nav-text');
+            if (icon) {
+                icon.className = `fas ${newMode === 'light' ? 'fa-sun' : 'fa-moon'}`;
+                icon.style.color = newMode === 'light' ? '#f59e0b' : '#a78bfa';
+            }
+            if (text) {
+                text.textContent = newMode === 'light' ? 'Giao diện: Sáng' : 'Giao diện: Tối';
+            }
+        });
+    }
+
     // Global helper to update mini player visibility based on tab and play state
     window.currentTab = 'control';
     window.updateMiniPlayerVisibility = function() {

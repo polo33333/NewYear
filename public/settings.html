@@ -154,74 +154,6 @@
                                 class="fas fa-save"></i> Lưu</button>
                     </div>
 
-                    <!-- Accent Color Card -->
-                    <div class="settings-card">
-                        <div class="settings-title"><i class="fas fa-palette" style="color: #a78bfa;"></i> Màu chủ đạo —
-                            Bảng điều khiển</div>
-
-                        <div class="form-group">
-                            <label class="form-label">Chọn màu chủ đạo cho giao diện quản lý</label>
-                            <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap; align-items: center;"
-                                id="sett-accent-options">
-                                <!-- Option: Default Cyan -->
-                                <label class="sett-color-option" title="Cyan (Mặc định)">
-                                    <input type="radio" name="uiAccent" value="#00f5ff" style="display:none;" checked>
-                                    <div class="color-preview"
-                                        style="background: #00f5ff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-                                    </div>
-                                </label>
-                                <!-- Option: Green -->
-                                <label class="sett-color-option" title="Emerald">
-                                    <input type="radio" name="uiAccent" value="#10b981" style="display:none;">
-                                    <div class="color-preview"
-                                        style="background: #10b981; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-                                    </div>
-                                </label>
-                                <!-- Option: Purple -->
-                                <label class="sett-color-option" title="Violet">
-                                    <input type="radio" name="uiAccent" value="#a78bfa" style="display:none;">
-                                    <div class="color-preview"
-                                        style="background: #a78bfa; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-                                    </div>
-                                </label>
-                                <!-- Option: Pink -->
-                                <label class="sett-color-option" title="Pink">
-                                    <input type="radio" name="uiAccent" value="#ec4899" style="display:none;">
-                                    <div class="color-preview"
-                                        style="background: #ec4899; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-                                    </div>
-                                </label>
-                                <!-- Option: Orange -->
-                                <label class="sett-color-option" title="Amber">
-                                    <input type="radio" name="uiAccent" value="#f59e0b" style="display:none;">
-                                    <div class="color-preview"
-                                        style="background: #f59e0b; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-                                    </div>
-                                </label>
-
-                                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                    <div style="width: 2px; height: 24px; background: rgba(255,255,255,0.1);"></div>
-                                    <!-- Option: Custom -->
-                                    <label class="sett-color-option"
-                                        style="display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Tùy
-                                            chỉnh:</span>
-                                        <input type="color" id="uiAccentCustom" value="#00f5ff"
-                                            style="width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; cursor: pointer; background: transparent; overflow: hidden;">
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-desc" style="margin-top: 16px;">
-                                Thay đổi màu nhấn <b>(accent color)</b> trên toàn bộ giao diện quản lý. Không ảnh hưởng
-                                tới OBS overlay.
-                            </div>
-                        </div>
-
-                        <button id="sett-btn-save-accent" class="btn-save"
-                            style="background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); border: 1px solid rgba(167,139,250,0.3);"><i
-                                class="fas fa-palette"></i> Lưu Màu Chủ Đạo</button>
-                    </div>
-
                 </div>
 
                 <!-- RIGHT COLUMN: App Info & Support -->
@@ -264,7 +196,7 @@
                             chúng tôi.
                         </div>
 
-                        <a href="" target="_blank"
+                        <a href="" target="_blank" class="github-link-btn"
                             style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; text-decoration: none; font-weight: 500; font-size: 14px; transition: 0.2s;"
                             onmouseover="this.style.background='rgba(255,255,255,0.1)'"
                             onmouseout="this.style.background='rgba(255,255,255,0.03)'">

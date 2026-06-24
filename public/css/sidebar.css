@@ -97,6 +97,8 @@
 
 .nav-text {
     transition: opacity 0.3s;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
 }
 
 .main-content {
@@ -149,7 +151,7 @@
     .sidebar.mini .sidebar-logo {
         display: none;
     }
-    
+
     .sidebar .nav-text,
     .sidebar .sidebar-logo {
         opacity: 1 !important;
@@ -182,13 +184,31 @@
         backdrop-filter: blur(8px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
-    
+
     .sidebar-toggle {
         font-size: 16px;
     }
 
     /* Shift headers to the right to make room for floating toggle button */
-    header, .hist-page-header {
+    header,
+    .hist-page-header {
         padding-left: 70px !important;
     }
+}
+
+/* Global Brand Header Typography */
+.brand h1,
+.hist-page-brand h1 {
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    color: var(--accent) !important;
+    letter-spacing: 0.5px !important;
+}
+
+.brand p,
+.hist-page-brand p {
+    font-family: 'Inter', sans-serif !important;
+    color: var(--text-dim, #94a3b8) !important;
+    font-size: 13px !important;
 }

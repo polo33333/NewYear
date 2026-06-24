@@ -1,152 +1,1335 @@
 /* ── LIGHT MODE OVERRIDES ── */
 body[data-ui-mode="light"] {
-    --bg: #f3f4f6; /* Lighter background */
+    --bg: #f0f2f7;
+    --surface: #f7f8fc;
     --panel: #ffffff;
-    --accent: #0ea5e9; /* Light blue accent */
-    --text: #1f2937; /* Dark text */
-    --text-dim: #6b7280;
-    --success: #059669;
-    --danger: #dc2626;
+    --border: #e2e6ef;
+    --border-subtle: #eceef5;
+    --accent: #5b6af0;
+    --accent-soft: rgba(91, 106, 240, 0.10);
+    --accent-rgb: 91, 106, 240;
+    --text: #1e2340;
+    --text-dim: #6e7a9a;
+    --text-placeholder: #9da8c0;
+    --success: #0ea874;
+    --danger: #e0344b;
+    --shadow-sm: 0 1px 4px rgba(30, 35, 64, .06);
+    --shadow-md: 0 4px 16px rgba(30, 35, 64, .10);
+    --shadow-lg: 0 8px 32px rgba(30, 35, 64, .14);
 
     background: var(--bg);
     color: var(--text);
 }
 
-/* Sidebar */
+/* 1. Global / Scrollbar overrides */
+body[data-ui-mode="light"] ::-webkit-scrollbar-thumb,
+body[data-ui-mode="light"] .custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(30, 35, 64, 0.15);
+}
+
+body[data-ui-mode="light"] ::-webkit-scrollbar-thumb:hover,
+body[data-ui-mode="light"] .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* 2. Sidebar */
 body[data-ui-mode="light"] .sidebar {
     background: #ffffff;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid var(--border);
 }
+
 body[data-ui-mode="light"] .nav-link {
     color: var(--text-dim);
 }
+
 body[data-ui-mode="light"] .nav-link:hover,
 body[data-ui-mode="light"] .nav-link.active {
-    background: #f3f4f6;
+    background: var(--accent-soft);
     color: var(--accent);
 }
+
 body[data-ui-mode="light"] .sidebar-toggle {
     color: var(--accent);
 }
 
-/* Header */
+body[data-ui-mode="light"] .sidebar.mini .sidebar-toggle {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+body[data-ui-mode="light"] .theme-toggle-btn {
+    border-top: 1px solid var(--border) !important;
+}
+
+/* 3. Header */
 body[data-ui-mode="light"] header,
 body[data-ui-mode="light"] .hist-page-header {
     background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
+
 body[data-ui-mode="light"] .brand h1,
 body[data-ui-mode="light"] .hist-page-brand h1 {
     color: var(--accent);
 }
 
-/* Panels / Cards */
+/* 4. Panels & Cards */
 body[data-ui-mode="light"] .panel,
 body[data-ui-mode="light"] .settings-card,
-body[data-ui-mode="light"] .sp-section {
+body[data-ui-mode="light"] .sp-section,
+body[data-ui-mode="light"] .preview-section,
+body[data-ui-mode="light"] .match-controls-box,
+body[data-ui-mode="light"] .history-table-container {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
 }
 
-/* Inputs & Buttons */
+/* 5. Left Scenes Panel Sections */
+body[data-ui-mode="light"] .sp-section {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: none;
+}
+
+body[data-ui-mode="light"] .sp-section-title {
+    color: var(--accent);
+    opacity: 0.9;
+}
+
+/* 6. Scene Buttons */
+body[data-ui-mode="light"] .scene-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    opacity: 1;
+}
+
+body[data-ui-mode="light"] .scene-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+
+body[data-ui-mode="light"] .scene-btn.active {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+    box-shadow: 0 0 8px rgba(91, 106, 240, 0.15) !important;
+}
+
+body[data-ui-mode="light"] .scene-btn-end {
+    border-color: rgba(224, 52, 75, 0.25);
+    color: var(--danger);
+    background: rgba(224, 52, 75, 0.04);
+}
+
+body[data-ui-mode="light"] .scene-btn-end:hover {
+    background: rgba(224, 52, 75, 0.12) !important;
+    border-color: var(--danger) !important;
+    color: var(--danger) !important;
+}
+
+body[data-ui-mode="light"] .scene-btn-end.active {
+    background: rgba(224, 52, 75, 0.08) !important;
+    border-color: var(--danger) !important;
+    color: var(--danger) !important;
+    box-shadow: 0 0 8px rgba(224, 52, 75, 0.2) !important;
+}
+
+/* 7. Inputs, Selects, Textareas */
 body[data-ui-mode="light"] input,
 body[data-ui-mode="light"] textarea,
-body[data-ui-mode="light"] select {
-    background: #f9fafb;
-    border: 1px solid #d1d5db;
+body[data-ui-mode="light"] select,
+body[data-ui-mode="light"] .mcb-name-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
     color: var(--text);
 }
+
+body[data-ui-mode="light"] input::placeholder,
+body[data-ui-mode="light"] textarea::placeholder {
+    color: var(--text-placeholder);
+}
+
 body[data-ui-mode="light"] input:focus,
-body[data-ui-mode="light"] textarea:focus {
+body[data-ui-mode="light"] textarea:focus,
+body[data-ui-mode="light"] select:focus,
+body[data-ui-mode="light"] .mcb-name-input:focus {
     border-color: var(--accent);
     background: #ffffff;
-    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
+    box-shadow: 0 0 0 3px rgba(91, 106, 240, 0.12);
 }
+
+/* 8. Buttons & Switches */
 body[data-ui-mode="light"] button {
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
 }
+
 body[data-ui-mode="light"] button:hover {
-    background: #e5e7eb;
+    background: var(--accent-soft);
     border-color: var(--accent);
     color: var(--accent);
 }
-body[data-ui-mode="light"] button.active,
-body[data-ui-mode="light"] .scene-btn.active {
-    background: #e0f2fe !important;
+
+body[data-ui-mode="light"] button.active {
+    background: var(--accent-soft) !important;
     border-color: var(--accent) !important;
     color: var(--accent) !important;
-    box-shadow: none !important;
 }
 
-/* Table / Grid items */
-body[data-ui-mode="light"] .history-table th {
-    background: #f3f4f6;
+body[data-ui-mode="light"] .switch {
+    background: #e2e6ef;
+    border: 1px solid var(--border);
+}
+
+body[data-ui-mode="light"] .switch::after {
+    background: #ffffff !important;
+}
+
+body[data-ui-mode="light"] .switch.on {
+    background: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .switch.on::after {
+    background: #ffffff !important;
+}
+
+/* 9. Filter Buttons */
+body[data-ui-mode="light"] .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
     color: var(--text-dim);
-    border-bottom: 2px solid #e5e7eb;
-}
-body[data-ui-mode="light"] .history-table td {
-    border-bottom: 1px solid #e5e7eb;
-}
-body[data-ui-mode="light"] .history-table tbody tr:hover {
-    background: #f9fafb;
 }
 
-/* Modals */
+body[data-ui-mode="light"] .filter-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}
+
+body[data-ui-mode="light"] .filter-group::-webkit-scrollbar-thumb {
+    background: rgba(30, 35, 64, 0.15);
+}
+
+/* 10. Match Controls Box Team Styling */
+body[data-ui-mode="light"] .mcb-team-a {
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+body[data-ui-mode="light"] .mcb-team-b {
+    background: rgba(220, 38, 60, 0.05);
+    border: 1px solid rgba(220, 38, 60, 0.25);
+}
+
+body[data-ui-mode="light"] .mcb-team-a .mcb-team-label {
+    color: #2563eb;
+}
+
+body[data-ui-mode="light"] .mcb-team-b .mcb-team-label {
+    color: #dc2626;
+}
+
+body[data-ui-mode="light"] .score-card {
+    background: var(--surface);
+}
+
+body[data-ui-mode="light"] .score-val {
+    background: #ffffff;
+    border-color: var(--border);
+    color: var(--accent);
+}
+
+body[data-ui-mode="light"] .mcb-reset-btn {
+    color: var(--text-dim);
+}
+
+body[data-ui-mode="light"] .mcb-reset-btn:hover {
+    background: rgba(224, 52, 75, 0.12);
+    color: var(--danger);
+}
+
+/* 11. Roster Cards */
+body[data-ui-mode="light"] .roster-card {
+    border: 1px solid var(--border);
+}
+
+body[data-ui-mode="light"] .roster-card.teamA {
+    background: rgba(59, 130, 246, 0.04);
+    border-color: rgba(59, 130, 246, 0.18);
+}
+
+body[data-ui-mode="light"] .roster-card.teamB {
+    background: rgba(220, 38, 60, 0.04);
+    border-color: rgba(220, 38, 60, 0.18);
+}
+
+/* 12. Character selection squares */
+body[data-ui-mode="light"] .char-square:not(.filled),
+body[data-ui-mode="light"] .weapon-square:not(.filled) {
+    background-color: var(--surface) !important;
+    border: 1px solid rgba(30, 35, 64, 0.1) !important;
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .char-square:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+body[data-ui-mode="light"] .char-square.filled {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+body[data-ui-mode="light"] .char-label {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-dim);
+}
+
+/* 13. History Table */
+body[data-ui-mode="light"] .history-table-container {
+    background: #ffffff;
+}
+
+body[data-ui-mode="light"] .history-table tr {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+body[data-ui-mode="light"] .history-table th {
+    background: var(--surface);
+    color: var(--text-dim);
+    border-bottom: 2px solid var(--border);
+}
+
+body[data-ui-mode="light"] .history-table td {
+    color: var(--text);
+}
+
+body[data-ui-mode="light"] .history-table tbody tr:hover {
+    background: rgba(91, 106, 240, 0.03);
+}
+
+body[data-ui-mode="light"] .history-table .col-time {
+    color: #4b528a;
+}
+
+body[data-ui-mode="light"] .history-table .bracket-badge {
+    background: var(--accent-soft);
+    border: 1px solid rgba(91, 106, 240, 0.25);
+    color: var(--accent);
+    box-shadow: none;
+}
+
+/* 14. OBS Links & sp-link-row */
+body[data-ui-mode="light"] .sp-link-row {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+}
+
+body[data-ui-mode="light"] .sp-link-row:hover {
+    background: var(--accent-soft);
+    border-color: rgba(91, 106, 240, 0.25);
+}
+
+body[data-ui-mode="light"] .sp-link-name {
+    color: var(--text);
+}
+
+body[data-ui-mode="light"] .sp-copy-link-btn {
+    background: var(--accent-soft);
+    border: 1px solid rgba(91, 106, 240, 0.25);
+    color: var(--accent);
+}
+
+body[data-ui-mode="light"] .sp-copy-link-btn:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+
+body[data-ui-mode="light"] .url-copy-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+body[data-ui-mode="light"] .url-copy-row code {
+    color: var(--accent);
+}
+
+/* 15. Modals */
 body[data-ui-mode="light"] .modal-content {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
 }
+
 body[data-ui-mode="light"] .modal-header,
 body[data-ui-mode="light"] .modal-footer {
-    border-color: #e5e7eb;
-    background: #f9fafb;
+    border-color: var(--border-subtle);
+    background: var(--surface);
 }
+
 body[data-ui-mode="light"] .modal-title {
     color: var(--text);
 }
 
-/* Misc Tweaks */
-body[data-ui-mode="light"] .char-square {
-    background: #f9fafb;
-    border-color: #e5e7eb;
+/* 16. Subtab Buttons & Pill Group */
+body[data-ui-mode="light"] .subtab-pill-group {
+    background: var(--bg);
+    border-color: var(--border);
 }
-body[data-ui-mode="light"] .char-square:hover {
-    border-color: var(--accent);
-}
-body[data-ui-mode="light"] .char-square.filled {
-    background: #e0f2fe;
-    border-color: var(--accent);
-    color: var(--text);
-}
-body[data-ui-mode="light"] .char-label {
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--text-dim);
-}
-body[data-ui-mode="light"] .divider,
-body[data-ui-mode="light"] .divider-v {
-    background: #e5e7eb;
-}
-body[data-ui-mode="light"] .score-val {
-    background: #f3f4f6;
-    border-color: #d1d5db;
-    color: var(--text);
-}
+
 body[data-ui-mode="light"] .subtab-btn {
     color: var(--text-dim);
 }
+
 body[data-ui-mode="light"] .subtab-btn:hover {
-    background: #f3f4f6;
+    background: var(--border-subtle);
+    color: var(--text);
 }
+
 body[data-ui-mode="light"] .subtab-btn.active {
-    background: #e0f2fe;
+    background: #ffffff;
     color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent) inset;
+    box-shadow: 0 0 0 1px var(--accent) inset, var(--shadow-sm);
 }
-body[data-ui-mode="light"] .subtab-pill-group {
-    background: #f9fafb;
-    border-color: #e5e7eb;
+
+/* 17. Dividers */
+body[data-ui-mode="light"] .divider,
+body[data-ui-mode="light"] .divider-v {
+    background: var(--border);
+}
+
+/* 19. Preview Section */
+body[data-ui-mode="light"] .preview-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+body[data-ui-mode="light"] .preview-box {
+    border: 1px solid rgba(91, 106, 240, 0.2);
+}
+
+body[data-ui-mode="light"] .pv-title {
+    color: var(--accent);
+}
+
+body[data-ui-mode="light"] .pv-fullscreen-btn {
+    color: var(--text-dim);
+}
+
+body[data-ui-mode="light"] .pv-fullscreen-btn:hover {
+    background: var(--border-subtle);
+    color: var(--text);
+}
+
+/* 20. Settings specifically */
+body[data-ui-mode="light"] .settings-title {
+    color: var(--accent);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+body[data-ui-mode="light"] .form-label {
+    color: var(--text-dim);
+}
+
+body[data-ui-mode="light"] .form-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+body[data-ui-mode="light"] .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(91, 106, 240, 0.15);
+}
+
+body[data-ui-mode="light"] .form-desc {
+    color: var(--text-placeholder);
+}
+
+body[data-ui-mode="light"] .console-logger {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+}
+
+body[data-ui-mode="light"] .save-item {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+}
+
+body[data-ui-mode="light"] .save-item:hover {
+    background: var(--border-subtle);
+    border-color: var(--border);
+}
+
+body[data-ui-mode="light"] .save-item-info {
+    color: var(--text);
+}
+
+body[data-ui-mode="light"] .sett-template-option {
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+body[data-ui-mode="light"] .sett-template-option:hover {
+    border-color: rgba(91, 106, 240, 0.3);
+    background: rgba(91, 106, 240, 0.04);
+}
+
+body[data-ui-mode="light"] .sett-template-option.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 1px rgba(91, 106, 240, 0.25), 0 4px 16px rgba(91, 106, 240, 0.1);
+}
+
+body[data-ui-mode="light"] .sett-tpl-name {
+    color: var(--text);
+}
+
+body[data-ui-mode="light"] .sett-tpl-desc {
+    color: var(--text-dim);
+}
+
+body[data-ui-mode="light"] .sett-tpl-classic {
+    background: var(--bg);
+}
+
+/* 21. AI Smart Filter Adaptation */
+body[data-ui-mode="light"] #filter-weapon-smart.active {
+    background-image: linear-gradient(#f0f2f7, #f0f2f7),
+        linear-gradient(135deg, #ff0055, #ff7f00, #ffcc00, #00ffcc, #3300ff, #bd00ff, #ff0055) !important;
+    color: var(--text) !important;
+}
+
+/* 22. Connection Panel (System Monitor Box) */
+body[data-ui-mode="light"] .system-monitor-box {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+body[data-ui-mode="light"] .system-monitor-box .sys-stats-grid {
+    background: var(--surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .sys-client-card {
+    background: #ffffff !important;
+    border: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .sys-stat-name {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .sys-stat-val {
+    color: var(--text) !important;
+}
+
+/* 23. Roster Panel */
+body[data-ui-mode="light"] .roster-panel {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+body[data-ui-mode="light"] .rp-header {
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .rp-clear-btn {
+    color: var(--danger) !important;
+}
+
+body[data-ui-mode="light"] .rp-clear-btn:hover {
+    background: rgba(224, 52, 75, 0.08) !important;
+}
+
+body[data-ui-mode="light"] .divider-v.bg-light {
+    background: var(--border) !important;
+}
+
+/* 24. Round Rows */
+body[data-ui-mode="light"] .round-row {
+    background: var(--surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .round-row.active {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .round-label {
+    color: var(--text) !important;
+    border-right-color: var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .step-val {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .step-btn {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .step-btn:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .score-pt-input,
+body[data-ui-mode="light"] .score-deduct-input,
+body[data-ui-mode="light"] .score-buy-input {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .score-pt-input:focus,
+body[data-ui-mode="light"] .score-buy-input:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(91, 106, 240, 0.12) !important;
+}
+
+body[data-ui-mode="light"] .score-net-box {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .btn-submit-row {
+    background: var(--accent-soft) !important;
+    border-color: rgba(91, 106, 240, 0.25) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .btn-submit-row:hover {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .btn-clear-row {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .btn-clear-row:hover {
+    background: rgba(224, 52, 75, 0.08) !important;
+    border-color: var(--danger) !important;
+    color: var(--danger) !important;
+}
+
+body[data-ui-mode="light"] .rc-label,
+body[data-ui-mode="light"] .r-label {
+    color: var(--text-dim) !important;
+}
+
+/* 25. Modal Selection Items */
+body[data-ui-mode="light"] .modal-item-card {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+}
+
+body[data-ui-mode="light"] .modal-item-card:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .modal-item-card.is-selected {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: var(--success) !important;
+}
+
+body[data-ui-mode="light"] .modal-item-name {
+    color: var(--text) !important;
+}
+
+/* 26. Music Player Widget */
+body[data-ui-mode="light"] .music-now-playing {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .music-now-playing.mp-playing {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 12px rgba(91, 106, 240, 0.15) !important;
+}
+
+body[data-ui-mode="light"] .music-track-name {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .music-current-time,
+body[data-ui-mode="light"] #music-current-time,
+body[data-ui-mode="light"] #music-duration {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .music-progress,
+body[data-ui-mode="light"] .music-volume {
+    background: var(--border) !important;
+}
+
+body[data-ui-mode="light"] .music-vol-icon,
+body[data-ui-mode="light"] .music-volume-pct {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .music-playlist {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+}
+
+body[data-ui-mode="light"] .music-playlist-empty {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .music-btn {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .music-btn:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .music-btn-play {
+    background: var(--accent-soft) !important;
+    border-color: rgba(91, 106, 240, 0.25) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .music-btn-play:hover {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #ffffff !important;
+}
+
+body[data-ui-mode="light"] .music-btn.mp-active {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .mp-row {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .mp-row:hover {
+    background: var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .mp-row-active {
+    background: var(--accent-soft) !important;
+    border-left: 2px solid var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .mp-row-active .mp-row-name {
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .mp-row-num,
+body[data-ui-mode="light"] .mp-row-name {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .mp-dur {
+    color: var(--text-dim) !important;
+}
+
+/* 27. Team Scores in Roster Header */
+body[data-ui-mode="light"] .rp-score-a {
+    color: #0077c2 !important;
+    background: rgba(0, 170, 255, 0.12) !important;
+    border-color: rgba(0, 170, 255, 0.4) !important;
+    box-shadow: none !important;
+}
+
+body[data-ui-mode="light"] .rp-score-b {
+    color: #d32f2f !important;
+    background: rgba(255, 68, 68, 0.12) !important;
+    border-color: rgba(255, 68, 68, 0.4) !important;
+    box-shadow: none !important;
+}
+
+/* 28. Character & Weapon Editor Pages */
+body[data-ui-mode="light"] .table-container {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+body[data-ui-mode="light"] table {
+    background: #ffffff !important;
+}
+
+body[data-ui-mode="light"] th {
+    background: var(--surface) !important;
+    color: var(--text-dim) !important;
+    border-bottom: 2px solid var(--border) !important;
+}
+
+body[data-ui-mode="light"] td {
+    color: var(--text) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] tr:hover td {
+    background: rgba(91, 106, 240, 0.03) !important;
+}
+
+body[data-ui-mode="light"] .rc-input {
+    background-color: #ffffff !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+
+body[data-ui-mode="light"] .rc-input.has-value {
+    background-color: rgba(14, 168, 116, 0.06) !important;
+    border-color: var(--success) !important;
+    color: var(--success) !important;
+}
+
+body[data-ui-mode="light"] .rc-input:hover,
+body[data-ui-mode="light"] .rc-input:focus {
+    background-color: #ffffff !important;
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .rc-input.has-value:focus {
+    color: var(--success) !important;
+    border-color: var(--success) !important;
+}
+
+body[data-ui-mode="light"] .element-badge {
+    background: var(--accent-soft) !important;
+    color: var(--accent) !important;
+    border-color: rgba(91, 106, 240, 0.2) !important;
+}
+
+body[data-ui-mode="light"] .search-box input {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .search-box input::placeholder {
+    color: var(--text-placeholder) !important;
+}
+
+body[data-ui-mode="light"] .search-box input:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(91, 106, 240, 0.12) !important;
+}
+
+body[data-ui-mode="light"] .search-icon {
+    color: var(--text-placeholder) !important;
+}
+
+body[data-ui-mode="light"] .filter-btn {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .filter-btn:hover:not(.active) {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .filter-btn.active {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+    border-color: var(--accent) !important;
+    text-shadow: none !important;
+}
+
+body[data-ui-mode="light"] .filter-btn.active.rank5 {
+    background: rgba(245, 158, 11, 0.12) !important;
+    color: #d97706 !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+}
+body[data-ui-mode="light"] .filter-btn.active.rank4 {
+    background: rgba(167, 139, 250, 0.15) !important;
+    color: #7c3aed !important;
+    border-color: rgba(167, 139, 250, 0.4) !important;
+}
+body[data-ui-mode="light"] .filter-btn.active.rank3 {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: #2563eb !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+}
+body[data-ui-mode="light"] .filter-btn.active.rank2 {
+    background: rgba(16, 185, 129, 0.12) !important;
+    color: #059669 !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+}
+body[data-ui-mode="light"] .filter-btn.active.rank1 {
+    background: rgba(100, 116, 139, 0.12) !important;
+    color: #475569 !important;
+    border-color: rgba(100, 116, 139, 0.4) !important;
+}
+
+body[data-ui-mode="light"] .page-btn {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .page-btn:hover:not(:disabled) {
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+    background: var(--accent-soft) !important;
+}
+
+body[data-ui-mode="light"] .page-info {
+    color: var(--text-dim) !important;
+}
+
+/* 29. Match History Cards */
+body[data-ui-mode="light"] .history-card {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+body[data-ui-mode="light"] .history-card:hover {
+    border-color: var(--accent) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-left {
+    border-right: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-left-bg {
+    filter: blur(8px) brightness(0.95) !important;
+    opacity: 0.25 !important;
+}
+
+body[data-ui-mode="light"] .hist-card-left::before {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-teams {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-map {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-time {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-right {
+    background: var(--surface) !important;
+}
+
+body[data-ui-mode="light"] .hist-roster-row {
+    background: #ffffff !important;
+    border: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .hist-roster-row:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .hist-roster-name {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .hist-roster-vs {
+    color: var(--text-placeholder) !important;
+}
+
+body[data-ui-mode="light"] .hist-roster-side .hist-roster-score {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .hist-roster-side span[style*="color: #fff"] {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .hist-card-outcome.outcome-incomplete {
+    color: var(--text) !important;
+    text-shadow: none !important;
+}
+
+body[data-ui-mode="light"] .hist-action-btn {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .hist-action-btn:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .hist-action-btn.btn-load {
+    background: linear-gradient(135deg, var(--accent) 0%, #00b8d4 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+body[data-ui-mode="light"] .hist-action-btn.btn-load:hover {
+    box-shadow: 0 0 10px rgba(91, 106, 240, 0.3) !important;
+}
+
+body[data-ui-mode="light"] .hist-action-btn.btn-delete:hover {
+    background: var(--danger) !important;
+    color: #ffffff !important;
+    border-color: var(--danger) !important;
+}
+
+/* 30. Match Details Modal (History View) */
+body[data-ui-mode="light"] #hist-details-modal .modal-content {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+body[data-ui-mode="light"] #hist-details-modal .modal-header {
+    border-bottom: 1px solid var(--border-subtle) !important;
+    background: var(--surface) !important;
+}
+
+body[data-ui-mode="light"] #hist-details-modal .modal-title {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] #hist-details-modal .modal-close {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] #hist-details-modal .modal-footer {
+    background: var(--surface) !important;
+    border-top: 1px solid var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .history-round-row {
+    background: var(--surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .history-round-row:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .history-round-label {
+    background: var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .history-item-slot.empty {
+    background-color: var(--surface) !important;
+    border-color: rgba(30, 35, 64, 0.15) !important;
+    opacity: 0.75 !important;
+}
+
+body[data-ui-mode="light"] .history-item-slot.empty i {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .history-slot-tag {
+    background: #ffffff !important;
+    border-color: var(--border-subtle) !important;
+}
+
+body[data-ui-mode="light"] .history-score-label {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .history-score-value.net {
+    color: var(--text) !important;
+    background: var(--border) !important;
+}
+
+body[data-ui-mode="light"] .history-round-items div[style*="background: rgba(255,255,255,0.05)"] {
+    background: var(--border) !important;
+}
+
+/* 31. History Toolbar Controls */
+body[data-ui-mode="light"] .hist-search-input {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .hist-search-input::placeholder {
+    color: var(--text-placeholder) !important;
+}
+
+body[data-ui-mode="light"] .hist-search-input:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(91, 106, 240, 0.12) !important;
+}
+
+body[data-ui-mode="light"] .hist-search-icon {
+    color: var(--text-placeholder) !important;
+}
+
+body[data-ui-mode="light"] .hist-select {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .hist-select:focus {
+    border-color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .hist-view-toggle {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+}
+
+body[data-ui-mode="light"] .hist-view-btn {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .hist-view-btn:hover {
+    background: var(--accent-soft) !important;
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .hist-view-btn.active {
+    background: var(--accent-soft) !important;
+    color: var(--accent) !important;
+}
+
+/* 32. Invert Weapon Type Icons in Light Mode */
+body[data-ui-mode="light"] img[src*="weapon-type"] {
+    filter: invert(0.8) brightness(0.2) contrast(1.2) !important;
+}
+
+/* 33. Save Buttons Text Color in Light Mode */
+body[data-ui-mode="light"] .btn-save {
+    color: #000000 !important;
+}
+
+/* 34. Fix Settings Card Inline White Text in Light Mode */
+body[data-ui-mode="light"] .settings-card span[style*="color: #fff"],
+body[data-ui-mode="light"] .settings-card span[style*="color:#fff"] {
+    color: var(--text) !important;
+}
+
+/* 35. Fix GitHub Button in Light Mode */
+body[data-ui-mode="light"] .github-link-btn {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+body[data-ui-mode="light"] .github-link-btn:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+/* 36. Nexus Custom Modals (Confirmations & Prompts) in Light Mode */
+body[data-ui-mode="light"] .nexus-modal-overlay {
+    background: rgba(15, 23, 42, 0.4) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-card {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-lg) !important;
+    color: var(--text) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-title {
+    color: var(--accent) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-message {
+    color: var(--text-dim) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-prompt-input {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-prompt-input:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 10px rgba(91, 106, 240, 0.15) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-btn-cancel {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-btn-cancel:hover {
+    background: var(--border-subtle) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-btn-ok {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--accent) 0%, #00b8d4 100%) !important;
+}
+body[data-ui-mode="light"] .nexus-modal-btn-ok:hover {
+    filter: brightness(1.1) !important;
+}
+
+/* 37. Toast Popups in Light Mode */
+body[data-ui-mode="light"] .nexus-toast {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 10px 30px rgba(30, 35, 64, 0.1), 0 1px 8px rgba(30, 35, 64, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+body[data-ui-mode="light"] .nexus-toast.success {
+    border-left: 4px solid var(--success) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+body[data-ui-mode="light"] .nexus-toast.success i {
+    color: var(--success) !important;
+}
+
+body[data-ui-mode="light"] .nexus-toast.error,
+body[data-ui-mode="light"] .nexus-toast.danger {
+    border-left: 4px solid var(--danger) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+body[data-ui-mode="light"] .nexus-toast.error i,
+body[data-ui-mode="light"] .nexus-toast.danger i {
+    color: var(--danger) !important;
+}
+
+body[data-ui-mode="light"] .nexus-toast.warning {
+    border-left: 4px solid #f59e0b !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+body[data-ui-mode="light"] .nexus-toast.warning i {
+    color: #f59e0b !important;
+}
+
+body[data-ui-mode="light"] .nexus-toast.info {
+    border-left: 4px solid var(--accent) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+body[data-ui-mode="light"] .nexus-toast.info i {
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .nexus-toast-close {
+    color: var(--text-dim) !important;
+}
+body[data-ui-mode="light"] .nexus-toast-close:hover {
+    color: var(--text) !important;
+}
+
+/* 38. Save Toast in Light Mode */
+body[data-ui-mode="light"] .save-toast {
+    background: var(--success) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 20px rgba(14, 168, 116, 0.2) !important;
+}
+
+/* 39. Floating Mini Music Player in Light Mode */
+body[data-ui-mode="light"] .mini-music-player {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 10px 30px rgba(30, 35, 64, 0.1), 0 0 15px rgba(91, 106, 240, 0.05) !important;
+}
+
+body[data-ui-mode="light"] .mini-music-player:hover {
+    border-color: var(--accent) !important;
+    box-shadow: 0 12px 35px rgba(30, 35, 64, 0.15), 0 0 20px rgba(91, 106, 240, 0.1) !important;
+}
+
+body[data-ui-mode="light"] .mini-music-disc {
+    background: radial-gradient(circle at center, #ffffff 30%, #f1f5f9 100%) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+    box-shadow: 0 0 10px rgba(91, 106, 240, 0.1) !important;
+}
+
+body[data-ui-mode="light"] .mini-music-marquee span {
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .mini-music-status {
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .mini-control-btn {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] .mini-control-btn:hover {
+    color: var(--accent) !important;
+}
+
+body[data-ui-mode="light"] .mini-control-btn.play-btn {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+body[data-ui-mode="light"] .mini-control-btn.play-btn:hover {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #ffffff !important;
+}
+
+body[data-ui-mode="light"] .mini-music-player.playing .mini-control-btn.play-btn {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #ffffff !important;
+}
+
+/* 40. Character & Weapon Editor Action Buttons */
+body[data-ui-mode="light"] .btn-primary {
+    background: var(--success) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--success) !important;
+    font-weight: 700 !important;
+}
+body[data-ui-mode="light"] .btn-primary:hover {
+    background: #0c9364 !important;
+    border-color: #0c9364 !important;
+    box-shadow: 0 4px 12px rgba(14, 168, 116, 0.2) !important;
+}
+
+body[data-ui-mode="light"] .btn-outline-danger {
+    background: rgba(220, 52, 75, 0.05) !important;
+    color: var(--danger) !important;
+    border: 1px solid rgba(220, 52, 75, 0.3) !important;
+    font-weight: 700 !important;
+}
+body[data-ui-mode="light"] .btn-outline-danger:hover {
+    background: var(--danger) !important;
+    color: #ffffff !important;
+    border-color: var(--danger) !important;
+    box-shadow: 0 4px 12px rgba(220, 52, 75, 0.2) !important;
 }
