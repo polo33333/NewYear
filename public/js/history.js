@@ -72,10 +72,10 @@
     }
 
     // ── View State ──
-    let currentHistoryView = 'table'; // 'table' | 'card'
+    let currentHistoryView = 'card'; // 'table' | 'card'
 
     // Set view mode (table vs card)
-    window.setHistoryView = function(view) {
+    window.setHistoryView = function (view) {
         currentHistoryView = view;
         document.querySelectorAll('.hist-view-btn').forEach(btn => btn.classList.remove('active'));
         const btn = document.getElementById('btn-view-' + view);
@@ -147,6 +147,39 @@
         if (prev) sel.value = prev;
     }
 
+    // Helper to calculate relative time
+    function timeAgo(timestamp) {
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+        let interval = Math.floor(seconds / 31536000);
+        if (interval >= 1) return interval + "y ago";
+        interval = Math.floor(seconds / 2592000);
+        if (interval >= 1) return interval + "mo ago";
+        interval = Math.floor(seconds / 86400);
+        if (interval >= 1) return interval + "d ago";
+        interval = Math.floor(seconds / 3600);
+        if (interval >= 1) return interval + "h ago";
+        interval = Math.floor(seconds / 60);
+        if (interval >= 1) return interval + "m ago";
+        return seconds < 10 ? "just now" : seconds + "s ago";
+    }
+
+    // Helper to calculate total Net score for a team
+    function calculateTotalNetScore(rosters, teamCode) {
+        const teamData = rosters ? rosters['team' + teamCode] : null;
+        if (!teamData) return 0;
+        let total = 0;
+        for (let r = 1; r <= 6; r++) {
+            const round = teamData['round' + r];
+            if (round) {
+                const points = parseInt(round.points) || 0;
+                const deduction = parseInt(round.deduction) || 0;
+                const buyPoints = parseInt(round.buyPoints) || 0;
+                total += (points - deduction - buyPoints);
+            }
+        }
+        return total;
+    }
+
     // Render card grid view
     function renderHistoryCards(filteredSaves) {
         let html = '<div class="history-card-grid">';
@@ -161,50 +194,128 @@
             const teamBScore = save.score?.teamB?.score ?? 0;
             const isWinA = teamAScore > teamBScore;
             const isWinB = teamBScore > teamAScore;
+            const isIncomplete = teamAScore === 0 && teamBScore === 0;
 
             const teamAHeroes = getUniqueTeamHeroes(save.rosters, 'A');
             const teamBHeroes = getUniqueTeamHeroes(save.rosters, 'B');
-            const teamAAvatarsHTML = teamAHeroes.slice(0, 4).map(h => getCharacterAvatarHTML(h)).join('');
-            const teamBAvatarsHTML = teamBHeroes.slice(0, 4).map(h => getCharacterAvatarHTML(h)).join('');
+
+            // Find first hero to use as background icon
+            const firstHero = teamAHeroes[0] || teamBHeroes[0] || '';
+            let bgImgSrc = '';
+            if (firstHero) {
+                const char = allCharacters.find(c => c.name === firstHero);
+                if (char) {
+                    bgImgSrc = char.icon || char.image || '';
+                    if (bgImgSrc) {
+                        bgImgSrc = bgImgSrc.replace(/^\/?icon\//, 'images/icon/');
+                    }
+                }
+            }
+
+            outcomeText = `${teamAScore} - ${teamBScore}`;
+            if (isIncomplete) {
+                outcomeClass = 'outcome-incomplete';
+            } else if (isWinA) {
+                outcomeClass = 'outcome-win';
+            } else {
+                outcomeClass = 'outcome-loss';
+            }
+
+            const teamAAvatarsHTML = teamAHeroes.slice(0, 3).map(h => getCharacterAvatarHTML(h)).join('') || '<div class="empty-slot"><i class="fas fa-user"></i></div>';
+            const teamBAvatarsHTML = teamBHeroes.slice(0, 3).map(h => getCharacterAvatarHTML(h)).join('') || '<div class="empty-slot"><i class="fas fa-user"></i></div>';
+
+            const scoreRatio = teamBScore > 0 ? (teamAScore / teamBScore).toFixed(2) : teamAScore.toFixed(2);
+            const netScoreA = calculateTotalNetScore(save.rosters, 'A');
+
+            // Build rounds rows
+            let roundsHTML = '';
+            let hasAnyRounds = false;
+            for (let r = 1; r <= 6; r++) {
+                const rA = save.rosters?.teamA?.[`round${r}`];
+                const rB = save.rosters?.teamB?.[`round${r}`];
+
+                const hasHeroesA = rA?.heroes && rA.heroes.some(h => h && h.trim());
+                const hasHeroesB = rB?.heroes && rB.heroes.some(h => h && h.trim());
+
+                if (!hasHeroesA && !hasHeroesB) {
+                    continue; // Skip empty rounds entirely!
+                }
+
+                hasAnyRounds = true;
+                const netA = rA ? (parseInt(rA.points) || 0) - (parseInt(rA.deduction) || 0) - (parseInt(rA.buyPoints) || 0) : 0;
+                const netB = rB ? (parseInt(rB.points) || 0) - (parseInt(rB.deduction) || 0) - (parseInt(rB.buyPoints) || 0) : 0;
+
+                const avsA = rA?.heroes ? rA.heroes.filter(Boolean).slice(0, 3).map(h => getCharacterAvatarHTML(h)).join('') : '';
+                const avsB = rB?.heroes ? rB.heroes.filter(Boolean).slice(0, 3).map(h => getCharacterAvatarHTML(h)).join('') : '';
+
+                roundsHTML += `
+                    <div class="hist-roster-row">
+                        <div class="hist-roster-side left">
+                            <span class="hist-roster-name">Round ${r}</span>
+                            <div class="hist-roster-avatars">${avsA || '<span style="color: rgba(255,255,255,0.15); font-size:10px;">Trống</span>'}</div>
+                            <span class="hist-roster-score" style="color: ${netA < 0 ? 'var(--danger)' : netA > 0 ? 'var(--accent)' : '#fff'}">${netA >= 0 ? '+' : ''}${netA}</span>
+                        </div>
+                        <div class="hist-roster-vs">VS</div>
+                        <div class="hist-roster-side right">
+                            <span class="hist-roster-score" style="color: ${netB < 0 ? 'var(--danger)' : netB > 0 ? 'var(--success)' : '#fff'}">${netB >= 0 ? '+' : ''}${netB}</span>
+                            <div class="hist-roster-avatars">${avsB || '<span style="color: rgba(255,255,255,0.15); font-size:10px;">Trống</span>'}</div>
+                            <span class="hist-roster-name">Round ${r}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (!hasAnyRounds) {
+                roundsHTML = `
+                    <div class="hist-roster-row empty" style="justify-content: center; opacity: 0.5;">
+                        <span style="font-size: 11px; color: rgba(255,255,255,0.4);">Chưa có dữ liệu vòng đấu</span>
+                    </div>
+                `;
+            }
 
             html += `
-                <div class="history-card" style="${isWinA ? '--card-accent: var(--accent)' : isWinB ? '--card-accent: var(--success)' : '--card-accent: rgba(255,255,255,0.2)'}">
-                    <div class="history-card-header">
-                        <span class="history-bracket-label"><i class="fas fa-trophy" style="margin-right:5px; font-size:9px;"></i>${bracketLabel}</span>
-                        <span class="history-timestamp">${dateStr}</span>
+                <div class="history-card">
+                    <div class="hist-card-left">
+                        <div class="hist-card-left-bg" style="background-image: url('${bgImgSrc}')"></div>
+                        <div class="hist-card-left-grid">
+                            <div class="hist-grid-info-section">
+                                <div class="hist-card-map" style="font-style: italic; font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">${bracketLabel}</div>
+                                <div class="hist-card-teams" style="font-size: 13px; font-weight: 700; color: #fff; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    ${teamAName} vs ${teamBName}
+                                </div>
+      
+                            </div>
+                            <div class="hist-grid-score-section">
+                                <div class="hist-card-outcome ${outcomeClass}" style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 20px;">${outcomeText}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: auto; width: 100%;">
+                            <div class="hist-card-time" style="font-size: 11px; color: rgba(255,255,255,0.4); display: flex; gap: 8px;">
+                                <span>${timeAgo(save.timestamp)}</span>
+                                <span>•</span>
+                                <span>${dateStr.split(' ')[0]}</span>
+                            </div>
+                            
+                            <div class="hist-card-actions">
+                                <button class="hist-action-btn btn-load" onclick="loadSave('${save.id}')" title="Tải trận đấu">
+                                    <i class="fas fa-folder-open"></i> Tải
+                                </button>
+                                <button class="hist-action-btn" onclick="showMatchDetails('${save.id}')" title="Chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="hist-action-btn" onclick="syncMatchToSheets('${save.id}', this)" title="G-Sheets">
+                                    <i class="fab fa-google-drive"></i>
+                                </button>
+                                <button class="hist-action-btn btn-delete" onclick="deleteSave('${save.id}')" title="Xóa">
+                                    <i class="fas fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="history-match-preview">
-                        <div class="history-team-preview team-a" style="${isWinA ? 'position:relative' : ''}">
-                            ${isWinA ? '<span class="hist-win-badge">WIN</span>' : ''}
-                            <div class="history-mini-avatar-row">${teamAAvatarsHTML}</div>
-                            <div class="history-team-name" style="${isWinA ? 'color: var(--accent); text-shadow: 0 0 12px rgba(0,245,255,0.4)' : ''}">${teamAName}</div>
-                            <div class="history-team-score" style="${isWinA ? 'color: var(--accent); text-shadow: 0 0 20px rgba(0,245,255,0.4)' : ''}">${teamAScore}</div>
-                        </div>
-                        <div class="history-vs-divider">
-                            <div class="history-vs-line"></div>
-                            <span>VS</span>
-                            <div class="history-vs-line"></div>
-                        </div>
-                        <div class="history-team-preview team-b">
-                            ${isWinB ? '<span class="hist-win-badge" style="background: rgba(166,227,161,0.15); color: var(--success); border-color: rgba(166,227,161,0.3)">WIN</span>' : ''}
-                            <div class="history-mini-avatar-row">${teamBAvatarsHTML}</div>
-                            <div class="history-team-name" style="${isWinB ? 'color: var(--success); text-shadow: 0 0 12px rgba(166,227,161,0.4)' : ''}">${teamBName}</div>
-                            <div class="history-team-score" style="${isWinB ? 'color: var(--success); text-shadow: 0 0 20px rgba(166,227,161,0.4)' : ''}">${teamBScore}</div>
-                        </div>
-                    </div>
-                    <div class="history-card-footer">
-                        <button class="btn-history-load" onclick="loadSave('${save.id}')">
-                            <i class="fas fa-folder-open"></i> Tải
-                        </button>
-                        <button class="btn-history-detail" onclick="showMatchDetails('${save.id}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="btn-history-sync" onclick="syncMatchToSheets('${save.id}', this)" title="G-Sheets">
-                            <i class="fab fa-google-drive"></i>
-                        </button>
-                        <button class="btn-history-delete" onclick="deleteSave('${save.id}')">
-                            <i class="fas fa-trash-can"></i>
-                        </button>
+                    
+                    <div class="hist-card-right">
+                        ${roundsHTML}
                     </div>
                 </div>
             `;
@@ -239,6 +350,7 @@
                 nameB.toLowerCase().includes(searchVal) ||
                 bracket.toLowerCase().includes(searchVal);
             const matchesBracket = !bracketFilter || bracket === bracketFilter;
+
             return matchesSearch && matchesBracket;
         });
 
@@ -826,7 +938,7 @@
                 tabEl.style.padding = '12px';
                 tabEl.style.overflow = 'hidden';
                 initBracketDesigner();
-                
+
                 // Redraw connections after the tab display turns flex and layout settles
                 setTimeout(() => {
                     drawConnections();
@@ -860,11 +972,11 @@
             select.innerHTML = `
                 <option value="">-- Chọn Trận Đấu --</option>
                 ${savedMatches.map(s => {
-                    const nameA = s.score?.teamA?.name || 'TEAM A';
-                    const nameB = s.score?.teamB?.name || 'TEAM B';
-                    const bracket = s.tournament?.bracketLabel || 'Trận';
-                    return `<option value="${s.id}">${nameA} vs ${nameB} (${bracket})</option>`;
-                }).join('')}
+                const nameA = s.score?.teamA?.name || 'TEAM A';
+                const nameB = s.score?.teamB?.name || 'TEAM B';
+                const bracket = s.tournament?.bracketLabel || 'Trận';
+                return `<option value="${s.id}">${nameA} vs ${nameB} (${bracket})</option>`;
+            }).join('')}
             `;
             select.value = currentVal;
         });
@@ -899,7 +1011,7 @@
                 tempRegionHelper.style.width = '0px';
                 tempRegionHelper.style.height = '0px';
                 tempRegionHelper.style.zIndex = '1000';
-                
+
                 const container = document.getElementById('bracket-nodes-container');
                 if (container) container.appendChild(tempRegionHelper);
                 return;
@@ -1406,7 +1518,7 @@
                 const portType = outPort.getAttribute('data-port-type'); // 'winner' or 'loser'
                 const coords = getPortCoordinates(node.id, portType);
                 if (!coords) return;
-                
+
                 activeDragConnection = {
                     fromNodeId: node.id,
                     fromPort: portType,
@@ -1493,7 +1605,7 @@
                     const teamB = sourceNode.computedTeamB || save?.score?.teamB?.name || 'TEAM B';
                     const scoreA = save?.score?.teamA?.score ?? 0;
                     const scoreB = save?.score?.teamB?.score ?? 0;
-                    
+
                     const winner = scoreA > scoreB ? teamA : (scoreB > scoreA ? teamB : '');
                     const loser = scoreA > scoreB ? teamB : (scoreB > scoreA ? teamA : '');
 
@@ -1608,10 +1720,10 @@
 
                 const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 pathEl.setAttribute('class', 'bracket-svg-path');
-                
+
                 const dx = Math.abs(p2.x - p1.x) * 0.55;
                 const pathString = `M ${p1.x} ${p1.y} C ${p1.x + dx} ${p1.y}, ${p2.x - dx} ${p2.y}, ${p2.x} ${p2.y}`;
-                
+
                 pathEl.setAttribute('d', pathString);
 
                 // Create a wider invisible interaction helper path for easy hover
@@ -1647,7 +1759,7 @@
 
                 deleteBtn.appendChild(circle);
                 deleteBtn.appendChild(text);
-                
+
                 groupEl.appendChild(pathEl);
                 groupEl.appendChild(helperPath);
                 groupEl.appendChild(deleteBtn);
@@ -1658,7 +1770,7 @@
                     const totalLength = pathEl.getTotalLength();
                     const midPoint = pathEl.getPointAtLength(totalLength / 2);
                     deleteBtn.setAttribute('transform', `translate(${midPoint.x}, ${midPoint.y})`);
-                } catch(e) {
+                } catch (e) {
                     const midX = (p1.x + p2.x) / 2;
                     const midY = (p1.y + p2.y) / 2;
                     deleteBtn.setAttribute('transform', `translate(${midX}, ${midY})`);
@@ -1823,7 +1935,7 @@
                     roomId = 'room_' + parts[2];
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
 
         const publicUrl = `${window.location.origin}/bracket-view?roomId=${roomId}`;
         navigator.clipboard.writeText(publicUrl).then(() => {

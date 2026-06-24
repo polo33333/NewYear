@@ -393,8 +393,10 @@ function updateStatsScene(data) {
       }
     }
 
+    const watermarkVal = teamCode === 'A' ? '01' : '02';
     const blockHtml = `
       <div class="stats-team-block team${teamCode}" style="--color:${teamColor}; --color-rgb:${hexToRgbString(teamColor)}">
+        <div class="stats-team-watermark">${watermarkVal}</div>
         <div class="stats-team-result ${resultClass}">${resultText}</div>
         <div class="stats-team-label">${teamName}</div>
         <div class="stats-team-score-big">${totalScore}</div>

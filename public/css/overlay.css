@@ -726,7 +726,10 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s;
-  background: transparent;
+  background: radial-gradient(circle at 20% 50%, rgba(0, 170, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(255, 68, 68, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 60%),
+    #050914 url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="g" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M100 0L0 100" stroke="rgba(255, 255, 255, 0.02)" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(%23g)"/></svg>');
   z-index: 90;
 }
 
@@ -740,7 +743,6 @@ body {
   width: 100%;
   height: auto;
   max-width: none;
-  background: transparent;
   border: none;
   box-shadow: none;
   font-family: 'Outfit', sans-serif;
@@ -764,7 +766,7 @@ body {
   height: auto;
   flex: 1;
   gap: 0;
-  padding: 0 120px;
+  padding: 0 180px;
   box-sizing: border-box;
   /* Premium dark base with blue/red radial glows matching e-sports aesthetics */
   background: radial-gradient(circle at 20% 50%, rgba(0, 170, 255, 0.15) 0%, transparent 50%),
@@ -779,7 +781,7 @@ body {
 }
 
 .stats-left-panel {
-  width: 30%;
+  width: 35%;
   display: flex;
   flex-direction: column;
 }
@@ -802,6 +804,20 @@ body {
   overflow: hidden;
 }
 
+.stats-team-watermark {
+  position: absolute;
+  left: 20px;
+  top: -15px;
+  font-size: 150px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.035);
+  font-family: 'Outfit', sans-serif;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  line-height: 1;
+}
+
 .stats-team-result {
   font-size: 24px;
   font-weight: 900;
@@ -810,6 +826,8 @@ body {
   margin-bottom: auto;
   /* Pushes everything else down */
   margin-top: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .stats-team-result.win {
@@ -833,6 +851,8 @@ body {
   letter-spacing: 2px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   color: #fff;
+  position: relative;
+  z-index: 1;
 }
 
 .stats-team-score-big {
@@ -843,10 +863,12 @@ body {
   margin-bottom: auto;
   /* Push it up to center the whole block slightly */
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 1;
 }
 
 .stats-right-panel {
-  width: 70%;
+  width: 65%;
   display: flex;
   flex-direction: column;
   background: transparent;
