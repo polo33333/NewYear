@@ -1,8 +1,83 @@
 // Apply UI Mode immediately to avoid flickering
 const savedUIMode = localStorage.getItem('uiMode') || 'dark';
 document.documentElement.setAttribute('data-ui-mode', savedUIMode);
+document.documentElement.style.backgroundColor = savedUIMode === 'light' ? '#f0f2f7' : '#060a16';
+
+// Inject loading overlay stylesheet dynamically
+const overlayStyle = document.createElement('style');
+overlayStyle.innerHTML = `
+#theme-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: ${savedUIMode === 'light' ? '#f0f2f7' : '#060a16'};
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.3s;
+    visibility: visible;
+}
+#theme-loading-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+.nexus-loader {
+    width: 48px;
+    height: 48px;
+    border: 3px solid ${savedUIMode === 'light' ? '#e2e6ef' : 'rgba(0, 245, 255, 0.1)'};
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+.nexus-loader::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-bottom-color: ${savedUIMode === 'light' ? '#5b6af0' : '#00f5ff'};
+}
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+`;
+document.head.appendChild(overlayStyle);
+
 document.addEventListener('DOMContentLoaded', () => {
     document.body.setAttribute('data-ui-mode', savedUIMode);
+    document.documentElement.style.backgroundColor = '';
+
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.id = 'theme-loading-overlay';
+    overlay.innerHTML = '<span class="nexus-loader"></span>';
+    document.body.appendChild(overlay);
+
+    // Hide overlay when page is fully loaded
+    const hideOverlay = () => {
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+            setTimeout(() => overlay.remove(), 300);
+        }, 150);
+    };
+
+    if (document.readyState === 'complete') {
+        hideOverlay();
+    } else {
+        window.addEventListener('load', hideOverlay);
+    }
 });
 
 const token = localStorage.getItem('kdone_auth_token');

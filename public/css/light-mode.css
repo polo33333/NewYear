@@ -873,21 +873,25 @@ body[data-ui-mode="light"] .filter-btn.active.rank5 {
     color: #d97706 !important;
     border-color: rgba(245, 158, 11, 0.4) !important;
 }
+
 body[data-ui-mode="light"] .filter-btn.active.rank4 {
     background: rgba(167, 139, 250, 0.15) !important;
     color: #7c3aed !important;
     border-color: rgba(167, 139, 250, 0.4) !important;
 }
+
 body[data-ui-mode="light"] .filter-btn.active.rank3 {
     background: rgba(59, 130, 246, 0.12) !important;
     color: #2563eb !important;
     border-color: rgba(59, 130, 246, 0.4) !important;
 }
+
 body[data-ui-mode="light"] .filter-btn.active.rank2 {
     background: rgba(16, 185, 129, 0.12) !important;
     color: #059669 !important;
     border-color: rgba(16, 185, 129, 0.4) !important;
 }
+
 body[data-ui-mode="light"] .filter-btn.active.rank1 {
     background: rgba(100, 116, 139, 0.12) !important;
     color: #475569 !important;
@@ -1150,6 +1154,7 @@ body[data-ui-mode="light"] .github-link-btn {
     border: 1px solid var(--border) !important;
     color: var(--text) !important;
 }
+
 body[data-ui-mode="light"] .github-link-btn:hover {
     background: var(--accent-soft) !important;
     border-color: var(--accent) !important;
@@ -1160,39 +1165,48 @@ body[data-ui-mode="light"] .github-link-btn:hover {
 body[data-ui-mode="light"] .nexus-modal-overlay {
     background: rgba(15, 23, 42, 0.4) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-card {
     background: #ffffff !important;
     border: 1px solid var(--border) !important;
     box-shadow: var(--shadow-lg) !important;
     color: var(--text) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-title {
     color: var(--accent) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-message {
     color: var(--text-dim) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-prompt-input {
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     color: var(--text) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-prompt-input:focus {
     border-color: var(--accent) !important;
     box-shadow: 0 0 10px rgba(91, 106, 240, 0.15) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-btn-cancel {
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     color: var(--text) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-btn-cancel:hover {
     background: var(--border-subtle) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-btn-ok {
     color: #ffffff !important;
     background: linear-gradient(135deg, var(--accent) 0%, #00b8d4 100%) !important;
 }
+
 body[data-ui-mode="light"] .nexus-modal-btn-ok:hover {
     filter: brightness(1.1) !important;
 }
@@ -1211,6 +1225,7 @@ body[data-ui-mode="light"] .nexus-toast.success {
     border-left: 4px solid var(--success) !important;
     background: rgba(255, 255, 255, 0.95) !important;
 }
+
 body[data-ui-mode="light"] .nexus-toast.success i {
     color: var(--success) !important;
 }
@@ -1220,6 +1235,7 @@ body[data-ui-mode="light"] .nexus-toast.danger {
     border-left: 4px solid var(--danger) !important;
     background: rgba(255, 255, 255, 0.95) !important;
 }
+
 body[data-ui-mode="light"] .nexus-toast.error i,
 body[data-ui-mode="light"] .nexus-toast.danger i {
     color: var(--danger) !important;
@@ -1229,6 +1245,7 @@ body[data-ui-mode="light"] .nexus-toast.warning {
     border-left: 4px solid #f59e0b !important;
     background: rgba(255, 255, 255, 0.95) !important;
 }
+
 body[data-ui-mode="light"] .nexus-toast.warning i {
     color: #f59e0b !important;
 }
@@ -1237,6 +1254,7 @@ body[data-ui-mode="light"] .nexus-toast.info {
     border-left: 4px solid var(--accent) !important;
     background: rgba(255, 255, 255, 0.95) !important;
 }
+
 body[data-ui-mode="light"] .nexus-toast.info i {
     color: var(--accent) !important;
 }
@@ -1244,6 +1262,7 @@ body[data-ui-mode="light"] .nexus-toast.info i {
 body[data-ui-mode="light"] .nexus-toast-close {
     color: var(--text-dim) !important;
 }
+
 body[data-ui-mode="light"] .nexus-toast-close:hover {
     color: var(--text) !important;
 }
@@ -1315,6 +1334,7 @@ body[data-ui-mode="light"] .btn-primary {
     border: 1px solid var(--success) !important;
     font-weight: 700 !important;
 }
+
 body[data-ui-mode="light"] .btn-primary:hover {
     background: #0c9364 !important;
     border-color: #0c9364 !important;
@@ -1327,6 +1347,7 @@ body[data-ui-mode="light"] .btn-outline-danger {
     border: 1px solid rgba(220, 52, 75, 0.3) !important;
     font-weight: 700 !important;
 }
+
 body[data-ui-mode="light"] .btn-outline-danger:hover {
     background: var(--danger) !important;
     color: #ffffff !important;

@@ -957,7 +957,9 @@ window.renderModalItems = function (items) {
     // Hiển thị Energy (nếu là character)
     let energyHtml = '';
     if (currentSelectionType === 'character' && item._remainingEnergy !== null) {
-      const eColor = item._remainingEnergy > 0 ? '#fcfcfcff' : '#ff4444';
+      const isLight = document.body.getAttribute('data-ui-mode') === 'light';
+      const defaultColor = isLight ? '#1e2340' : '#fcfcfcff';
+      const eColor = item._remainingEnergy > 0 ? defaultColor : '#ff4444';
       energyHtml = `<div class="modal-item-energy" style="color:${eColor}">⚡ ${item._remainingEnergy}</div>`;
     }
 

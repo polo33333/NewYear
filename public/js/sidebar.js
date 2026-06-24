@@ -40,20 +40,47 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             e.stopPropagation();
             const newMode = (localStorage.getItem('uiMode') || 'dark') === 'light' ? 'dark' : 'light';
-            localStorage.setItem('uiMode', newMode);
-            document.documentElement.setAttribute('data-ui-mode', newMode);
-            document.body.setAttribute('data-ui-mode', newMode);
+            
+            // 1. Show loading overlay
+            let overlay = document.getElementById('theme-loading-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'theme-loading-overlay';
+                overlay.innerHTML = '<span class="nexus-loader"></span>';
+                document.body.appendChild(overlay);
+            }
+            
+            // Customize overlay background and spinner for the incoming mode
+            overlay.style.background = newMode === 'light' ? '#f0f2f7' : '#060a16';
+            const loader = overlay.querySelector('.nexus-loader');
+            if (loader) {
+                loader.style.borderColor = newMode === 'light' ? '#e2e6ef' : 'rgba(0, 245, 255, 0.1)';
+            }
+            overlay.classList.remove('fade-out');
 
-            // Update icon and text
-            const icon = themeToggle.querySelector('.nav-icon i');
-            const text = themeToggle.querySelector('.nav-text');
-            if (icon) {
-                icon.className = `fas ${newMode === 'light' ? 'fa-sun' : 'fa-moon'}`;
-                icon.style.color = newMode === 'light' ? '#f59e0b' : '#a78bfa';
-            }
-            if (text) {
-                text.textContent = newMode === 'light' ? 'Giao diện: Sáng' : 'Giao diện: Tối';
-            }
+            // 2. Perform switch after a tiny delay for smooth animation
+            setTimeout(() => {
+                localStorage.setItem('uiMode', newMode);
+                document.documentElement.setAttribute('data-ui-mode', newMode);
+                document.body.setAttribute('data-ui-mode', newMode);
+
+                // Update icon and text
+                const icon = themeToggle.querySelector('.nav-icon i');
+                const text = themeToggle.querySelector('.nav-text');
+                if (icon) {
+                    icon.className = `fas ${newMode === 'light' ? 'fa-sun' : 'fa-moon'}`;
+                    icon.style.color = newMode === 'light' ? '#f59e0b' : '#a78bfa';
+                }
+                if (text) {
+                    text.textContent = newMode === 'light' ? 'Giao diện: Sáng' : 'Giao diện: Tối';
+                }
+
+                // 3. Fade out overlay
+                setTimeout(() => {
+                    overlay.classList.add('fade-out');
+                    setTimeout(() => overlay.remove(), 300);
+                }, 200);
+            }, 150);
         });
     }
 
