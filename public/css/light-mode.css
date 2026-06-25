@@ -273,7 +273,7 @@ body[data-ui-mode="light"] .roster-card.teamB {
 /* 12. Character selection squares */
 body[data-ui-mode="light"] .char-square:not(.filled),
 body[data-ui-mode="light"] .weapon-square:not(.filled) {
-    background-color: var(--surface) !important;
+    background-color: #e6e8f1 !important;
     border: 1px solid rgba(30, 35, 64, 0.1) !important;
     color: var(--text-dim) !important;
 }
@@ -1353,4 +1353,77 @@ body[data-ui-mode="light"] .btn-outline-danger:hover {
     color: #ffffff !important;
     border-color: var(--danger) !important;
     box-shadow: 0 4px 12px rgba(220, 52, 75, 0.2) !important;
+}
+
+/* 41. Contrast Improvements for Titles and Labels in Light Mode */
+body[data-ui-mode="light"] .mcb-title {
+    color: #4b5be8 !important;
+    /* Slightly darker/bolder blue than the default light mode accent */
+    opacity: 1 !important;
+    font-weight: 800 !important;
+}
+
+body[data-ui-mode="light"] .rp-title {
+    color: #4b5be8 !important;
+    /* Slightly darker/bolder blue than the default light mode accent */
+    opacity: 1 !important;
+    font-weight: 800 !important;
+}
+
+body[data-ui-mode="light"] .mcb-meta-label {
+    color: #64748b !important;
+    /* A darker gray for form labels (e.g., Tiêu đề, Tiêu đề phụ, Nghỉ) */
+    opacity: 1 !important;
+    font-weight: 700 !important;
+}
+
+body[data-ui-mode="light"] .sp-section-title {
+    color: #4b5be8 !important;
+    opacity: 1 !important;
+}
+
+body[data-ui-mode="light"] .settings-title {
+    color: #4b5be8 !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+/* 42. History Empty Search State for Light Mode */
+body[data-ui-mode="light"] .history-empty-state {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-dim) !important;
+    box-shadow: var(--shadow-md) !important;
+    backdrop-filter: none !important;
+}
+
+body[data-ui-mode="light"] .history-empty-state>i {
+    color: var(--accent) !important;
+    opacity: 0.35 !important;
+    text-shadow: none !important;
+}
+
+body[data-ui-mode="light"] .history-empty-state .btn-goto-control {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(91, 106, 240, 0.2) !important;
+}
+
+body[data-ui-mode="light"] .history-empty-state .btn-goto-control i {
+    color: #ffffff !important;
+}
+
+body[data-ui-mode="light"] .history-empty-state .btn-goto-control:hover {
+    background: #4b5be8 !important;
+    box-shadow: 0 6px 16px rgba(91, 106, 240, 0.3) !important;
+}
+
+/* 43. Visibility Toggle Buttons in Settings */
+body[data-ui-mode="light"] #sett-btn-toggle-token,
+body[data-ui-mode="light"] #sett-btn-toggle-apps-script {
+    color: var(--text-dim) !important;
+}
+
+body[data-ui-mode="light"] #sett-btn-toggle-token:hover,
+body[data-ui-mode="light"] #sett-btn-toggle-apps-script:hover {
+    color: var(--accent) !important;
 }

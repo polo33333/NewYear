@@ -5,6 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MATRIX HUD — Đăng nhập</title>
+  <script>
+    (function () {
+      const mode = localStorage.getItem('uiMode') || 'dark';
+      document.documentElement.setAttribute('data-ui-mode', mode);
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.setAttribute('data-ui-mode', mode);
+      });
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -551,6 +560,93 @@
         display: none;
       }
     }
+
+    /* ── LIGHT MODE OVERRIDES ── */
+    [data-ui-mode="light"] {
+      --bg: #f0f2f7;
+      --surface: #ffffff;
+      --cyan: #3b82f6;
+      /* Blue accent for light mode */
+      --cyan-dim: rgba(59, 130, 246, 0.10);
+      --cyan-glow: rgba(59, 130, 246, 0.2);
+      --red: #e0344b;
+      --text: #1e2340;
+      --text-dim: #6e7a9a;
+      --border: rgba(59, 130, 246, 0.15);
+    }
+
+    [data-ui-mode="light"] .brand-bg {
+      -webkit-text-stroke: 1px rgba(59, 130, 246, 0.05);
+    }
+
+    [data-ui-mode="light"] .hero-title {
+      color: #1e2340;
+    }
+
+    [data-ui-mode="light"] .hero-desc {
+      border-color: rgba(59, 130, 246, 0.15);
+    }
+
+    [data-ui-mode="light"] .status-val {
+      color: #1e2340;
+    }
+
+    [data-ui-mode="light"] .divider {
+      background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.15) 30%, rgba(59, 130, 246, 0.15) 70%, transparent);
+    }
+
+    [data-ui-mode="light"] .right::before {
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+    }
+
+    [data-ui-mode="light"] .corner {
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    [data-ui-mode="light"] .form-title {
+      color: #1e2340;
+    }
+
+    [data-ui-mode="light"] .field-input {
+      background: #fafbfe;
+      border: 1px solid rgba(30, 35, 64, 0.15);
+      color: #1e2340;
+    }
+
+    [data-ui-mode="light"] .field-input::placeholder {
+      color: rgba(30, 35, 64, 0.35);
+    }
+
+    [data-ui-mode="light"] .field-input:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+      background: #f3f4fa;
+    }
+
+    [data-ui-mode="light"] .field-input:focus {
+      border-color: var(--cyan);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12), inset 0 0 20px rgba(59, 130, 246, 0.01);
+    }
+
+    [data-ui-mode="light"] .btn-submit {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    [data-ui-mode="light"] .btn-submit:hover {
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+    }
+
+    [data-ui-mode="light"] .form-meta {
+      border-top: 1px solid rgba(30, 35, 64, 0.08);
+    }
+
+    [data-ui-mode="light"] .orb {
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 65%);
+    }
   </style>
 </head>
 
@@ -565,7 +661,7 @@
     <div class="brand-bg">MATRIX</div>
 
     <div class="left-content">
-      <p class="tagline">Overlay Control Suite v1.1</p>
+      <p class="tagline">Overlay Control Suite v1.2</p>
 
       <h1 class="hero-title">
         MATRIX
@@ -588,7 +684,7 @@
         </div>
         <div class="status-item">
           <span class="status-val">KDONE</span>
-          <span class="status-lbl">Tạo bởi</span>
+          <span class="status-lbl">Developer</span>
         </div>
       </div>
     </div>
@@ -763,7 +859,9 @@
         }
 
         draw() {
-          ctx.fillStyle = `rgba(0, 255, 231, ${this.opacity})`;
+          const isLight = document.body.getAttribute('data-ui-mode') === 'light';
+          const colorStr = isLight ? `rgba(91, 106, 240, ${this.opacity * 1.5})` : `rgba(0, 255, 231, ${this.opacity})`;
+          ctx.fillStyle = colorStr;
           ctx.font = `${this.fontSize}px 'Outfit', sans-serif`;
           ctx.fillText(this.value, this.x, this.y);
         }

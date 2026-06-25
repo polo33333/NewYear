@@ -11,6 +11,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+app.disable('x-powered-by');
 const server = http.createServer(app);
 
 app.use(express.json());

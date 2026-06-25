@@ -294,7 +294,7 @@
                             <div class="hist-card-time" style="font-size: 11px; color: rgba(255,255,255,0.4); display: flex; gap: 8px;">
                                 <span>${timeAgo(save.timestamp)}</span>
                                 <span>•</span>
-                                <span>${dateStr.split(' ')[0]}</span>
+                                <span>${dateStr}</span>
                             </div>
                             
                             <div class="hist-card-actions">
