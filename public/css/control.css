@@ -2008,23 +2008,23 @@ input[type=number] {
 
 .modal-item-energy {
   position: absolute;
-  top: -5px;
-  left: -5px;
-  font-size: 9px;
-  font-weight: 800;
-  margin: 10px 0px 0px 1px;
+  top: 6px;
+  left: 6px;
+  font-size: 10px;
+  font-weight: 700;
   z-index: 10;
-  /* background: rgba(3, 7, 18, 0.85); */
-  /* backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px); */
-  /* border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 2px 5px; */
-  /* border-radius: 4px; */
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 3px 7px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
-  gap: 1px;
+  gap: 3px;
   line-height: 1;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
 }
 
 .modal-item-image {
