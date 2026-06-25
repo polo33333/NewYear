@@ -258,6 +258,11 @@ function doPost(e) {
   var tabName = data.tabName || "Match History";
   var sheet   = ss.getSheetByName(tabName) || ss.insertSheet(tabName);
 
+  // Đảm bảo sheet có tối thiểu 17 cột để ghi dữ liệu Kết quả (cột Q)
+  if (sheet.getMaxColumns() < 17) {
+    sheet.insertColumnsAfter(sheet.getMaxColumns(), 17 - sheet.getMaxColumns());
+  }
+
   // Nhận danh sách nhân vật động từ server payload (đảm bảo luôn đúng mới nhất)
   // Nếu không có, dùng CHARACTER_LIST backup có sẵn ở trên
   var charList = data.characters || CHARACTER_LIST;
@@ -296,7 +301,8 @@ function doPost(e) {
         rcDed[5] || "",          // M RC6
         rd.extraDeduction || "", // N
         rd.squadTotal     || 0, // O
-        player.totalScore || 0  // P
+        player.totalScore || 0, // P
+        player.result     || ""  // Q
       ]);
 
       var newRow = sheet.getLastRow();
@@ -310,12 +316,17 @@ function doPost(e) {
     var endRow  = sheet.getLastRow();
     var numRows = endRow - startRow + 1;
 
-    // Merge + style (giữ nguyên như cũ, 16 cột A→P)
+    // Merge + style (cập nhật 17 cột A→Q)
     sheet.getRange(startRow, 1, numRows, 1)
       .merge().setVerticalAlignment("middle")
       .setHorizontalAlignment("center").setFontWeight("bold");
 
     sheet.getRange(startRow, 16, numRows, 1)
+      .merge().setVerticalAlignment("middle")
+      .setHorizontalAlignment("center")
+      .setFontWeight("bold").setFontSize(13);
+
+    sheet.getRange(startRow, 17, numRows, 1)
       .merge().setVerticalAlignment("middle")
       .setHorizontalAlignment("center")
       .setFontWeight("bold").setFontSize(13);
@@ -327,9 +338,9 @@ function doPost(e) {
     sheet.getRange(startRow, 6,  numRows, 1).setHorizontalAlignment("right");
     sheet.getRange(startRow, 15, numRows, 1).setHorizontalAlignment("right");
 
-    sheet.getRange(startRow, 1, numRows, 16)
+    sheet.getRange(startRow, 1, numRows, 17)
       .setBorder(true,true,true,true,true,true, "#94A3B8", SpreadsheetApp.BorderStyle.SOLID);
-    sheet.getRange(startRow, 1, numRows, 16)
+    sheet.getRange(startRow, 1, numRows, 17)
       .setBorder(true,true,true,true,null,null,  "#1E3A5F", SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
   }
 
@@ -365,6 +376,7 @@ function buildHeader(sheet) {
   mergeStyle(sheet, 1,14, 3,14, "Điểm mua\\nlượt đánh",      BLUE, WHITE, true, "CENTER");
   mergeStyle(sheet, 1,15, 3,15, "Điểm tổng\\ntừng đội hình", BLUE, WHITE, true, "CENTER");
   mergeStyle(sheet, 1,16, 3,16, "Điểm tổng\\ncuối cùng",     BLUE, WHITE, true, "CENTER");
+  mergeStyle(sheet, 1,17, 3,17, "Kết quả",                  BLUE, WHITE, true, "CENTER");
 
   var rcLabels = ["RC1","RC2","RC3","RC4","RC5","RC6"];
   for (var i = 0; i < 6; i++) {
@@ -387,6 +399,7 @@ function buildHeader(sheet) {
   sheet.setColumnWidth(14, 85);
   sheet.setColumnWidth(15, 100);
   sheet.setColumnWidth(16, 100);
+  sheet.setColumnWidth(17, 100);
 
   sheet.setRowHeight(1, 22);
   sheet.setRowHeight(2, 22);

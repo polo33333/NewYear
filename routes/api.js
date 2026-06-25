@@ -434,9 +434,34 @@ router.post('/saves/:id/sync-sheets', async (req, res) => {
 
     const playersPayload = [];
 
+    // Pre-calculate total scores to determine win/loss
+    const totalScores = { teamA: 0, teamB: 0 };
+    ['teamA', 'teamB'].forEach(teamKey => {
+      const teamRosters = save.rosters?.[teamKey] || {};
+      let total = 0;
+      for (let r = 1; r <= 6; r++) {
+        const roundData = teamRosters[`round${r}`] || { heroes: [], heroRcs: [], weapons: [], weaponRs: [], points: 0, deduction: 0, buyPoints: 0 };
+        const extraDeduction = parseInt(roundData.buyPoints, 10) || 0;
+        const totalSavedDeduction = (parseInt(roundData.deduction, 10) || 0) + extraDeduction;
+        const baseScore = parseInt(roundData.points, 10) || 0;
+        total += (baseScore - totalSavedDeduction);
+      }
+      totalScores[teamKey] = total;
+    });
+
     ['teamA', 'teamB'].forEach(teamKey => {
       const playerName = save.score?.[teamKey]?.name || (teamKey === 'teamA' ? 'TEAM A' : 'TEAM B');
       const teamRosters = save.rosters?.[teamKey] || {};
+
+      let resultStr = 'DRAW';
+      const myScore = totalScores[teamKey];
+      const oppKey = teamKey === 'teamA' ? 'teamB' : 'teamA';
+      const oppScore = totalScores[oppKey];
+      if (myScore > oppScore) {
+        resultStr = 'WIN';
+      } else if (myScore < oppScore) {
+        resultStr = 'LOSS';
+      }
 
       const usedChars = new Set();
       const usedWeapons = new Set();
@@ -515,6 +540,7 @@ router.post('/saves/:id/sync-sheets', async (req, res) => {
 
       playersPayload.push({
         name: playerName,
+        result: resultStr,
         rounds: roundsPayload,
         totalScore: calculatedTotal
       });
