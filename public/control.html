@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="/css/character-editor.css">
   <link rel="stylesheet" href="/css/history.css">
   <link rel="stylesheet" href="/css/settings.css">
-  <link rel="stylesheet" href="/css/toast.css">
+  <link rel="stylesheet" href="/css/toast.css?v=4">
   <link rel="icon" type="image/webp" href="/images/icon/Yangyang.webp?v=2">
   <link rel="manifest" href="/manifest.json">
   <script src="/js/auth.js"></script>
@@ -242,24 +242,53 @@
                   <div class="system-monitor-box">
                     <div class="mcb-header">
                       <span class="mcb-title"><i class="fas fa-desktop"></i> THÔNG TIN KẾT NỐI</span>
-                      <!-- <span id="sys-ping-badge" class="sys-badge-ping">-- ms</span> -->
                     </div>
                     <div class="sys-stats-grid">
-                      <!-- Network Latency Chart -->
+                      <!-- Network Latency Chart (Horizontal Full Width) -->
                       <div class="sys-client-card sys-network-card">
-                        <div class="sys-network-header">
-                          <span class="sys-stat-name">Độ trễ</span>
-                          <span id="chart-ping-val" class="sys-stat-val">-- ms</span>
-                        </div>
-                        <div class="sys-canvas-wrapper">
-                          <canvas id="sys-ping-canvas"></canvas>
-                        </div>
-                      </div>
 
-                      <!-- Session Uptime -->
-                      <div class="sys-client-card">
-                        <span class="sys-stat-name">Thời gian chạy</span>
-                        <span id="client-uptime-val" class="sys-stat-val">00:00:00</span>
+                        <!-- Left: Icon & Info -->
+                        <div class="sn-h-left">
+                          <div class="sn-icon-box"><i class="fas fa-wave-square"></i></div>
+                          <div class="sn-title-box">
+                            <div class="sn-title">ĐỘ TRỄ</div>
+                            <div class="sn-subtitle">Thời gian phản hồi</div>
+                          </div>
+                        </div>
+
+                        <!-- Middle: Chart & Axes -->
+                        <div class="sn-h-middle">
+                          <div class="sn-chart-wrapper">
+                            <!-- Y Axis (right aligned) -->
+                            <div class="sn-y-axis">
+                              <span id="sn-y-top">20 ms</span>
+                              <span id="sn-y-mid">10 ms</span>
+                              <span id="sn-y-bot">0 ms</span>
+                            </div>
+                            <!-- X Axis (bottom aligned) -->
+                            <div class="sn-x-axis">
+                              <span>1 phút trước</span>
+                              <span>45 giây trước</span>
+                              <span>30 giây trước</span>
+                              <span>15 giây trước</span>
+                              <span>Hiện tại</span>
+                            </div>
+                            <canvas id="sys-ping-canvas"></canvas>
+                          </div>
+                        </div>
+
+                        <!-- Right: Value & Trend -->
+                        <div class="sn-h-right">
+                          <div class="sn-value-group">
+                            <span class="sn-val" id="chart-ping-val">--</span>
+                          </div>
+                          <div class="sn-trend good" id="chart-ping-trend">
+                            <span id="chart-ping-trend-icon"><i class="fas fa-arrow-down"></i></span>
+                            <span id="chart-ping-trend-val">--% tốt hơn</span>
+                            <div class="sn-trend-sub">so với 1 phút trước</div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -278,7 +307,7 @@
                     <div class="mcb-teams">
                       <!-- Team A -->
                       <div class="mcb-team mcb-team-a">
-                        <div class="mcb-team-label">TEAM BLUE</div>
+                        <div class="mcb-team-label">TEAM XANH</div>
                         <input type="text" id="nameA" onchange="updateMatch()" placeholder="Team Name"
                           class="mcb-name-input">
                         <div class="mcb-score-row">
@@ -299,7 +328,7 @@
 
                       <!-- Team B -->
                       <div class="mcb-team mcb-team-b">
-                        <div class="mcb-team-label">TEAM RED</div>
+                        <div class="mcb-team-label">TEAM ĐỎ</div>
                         <input type="text" id="nameB" onchange="updateMatch()" placeholder="Team Name"
                           class="mcb-name-input">
                         <div class="mcb-score-row">

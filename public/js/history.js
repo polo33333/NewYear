@@ -196,6 +196,18 @@
             const isWinB = teamBScore > teamAScore;
             const isIncomplete = teamAScore === 0 && teamBScore === 0;
 
+            // Build synced tabs HTML (same as table view)
+            const syncedTabs = save.syncedTabs || [];
+            let syncedTabsHTML = '';
+            if (syncedTabs.length > 0) {
+                syncedTabsHTML = `
+                    <div class="hist-card-synced-tabs">
+                        <i class="fab fa-google-drive" style="color: #10b981; font-size: 10px;"></i>
+                        ${syncedTabs.map(tab => `<span class="synced-tab-tag">${tab}</span>`).join('')}
+                    </div>
+                `;
+            }
+
             const teamAHeroes = getUniqueTeamHeroes(save.rosters, 'A');
             const teamBHeroes = getUniqueTeamHeroes(save.rosters, 'B');
 
@@ -277,25 +289,18 @@
                 <div class="history-card">
                     <div class="hist-card-left">
                         <div class="hist-card-left-bg" style="background-image: url('${bgImgSrc}')"></div>
-                        <div class="hist-card-left-grid">
-                            <div class="hist-grid-info-section">
-                                <div class="hist-card-map" style="font-style: italic; font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">${bracketLabel}</div>
-                                <div class="hist-card-teams" style="font-size: 13px; font-weight: 700; color: #fff; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                    ${teamAName} vs ${teamBName}
-                                </div>
-      
-                            </div>
-                            <div class="hist-grid-score-section">
-                                <div class="hist-card-outcome ${outcomeClass}" style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 20px;">${outcomeText}</div>
-                            </div>
-                        </div>
                         
+                        <div class="hist-card-bracket-tag">
+                            <div class="hist-card-map">${bracketLabel}</div>
+                        </div>
+
                         <div style="margin-top: auto; width: 100%;">
-                            <div class="hist-card-time" style="font-size: 11px; color: rgba(255,255,255,0.4); display: flex; gap: 8px;">
+                            <div class="hist-card-time">
                                 <span>${timeAgo(save.timestamp)}</span>
                                 <span>•</span>
                                 <span>${dateStr}</span>
                             </div>
+                            ${syncedTabsHTML}
                             
                             <div class="hist-card-actions">
                                 <button class="hist-action-btn btn-load" onclick="loadSave('${save.id}')" title="Tải trận đấu">
@@ -315,7 +320,20 @@
                     </div>
                     
                     <div class="hist-card-right">
-                        ${roundsHTML}
+                        <div class="hist-card-right-header">
+                            <div class="hist-right-team team-a-side">
+                                <span class="hist-right-team-name">${teamAName}</span>
+                                <span class="hist-right-team-score ${isWinA ? 'score-win' : isIncomplete ? 'score-draw' : 'score-lose'}">${teamAScore}</span>
+                            </div>
+                            <div class="hist-right-vs">VS</div>
+                            <div class="hist-right-team team-b-side">
+                                <span class="hist-right-team-score ${isWinB ? 'score-win' : isIncomplete ? 'score-draw' : 'score-lose'}">${teamBScore}</span>
+                                <span class="hist-right-team-name">${teamBName}</span>
+                            </div>
+                        </div>
+                        <div class="hist-card-right-rounds">
+                            ${roundsHTML}
+                        </div>
                     </div>
                 </div>
             `;
@@ -414,8 +432,9 @@
             let syncedTabsHTML = '<span style="color: rgba(255,255,255,0.15); font-size: 11px;">Chưa đồng bộ</span>';
             if (syncedTabs.length > 0) {
                 syncedTabsHTML = `
-                    <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                        ${syncedTabs.map(tab => `<span class="synced-tab-tag" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #10b981; font-size: 10px; font-family: 'Inter', sans-serif;">${tab}</span>`).join('')}
+                    <div class="hist-card-synced-tabs" style="margin-top: 0;">
+                        <i class="fab fa-google-drive" style="color: #10b981; font-size: 10px;"></i>
+                        ${syncedTabs.map(tab => `<span class="synced-tab-tag">${tab}</span>`).join('')}
                     </div>
                 `;
             }
@@ -499,7 +518,7 @@
 
         const confirmed = await showConfirm(
             "Tải Trận Đấu",
-            `Bạn có chắc chắn muốn TẢI (LOAD) kết quả trận đấu:\n"${teamAName} vs ${teamBName}"\nĐè lên phiên hoạt động hiện tại trên OBS và Control Panel?`
+            `Tải ${teamAName} vs ${teamBName} lên phiên hiện tại?\nDữ liệu OBS & Control Panel sẽ bị ghi đè.`
         );
         if (!confirmed) {
             return;
@@ -532,7 +551,7 @@
     async function deleteSave(id) {
         const confirmed = await showConfirm(
             "Xóa Trận Đấu",
-            "Bạn có chắc chắn muốn xóa vĩnh viễn kết quả trận đấu đã lưu này? Hành động này không thể hoàn tác."
+            "Xóa vĩnh viễn bản ghi này?\nHành động không thể hoàn tác."
         );
         if (!confirmed) {
             return;
@@ -1551,8 +1570,8 @@
         }
 
         const confirmed = await showConfirm(
-            "Xóa Đối Tượng Sơ Đồ",
-            `Bạn có chắc chắn muốn xóa ${nodeName}? Hành động này cũng sẽ xóa các kết nối liên quan.`
+            "Xóa Node",
+            `Xóa ${nodeName}?\nCác kết nối liên quan cũng sẽ bị xóa.`
         );
         if (!confirmed) return;
 
@@ -1906,7 +1925,7 @@
     async function clearBracketConfig() {
         const confirmed = await showConfirm(
             "Xóa Sơ Đồ",
-            "Bạn có chắc chắn muốn xóa hoàn toàn các node và liên kết của sơ đồ giải đấu hiện tại?"
+            "Xóa toàn bộ node và liên kết của sơ đồ giải đấu?"
         );
         if (!confirmed) return;
 

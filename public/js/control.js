@@ -25,7 +25,7 @@ function connect() {
   ws.onopen = () => {
     document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot online');
     document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'CONNECTED');
-    
+
     if (typeof mp !== 'undefined' && mp.audio) {
       const isPlaying = !mp.audio.paused;
       const name = (mp.playlist && mp.playlist[mp.currentIndex]) ? mp.playlist[mp.currentIndex].name : '';
@@ -239,7 +239,7 @@ function updateScoreInput(t) {
   send({ type: 'update_score', data });
 }
 async function resetMatch() {
-  const confirmed = await showConfirm("Xoá Dữ Liệu", "Bạn có chắc chắn muốn xoá toàn bộ dữ liệu trận đấu hiện tại?");
+  const confirmed = await showConfirm("Xoá Dữ Liệu", "Xóa toàn bộ dữ liệu trận đấu hiện tại?\nHành động không thể hoàn tác.");
   if (!confirmed) return;
   const nA = 'TEAM A';
   const nB = 'TEAM B';
@@ -556,46 +556,128 @@ function drawPingChart() {
   }
 
   const range = maxVal - minVal;
-  const padding = range * 0.1;
+  const padding = range * 0.2;
   const min = Math.max(0, minVal - padding);
   const max = maxVal + padding;
 
+  // Update Y-Axis labels
+  const yTopEl = document.getElementById('sn-y-top');
+  const yMidEl = document.getElementById('sn-y-mid');
+  const yBotEl = document.getElementById('sn-y-bot');
+  if (yTopEl && yMidEl && yBotEl) {
+    yTopEl.textContent = Math.round(max) + ' ms';
+    yMidEl.textContent = Math.round((max + min) / 2) + ' ms';
+    yBotEl.textContent = Math.round(min) + ' ms';
+  }
+
   const points = pingHistory.map((val, idx) => {
     const x = (idx / (maxPingPoints - 1)) * w;
-    const y = h - ((val - min) / (max - min)) * (h - 4) - 2;
-    return { x, y };
+    const y = h - ((val - min) / (max - min)) * (h - 6) - 3;
+    return { x, y, val };
   });
 
+  const latestPing = pingHistory[pingHistory.length - 1];
+  let themeColor = 'rgb(8 173 255)';
+  let rgbaBase = '0, 245, 255';
+
+  if (latestPing > 120) {
+    themeColor = '#ef4444';
+    rgbaBase = '239, 68, 68';
+  } else if (latestPing > 60) {
+    themeColor = '#f59e0b';
+    rgbaBase = '245, 158, 11';
+  }
+
+  // Update value color
+  const valEl = document.getElementById('chart-ping-val');
+  if (valEl) {
+    // textContent is managed by measurePing now, just update styling
+    valEl.style.color = themeColor;
+  }
+
+  // Calculate Trend
+  const trendEl = document.getElementById('chart-ping-trend');
+  const trendIconEl = document.getElementById('chart-ping-trend-icon');
+  const trendValEl = document.getElementById('chart-ping-trend-val');
+  if (trendEl && pingHistory.length > Math.floor(maxPingPoints / 2)) {
+    const olderHalf = pingHistory.slice(0, Math.floor(maxPingPoints / 2));
+    const oldAvg = olderHalf.reduce((a, b) => a + b, 0) / olderHalf.length;
+
+    if (oldAvg > 0) {
+      const diff = ((latestPing - oldAvg) / oldAvg) * 100;
+      if (Math.abs(diff) < 2) {
+        trendEl.className = 'sn-trend';
+        trendEl.style.color = 'var(--text-dim)';
+        if (trendIconEl) trendIconEl.innerHTML = '<i class="fas fa-minus"></i>';
+        if (trendValEl) trendValEl.textContent = 'Ổn định';
+      } else if (diff < 0) {
+        trendEl.className = 'sn-trend good';
+        trendEl.style.color = 'var(--success)';
+        if (trendIconEl) trendIconEl.innerHTML = '<i class="fas fa-arrow-down"></i>';
+        if (trendValEl) trendValEl.textContent = Math.abs(diff).toFixed(0) + '% tốt hơn';
+      } else {
+        trendEl.className = 'sn-trend bad';
+        trendEl.style.color = 'var(--danger)';
+        if (trendIconEl) trendIconEl.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        if (trendValEl) trendValEl.textContent = Math.abs(diff).toFixed(0) + '% kém hơn';
+      }
+    }
+  }
+
+  // Draw Grid Lines (matches 3 Y-labels, 5 X-labels)
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+
+  for (let i = 0; i <= 2; i++) {
+    const y = i * (h / 2);
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  for (let i = 0; i <= 4; i++) {
+    const x = i * (w / 4);
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Draw Curve Fill
   const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
-  fillGrad.addColorStop(0, 'rgba(0, 245, 255, 0.2)');
-  fillGrad.addColorStop(1, 'rgba(0, 245, 255, 0.0)');
+  fillGrad.addColorStop(0, `rgba(${rgbaBase}, 0.35)`);
+  fillGrad.addColorStop(1, `rgba(${rgbaBase}, 0.0)`);
 
   ctx.beginPath();
   ctx.moveTo(points[0].x, h);
-  points.forEach(pt => ctx.lineTo(pt.x, pt.y));
+  ctx.lineTo(points[0].x, points[0].y);
+  for (let i = 0; i < points.length - 1; i++) {
+    const cpX = (points[i].x + points[i + 1].x) / 2;
+    ctx.bezierCurveTo(cpX, points[i].y, cpX, points[i + 1].y, points[i + 1].x, points[i + 1].y);
+  }
   ctx.lineTo(points[points.length - 1].x, h);
   ctx.closePath();
   ctx.fillStyle = fillGrad;
   ctx.fill();
 
+  // Draw Line
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
-  points.forEach(pt => ctx.lineTo(pt.x, pt.y));
-
-  ctx.strokeStyle = '#00f5ff';
+  for (let i = 0; i < points.length - 1; i++) {
+    const cpX = (points[i].x + points[i + 1].x) / 2;
+    ctx.bezierCurveTo(cpX, points[i].y, cpX, points[i + 1].y, points[i + 1].x, points[i + 1].y);
+  }
+  ctx.strokeStyle = themeColor;
   ctx.lineWidth = 1.5;
+  ctx.shadowColor = themeColor;
+  ctx.shadowBlur = 6;
   ctx.stroke();
 
+  // Draw active point
   const lastPt = points[points.length - 1];
   ctx.beginPath();
-  ctx.arc(lastPt.x, lastPt.y, 2.5, 0, 2 * Math.PI);
-  ctx.fillStyle = '#00f5ff';
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(lastPt.x, lastPt.y, 4, 0, 2 * Math.PI);
-  ctx.strokeStyle = 'rgba(0, 245, 255, 0.4)';
-  ctx.lineWidth = 1;
   ctx.stroke();
 }
 
@@ -1338,7 +1420,7 @@ window.stepValue = function (id, delta, min, max, team, r) {
 };
 
 window.clearRoster = async function () {
-  const confirmed = await showConfirm("Xoá Đội Hình", "Bạn có chắc chắn muốn xoá toàn bộ dữ liệu đội hình và vũ khí?");
+  const confirmed = await showConfirm("Xoá Đội Hình", "Xóa toàn bộ dữ liệu đội hình và vũ khí?");
   if (!confirmed) return;
   for (let r = 1; r <= 6; r++) {
     ['A', 'B'].forEach(teamCode => {
@@ -1375,7 +1457,7 @@ window.clearRoster = async function () {
 
 window.clearRow = async function (teamCode, r, event) {
   if (event) event.stopPropagation();
-  const confirmed = await showConfirm("Xoá Vòng Đấu", `Bạn có chắc chắn muốn xoá dữ liệu Vòng ${r} của Team ${teamCode}?`);
+  const confirmed = await showConfirm("Xoá Vòng Đấu", `Xóa dữ liệu Vòng ${r} — Team ${teamCode}?`);
   if (!confirmed) return;
 
   const p = document.getElementById(`t${teamCode}r${r}p`);
@@ -1410,7 +1492,7 @@ window.clearRow = async function (teamCode, r, event) {
 
 window.saveRoster = async function () {
   // Confirm before saving to prevent accidental slot creation
-  const confirmed = await showConfirm("Lưu Trận Đấu", "Bạn có chắc chắn muốn lưu kết quả trận đấu hiện tại thành một bản ghi mới?");
+  const confirmed = await showConfirm("Lưu Trận Đấu", "Lưu kết quả hiện tại thành bản ghi mới?");
   if (!confirmed) return;
 
   // 1. Force update to ensure everything is synced

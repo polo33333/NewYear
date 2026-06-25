@@ -3,14 +3,14 @@
     width: 100%;
 }
 
-/* --- PREMIUM TABLE REDESIGN --- */
+/* --- PREMIUM TABLE REDESIGN v2 --- */
 .history-table-container {
-    background: rgba(8, 12, 28, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+    background: rgba(8, 10, 22, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
     overflow: hidden;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 245, 255, 0.03);
     margin-top: 10px;
 }
 
@@ -25,59 +25,80 @@
     text-align: left;
 }
 
+/* ── THEAD ── */
+.history-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
 .history-table th {
-    background: rgba(15, 23, 42, 0.9);
-    padding: 14px 18px;
-    font-size: 11px;
-    font-weight: 700;
+    background: rgba(6, 9, 20, 0.92);
+    padding: 13px 16px;
+    font-size: 10px;
+    font-weight: 800;
     text-transform: uppercase;
-    color: var(--text-main);
-    letter-spacing: 1px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid rgba(0, 245, 255, 0.12);
 }
 
-.history-table tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    transition: all 0.2s ease;
-    background: rgba(15, 23, 42, 0.15);
+/* ── TBODY ROWS ── */
+.history-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+    transition: background 0.18s ease, box-shadow 0.18s ease;
 }
 
-.history-table tr:hover {
-    background: rgba(0, 245, 255, 0.03);
+.history-table tbody tr:hover {
+    background: rgba(0, 245, 255, 0.035);
+    box-shadow: inset 3px 0 0 rgba(0, 245, 255, 0.45);
+}
+
+.history-table tbody tr:last-child {
+    border-bottom: none;
 }
 
 .history-table td {
-    padding: 12px 18px;
+    padding: 14px 16px;
     vertical-align: middle;
     font-size: 13px;
     color: var(--text-main);
 }
 
+/* ── COL TIME ── */
 .history-table .col-time {
-    width: 130px;
+    width: 120px;
     font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: #a4aceb;
+    font-size: 11px;
+    color: rgba(164, 172, 235, 0.7);
+    line-height: 1.6;
 }
 
+/* ── COL BRACKET ── */
 .history-table .col-bracket {
-    width: 260px;
+    width: 220px;
 }
 
 .history-table .bracket-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     padding: 4px 10px;
-    background: rgba(0, 245, 255, 0.06);
-    border: 1px solid rgba(0, 245, 255, 0.2);
-    border-radius: 6px;
+    background: rgba(0, 245, 255, 0.05);
+    border: 1px solid rgba(0, 245, 255, 0.18);
+    border-radius: 20px;
     color: var(--accent);
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 0 10px rgba(0, 245, 255, 0.05);
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* ── COL MATCHUP ── */
 .history-table .col-matchup {
     min-width: 340px;
 }
@@ -86,19 +107,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 14px;
 }
 
 .history-table .matchup-team {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex: 1;
+    min-width: 0;
 }
 
 .history-table .matchup-team.team-a {
     justify-content: flex-end;
     text-align: right;
+    flex-direction: row-reverse;
 }
 
 .history-table .matchup-team.team-b {
@@ -108,143 +131,156 @@
 
 .history-table .matchup-team-name {
     font-weight: 700;
-    color: #fff;
-    font-size: 13px;
-    max-width: 140px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: color 0.2s;
 }
 
 .history-table .matchup-team.team-a.winner .matchup-team-name {
     color: var(--accent);
-    text-shadow: 0 0 8px rgba(0, 245, 255, 0.35);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
 }
 
 .history-table .matchup-team.team-b.winner .matchup-team-name {
-    color: var(--success);
-    text-shadow: 0 0 8px rgba(166, 227, 161, 0.35);
+    color: #a6e3a1;
+    text-shadow: 0 0 10px rgba(166, 227, 161, 0.3);
 }
 
 .history-table .matchup-team-avatars {
     display: flex;
-    gap: 4px;
+    gap: 3px;
 }
 
 .history-table .matchup-score-pill {
-    background: rgba(0, 0, 0, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 30px;
-    padding: 4px 14px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 100px;
+    padding: 5px 16px;
     font-family: 'Outfit', sans-serif;
     font-weight: 900;
-    font-size: 15px;
-    color: #fff;
-    min-width: 85px;
+    font-size: 16px;
+    min-width: 90px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 6px;
-    letter-spacing: 0.5px;
+    gap: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .history-table .matchup-score-pill .score-a {
     color: var(--accent);
-    text-shadow: 0 0 10px rgba(0, 245, 255, 0.4);
+    text-shadow: 0 0 12px rgba(0, 245, 255, 0.45);
 }
 
 .history-table .matchup-score-pill .score-b {
-    color: var(--success);
-    text-shadow: 0 0 10px rgba(166, 227, 161, 0.4);
+    color: #a6e3a1;
+    text-shadow: 0 0 12px rgba(166, 227, 161, 0.45);
 }
 
 .history-table .matchup-score-pill .divider {
-    color: rgba(255, 255, 255, 0.2);
-    font-weight: 400;
-    font-size: 11px;
+    color: rgba(255, 255, 255, 0.15);
+    font-weight: 300;
+    font-size: 13px;
 }
 
+/* ── COL SYNCED ── */
 .history-table .col-synced {
-    width: 140px;
+    width: 150px;
 }
 
+/* ── COL ACTIONS ── */
 .history-table .col-actions {
-    width: 310px;
+    width: 290px;
     text-align: right;
 }
 
 .history-table .action-btn-group {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     justify-content: flex-end;
+    align-items: center;
 }
 
 .history-table .action-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-main);
-    padding: 6px 12px;
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 6px 11px;
+    border-radius: 8px;
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
+    outline: none;
 }
 
 .history-table .action-btn:hover {
     transform: translateY(-1px);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .history-table .action-btn.btn-load {
-    background: linear-gradient(135deg, var(--accent) 0%, #00b8d4 100%);
+    background: linear-gradient(135deg, #00f5ff 0%, #0096c7 100%);
     border: none;
-    color: #0b0d14;
+    color: #060b18;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
 }
 
 .history-table .action-btn.btn-load:hover {
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.35);
-    filter: brightness(1.1);
+    box-shadow: 0 0 18px rgba(0, 245, 255, 0.4);
+    filter: brightness(1.08);
+    transform: translateY(-1px);
 }
 
 .history-table .action-btn.btn-detail {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    background: rgba(139, 148, 255, 0.06);
+    border-color: rgba(139, 148, 255, 0.15);
+    color: rgba(180, 185, 255, 0.8);
 }
 
 .history-table .action-btn.btn-detail:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(139, 148, 255, 0.14);
+    border-color: rgba(139, 148, 255, 0.3);
+    color: #c4c8ff;
 }
 
 .history-table .action-btn.btn-sync {
-    background: rgba(16, 185, 129, 0.06);
+    background: rgba(16, 185, 129, 0.05);
     color: #10b981;
-    border-color: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.18);
 }
 
 .history-table .action-btn.btn-sync:hover {
-    background: rgba(16, 185, 129, 0.15);
+    background: rgba(16, 185, 129, 0.14);
     border-color: rgba(16, 185, 129, 0.35);
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.18);
 }
 
 .history-table .action-btn.btn-delete {
-    background: rgba(239, 68, 68, 0.05);
-    color: var(--danger);
-    border-color: rgba(239, 68, 68, 0.2);
-    padding: 6px 8px;
+    background: rgba(239, 68, 68, 0.04);
+    color: rgba(243, 139, 168, 0.7);
+    border-color: rgba(239, 68, 68, 0.15);
+    padding: 6px 9px;
 }
 
 .history-table .action-btn.btn-delete:hover {
-    background: rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.13);
     border-color: rgba(239, 68, 68, 0.35);
+    color: #f38ba8;
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
 }
 
@@ -257,13 +293,13 @@
     .history-table tr {
         display: flex;
         flex-direction: column;
-        padding: 12px;
+        padding: 14px;
         gap: 10px;
-        background: rgba(15, 23, 42, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
+        background: rgba(12, 16, 30, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
         margin-bottom: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .history-table td {
@@ -276,11 +312,13 @@
 
     .history-table td::before {
         content: attr(data-label);
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--text-dim);
+        font-size: 10px;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.3);
         text-transform: uppercase;
+        letter-spacing: 1px;
         margin-right: 8px;
+        flex-shrink: 0;
     }
 
     .history-table .matchup-display {
@@ -1607,273 +1645,325 @@ div#history-list-view {
     transform: translateY(-1px);
 }
 
-/* --- PREMIUM R6S TRACKER LIST LAYOUT --- */
+/* ── CARD VIEW — PREMIUM REDESIGN v2 ── */
 .history-card-grid {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
     width: 100%;
 }
 
 .history-card {
-    background: rgba(18, 22, 35, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+    background: rgba(10, 13, 25, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 14px;
     padding: 0 !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
     display: grid;
-    grid-template-columns: 280px 1fr;
-    min-height: 130px;
+    grid-template-columns: 200px 1fr;
+    min-height: 120px;
     height: auto;
     width: 100%;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
 }
 
 .history-card::before {
     display: none;
-    /* Disable old left accent bar */
 }
 
 .history-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(0, 245, 255, 0.25);
-    box-shadow: 0 15px 40px rgba(0, 245, 255, 0.06);
+    border-color: rgba(0, 245, 255, 0.2);
+    box-shadow: 0 14px 40px rgba(0, 245, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
+/* ── LEFT PANEL ── */
 .hist-card-left {
     position: relative;
-    padding: 16px 20px;
+    padding: 14px 18px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.055);
     z-index: 1;
+    gap: 8px;
 }
-
-
 
 .hist-card-left-bg {
     position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
-    filter: blur(8px) brightness(0.35);
-    opacity: 0.55;
+    filter: blur(10px) brightness(0.28) saturate(1.4);
+    opacity: 0.6;
     z-index: -2;
     transform: scale(1.15);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .history-card:hover .hist-card-left-bg {
-    transform: scale(1.2);
+    transform: scale(1.22);
+    opacity: 0.7;
 }
 
 .hist-card-left::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(10, 14, 26, 0.95) 0%, rgba(10, 14, 26, 0.75) 100%);
+    background: linear-gradient(100deg, rgba(7, 10, 22, 0.96) 0%, rgba(7, 10, 22, 0.82) 100%);
     z-index: -1;
+}
+
+/* Top section: bracket tag */
+.hist-card-bracket-tag {
+    display: flex;
+    align-items: flex-start;
+}
+
+.hist-card-map {
+    font-style: normal !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    color: rgba(0, 245, 255, 0.55) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+
+.hist-card-outcome {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 22px !important;
+    letter-spacing: 0.5px;
+    line-height: 1;
 }
 
 .hist-card-outcome.outcome-win {
     color: #a6e3a1;
-    /* Cute soft green */
-    text-shadow: 0 0 12px rgba(166, 227, 161, 0.25);
+    text-shadow: 0 0 16px rgba(166, 227, 161, 0.35);
 }
 
 .hist-card-outcome.outcome-loss {
     color: #f38ba8;
-    /* Cute soft red */
-    text-shadow: 0 0 12px rgba(243, 139, 168, 0.25);
+    text-shadow: 0 0 16px rgba(243, 139, 168, 0.35);
 }
 
 .hist-card-outcome.outcome-incomplete {
-    color: #cdd6f4;
-    /* Muted text */
-    text-shadow: 0 0 12px rgba(205, 214, 244, 0.15);
+    color: rgba(255, 255, 255, 0.3);
+    text-shadow: none;
+}
+
+/* Bottom: time + synced tags + actions */
+.hist-card-time {
+    font-size: 10px !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    display: flex !important;
+    gap: 6px !important;
+    align-items: center;
+}
+
+.hist-card-synced-tabs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.synced-tab-tag {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 700;
+    color: #10b981;
+    font-size: 9px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
 }
 
 .hist-card-actions {
     display: flex;
-    gap: 6px;
-    margin-top: 10px;
+    gap: 5px;
+    margin-top: 8px;
     width: 100%;
 }
 
 .hist-action-btn {
     flex: 1;
     background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.55);
     padding: 6px 4px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    transition: all 0.2s;
+    transition: all 0.18s ease;
     outline: none;
+    white-space: nowrap;
 }
 
 .hist-action-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.14);
     color: #fff;
+    transform: translateY(-1px);
 }
 
 .hist-action-btn.btn-load {
-    background: linear-gradient(135deg, var(--accent) 0%, #00b8d4 100%);
+    background: linear-gradient(135deg, #00f5ff 0%, #0096c7 100%);
     border: none;
-    color: #0b0d14;
-    font-weight: 700;
+    color: #050d18;
+    font-weight: 800;
+    box-shadow: 0 2px 10px rgba(0, 245, 255, 0.22);
 }
 
 .hist-action-btn.btn-load:hover {
-    box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
-    filter: brightness(1.1);
+    box-shadow: 0 4px 16px rgba(0, 245, 255, 0.38);
+    filter: brightness(1.08);
+    transform: translateY(-1px);
 }
 
 .hist-action-btn.btn-delete {
-    flex: 0 0 32px;
-    background: rgba(243, 139, 168, 0.08);
-    border-color: rgba(243, 139, 168, 0.15);
-    color: #f38ba8;
+    flex: 0 0 30px;
+    background: rgba(243, 139, 168, 0.06);
+    border-color: rgba(243, 139, 168, 0.14);
+    color: rgba(243, 139, 168, 0.7);
 }
 
 .hist-action-btn.btn-delete:hover {
-    background: rgba(243, 139, 168, 0.2);
-    border-color: rgba(243, 139, 168, 0.35);
-    color: #fff;
+    background: rgba(243, 139, 168, 0.16);
+    border-color: rgba(243, 139, 168, 0.32);
+    color: #f38ba8;
 }
 
-/* Middle Section: Operator Picks & Stats */
-.hist-card-middle {
-    padding: 16px 20px;
+/* ── RIGHT PANEL: Header score + Roster rounds ── */
+.hist-card-right {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(10, 14, 26, 0.15);
+    background: rgba(6, 8, 18, 0.3);
+    height: 100%;
+    overflow: hidden;
 }
 
-.hist-picks-container {
+/* Header: Team A score | VS | Team B score */
+.hist-card-right-header {
     display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    width: 100%;
-}
-
-.hist-picks-col {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
     align-items: center;
-    flex: 1;
+    justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-.hist-picks-header {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    color: rgba(255, 255, 255, 0.35);
-    text-transform: uppercase;
+.hist-right-team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.hist-right-team.team-a-side {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.hist-right-team.team-b-side {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.hist-right-team-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.85);
     white-space: nowrap;
-    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: center;
+    max-width: 180px;
 }
 
-.hist-picks-slots {
-    display: flex;
-    gap: 4px;
-    justify-content: center;
-    min-height: 32px;
-    align-items: center;
+.hist-right-team-score {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    flex-shrink: 0;
+    line-height: 1;
 }
 
-.hist-picks-slots .history-mini-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+.hist-right-team-score.score-win {
+    color: #00f5ff;
+    text-shadow: 0 0 16px rgba(0, 245, 255, 0.4);
 }
 
-.hist-picks-slots .empty-slot {
-    width: 32px;
-    height: 32px;
-    border: 1px dashed rgba(255, 255, 255, 0.12);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.15);
-    font-size: 11px;
+.hist-right-team-score.score-lose {
+    color: rgba(255, 255, 255, 0.35);
 }
 
-.hist-stats-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 10px;
+.hist-right-team-score.score-draw {
+    color: rgba(255, 255, 255, 0.5);
 }
 
-.hist-stat-pill {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    padding: 3px 8px;
+.hist-right-vs {
+    font-family: 'Outfit', sans-serif;
     font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: rgba(255, 255, 255, 0.55);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.15);
+    letter-spacing: 2px;
+    flex-shrink: 0;
 }
 
-.hist-stat-pill strong {
-    color: #fff;
-    margin-left: 3px;
-}
-
-/* Right Section: Roster VS list */
-.hist-card-right {
-    padding: 14px 20px;
+/* Rounds container */
+.hist-card-right-rounds {
+    flex: 1;
+    padding: 10px 18px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 6px;
-    background: rgba(10, 14, 26, 0.25);
-    height: 100%;
+    gap: 5px;
+    overflow: hidden;
 }
+
 
 .hist-roster-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    padding: 6px 12px;
-    gap: 12px;
+    background: rgba(255, 255, 255, 0.012);
+    border: 1px solid rgba(255, 255, 255, 0.028);
+    border-radius: 8px;
+    padding: 5px 10px;
+    gap: 10px;
     transition: all 0.15s ease;
-    max-width: 520px;
+    max-width: 560px;
     width: 100%;
     margin: 0 auto;
 }
 
 .hist-roster-row:hover {
-    background: rgba(255, 255, 255, 0.035);
-    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
 }
 
 .hist-roster-row.empty {
-    opacity: 0.25;
+    opacity: 0.2;
     background: transparent;
     border-style: dashed;
 }
@@ -1881,7 +1971,7 @@ div#history-list-view {
 .hist-roster-side {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex: 1;
 }
 
@@ -1894,16 +1984,12 @@ div#history-list-view {
 }
 
 .hist-roster-name {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: rgba(255, 255, 255, 0.3);
     text-transform: uppercase;
-    min-width: 45px;
-}
-
-.hist-card-left-grid {
-    /* justify-items: center; */
+    min-width: 42px;
 }
 
 .hist-roster-side.right .hist-roster-name {
@@ -1916,15 +2002,15 @@ div#history-list-view {
 }
 
 .hist-roster-avatars .history-mini-avatar {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .hist-roster-score {
     font-size: 11px;
-    min-width: 25px;
+    min-width: 24px;
 }
 
 .hist-roster-side.left .hist-roster-score {
@@ -1936,16 +2022,27 @@ div#history-list-view {
 }
 
 .hist-roster-vs {
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.1);
     letter-spacing: 0.5px;
     padding: 0 4px;
     text-align: center;
-    min-width: 20px;
+    min-width: 18px;
+    flex-shrink: 0;
 }
 
-/* Responsive Overrides */
+/* ── Middle panel (legacy) ── */
+.hist-card-middle {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255, 255, 255, 0.055);
+    background: rgba(8, 12, 24, 0.2);
+}
+
+/* ── Responsive ── */
 @media (max-width: 900px) {
     .history-card {
         grid-template-columns: 1fr;
@@ -1954,12 +2051,12 @@ div#history-list-view {
 
     .hist-card-left {
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
     }
 
     .hist-card-middle {
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.055);
     }
 }
 

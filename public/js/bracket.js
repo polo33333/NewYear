@@ -387,7 +387,7 @@
 
         const confirmed = await showConfirm(
             "Tải Trận Đấu",
-            `Bạn có chắc chắn muốn TẢI (LOAD) kết quả trận đấu:\n"${teamAName} vs ${teamBName}"\nĐè lên phiên hoạt động hiện tại trên OBS và Control Panel?`
+            `Tải ${teamAName} vs ${teamBName} lên phiên hiện tại?\nDữ liệu OBS & Control Panel sẽ bị ghi đè.`
         );
         if (!confirmed) {
             return;
@@ -420,7 +420,7 @@
     async function deleteSave(id) {
         const confirmed = await showConfirm(
             "Xóa Trận Đấu",
-            "Bạn có chắc chắn muốn xóa vĩnh viễn kết quả trận đấu đã lưu này? Hành động này không thể hoàn tác."
+            "Xóa vĩnh viễn bản ghi này?\nHành động không thể hoàn tác."
         );
         if (!confirmed) {
             return;
@@ -1413,8 +1413,8 @@
         }
 
         const confirmed = await showConfirm(
-            "Xóa Đối Tượng Sơ Đồ",
-            `Bạn có chắc chắn muốn xóa ${nodeName}? Hành động này cũng sẽ xóa các kết nối liên quan.`
+            "Xóa Node",
+            `Xóa ${nodeName}?\nCác kết nối liên quan cũng sẽ bị xóa.`
         );
         if (!confirmed) return;
 
@@ -1768,7 +1768,7 @@
     async function clearBracketConfig() {
         const confirmed = await showConfirm(
             "Xóa Sơ Đồ",
-            "Bạn có chắc chắn muốn xóa hoàn toàn các node và liên kết của sơ đồ giải đấu hiện tại?"
+            "Xóa toàn bộ node và liên kết của sơ đồ giải đấu?"
         );
         if (!confirmed) return;
 
