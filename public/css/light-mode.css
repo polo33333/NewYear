@@ -65,7 +65,7 @@ body[data-ui-mode="light"] .theme-toggle-btn {
 /* 3. Header */
 body[data-ui-mode="light"] header,
 body[data-ui-mode="light"] .hist-page-header {
-    background: #ffffff;
+    background: #b8fffc;
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
 }
