@@ -7,7 +7,6 @@ const mp = {
   playlist: [],        // Array of { name, url, duration }
   currentIndex: -1,
   shuffle: false,
-  repeat: false,       // 'none' | 'one' | 'all'
   repeatMode: 'none',
   shuffleOrder: [],
 };
