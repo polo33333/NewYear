@@ -414,7 +414,7 @@ function updateStatsScene(data) {
 
   statsContainer.innerHTML = `
     <div class="stats-left-panel">
-      <div class="stats-header-title">MATCH STATISTICS</div>
+      <div class="stats-header-title" style="visibility: hidden;">MATCH STATISTICS</div>
       ${teamABlock}
       ${teamBBlock}
     </div>

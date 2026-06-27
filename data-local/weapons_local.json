@@ -1528,5 +1528,35 @@
     "r4": 4000,
     "r5": 5000,
     "isActive": true
+  },
+  {
+    "id": 103,
+    "name": "Azure Oath",
+    "rank": 5,
+    "type": "Sword",
+    "typeid": 2,
+    "image": "/images/weapons/100px/azure-oath.webp",
+    "imagebig": "/images/weapons/256px/azure-oath.webp",
+    "r1": 1000,
+    "r2": 2000,
+    "r3": 3000,
+    "r4": 4000,
+    "r5": 5000,
+    "isActive": true
+  },
+  {
+    "id": 104,
+    "name": "Firstlight's Herald",
+    "rank": 5,
+    "type": "Rectifier",
+    "typeid": 5,
+    "image": "/images/weapons/100px/firstlights-herald.webp",
+    "imagebig": "/images/weapons/256px/firstlights-herald.webp",
+    "r1": 1000,
+    "r2": 2000,
+    "r3": 3000,
+    "r4": 4000,
+    "r5": 5000,
+    "isActive": true
   }
 ]

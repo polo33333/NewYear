@@ -69,7 +69,7 @@
                 if (data.googleAppsScriptUrl && sheetInp) {
                     sheetInp.value = data.googleAppsScriptUrl;
                 }
-                
+
                 // Hiển thị trạng thái isSync
                 const syncSwitch = document.getElementById('sett-is-sync-switch');
                 if (syncSwitch) {
@@ -172,22 +172,22 @@
             console.error('Error fetching character list:', err);
             // Fallback character list in case fetch fails
             characterList = [
-                {name:"Aalto",element:4},{name:"Aemeath",element:2},{name:"Augusta",element:3},
-                {name:"Baizhi",element:1},{name:"Brant",element:2},{name:"Buling",element:3},
-                {name:"Calcharo",element:3},{name:"Camellya",element:6},{name:"Cantarella",element:6},
-                {name:"Carlotta",element:1},{name:"Cartethyia",element:4},{name:"Changli",element:2},
-                {name:"Chisa",element:6},{name:"Chixia",element:2},{name:"Ciaccona",element:4},
-                {name:"Danjin",element:6},{name:"Denia",element:2},{name:"Encore",element:2},
-                {name:"Galbrena",element:2},{name:"Hiyuki",element:1},{name:"Iuno",element:4},
-                {name:"Jianxin",element:4},{name:"Jinhsi",element:5},{name:"Jiyan",element:4},
-                {name:"Lingyang",element:1},{name:"Lumi",element:3},{name:"Lupa",element:2},
-                {name:"Luuk Herssen",element:5},{name:"Lynae",element:5},{name:"Mornye",element:2},
-                {name:"Mortefi",element:2},{name:"Phoebe",element:5},{name:"Phrolova",element:6},
-                {name:"Qiuyuan",element:4},{name:"Roccia",element:6},{name:"Rover",element:0},
-                {name:"Sanhua",element:1},{name:"Shorekeeper",element:5},{name:"Sigrika",element:4},
-                {name:"Taoqi",element:6},{name:"Verina",element:5},{name:"Xiangli Yao",element:3},
-                {name:"Yangyang",element:4},{name:"Yinlin",element:3},{name:"Youhu",element:1},
-                {name:"Yuanwu",element:3},{name:"Zani",element:5},{name:"Zhezhi",element:1}
+                { name: "Aalto", element: 4 }, { name: "Aemeath", element: 2 }, { name: "Augusta", element: 3 },
+                { name: "Baizhi", element: 1 }, { name: "Brant", element: 2 }, { name: "Buling", element: 3 },
+                { name: "Calcharo", element: 3 }, { name: "Camellya", element: 6 }, { name: "Cantarella", element: 6 },
+                { name: "Carlotta", element: 1 }, { name: "Cartethyia", element: 4 }, { name: "Changli", element: 2 },
+                { name: "Chisa", element: 6 }, { name: "Chixia", element: 2 }, { name: "Ciaccona", element: 4 },
+                { name: "Danjin", element: 6 }, { name: "Denia", element: 2 }, { name: "Encore", element: 2 },
+                { name: "Galbrena", element: 2 }, { name: "Hiyuki", element: 1 }, { name: "Iuno", element: 4 },
+                { name: "Jianxin", element: 4 }, { name: "Jinhsi", element: 5 }, { name: "Jiyan", element: 4 },
+                { name: "Lingyang", element: 1 }, { name: "Lumi", element: 3 }, { name: "Lupa", element: 2 },
+                { name: "Luuk Herssen", element: 5 }, { name: "Lynae", element: 5 }, { name: "Mornye", element: 2 },
+                { name: "Mortefi", element: 2 }, { name: "Phoebe", element: 5 }, { name: "Phrolova", element: 6 },
+                { name: "Qiuyuan", element: 4 }, { name: "Roccia", element: 6 }, { name: "Rover", element: 0 },
+                { name: "Sanhua", element: 1 }, { name: "Shorekeeper", element: 5 }, { name: "Sigrika", element: 4 },
+                { name: "Taoqi", element: 6 }, { name: "Verina", element: 5 }, { name: "Xiangli Yao", element: 3 },
+                { name: "Yangyang", element: 4 }, { name: "Yinlin", element: 3 }, { name: "Youhu", element: 1 },
+                { name: "Yuanwu", element: 3 }, { name: "Zani", element: 5 }, { name: "Zhezhi", element: 1 }
             ];
         }
 
@@ -458,7 +458,7 @@ function mergeStyle(sheet, r1,c1, r2,c2, value, bg, fg, bold, align) {
                     </li>
                     <li>Nhấn <b>Triển khai (Deploy)</b>, cấp quyền truy cập tài khoản Google của bạn nếu được hỏi.</li>
                     <li>Copy lấy đường dẫn <b>URL ứng dụng web (Web app URL)</b> hiển thị ở cuối bảng.</li>
-                    <li>Dán đường dẫn URL vừa copy vào ô <b>Google Apps Script Web App URL</b> trên trang Cài đặt (Settings) của MATRIX HUB và nhấn Lưu!</li>
+                    <li>Dán đường dẫn URL vừa copy vào ô <b>Google Apps Script Web App URL</b> trên trang Cài đặt (Settings) của MATRIX HUD và nhấn Lưu!</li>
                 </ol>
             </body>
             </html>
@@ -492,7 +492,7 @@ function mergeStyle(sheet, r1,c1, r2,c2, value, bg, fg, bold, align) {
                 colorRadios.forEach(r => r.checked = false);
             }
         }
-        
+
         updateAccentSelection();
 
         colorRadios.forEach(r => {
