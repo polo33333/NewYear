@@ -845,7 +845,10 @@ body {
 .stats-header-logo-container {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 35%;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .stats-header-logo-container img.stats-logo {

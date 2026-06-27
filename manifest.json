@@ -3,7 +3,7 @@
   "name": "MATRIX HUD",
   "icons": [
     {
-      "src": "images/icon/Yangyang.webp",
+      "src": "/images/other/logo-web.webp?v=2",
       "type": "image/webp",
       "sizes": "256x256"
     }
