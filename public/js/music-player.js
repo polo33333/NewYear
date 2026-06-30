@@ -250,6 +250,7 @@ let analyser = null;
 let gainNode = null;
 let dataArray = null;
 let visualizerActive = false;
+let cachedBars = null;
 
 // Smoothing buffer để tránh giật
 const smoothedBars = new Float32Array(60).fill(2);
@@ -288,14 +289,24 @@ function updateVisualizer() {
   if (!visualizerActive) return;
   requestAnimationFrame(updateVisualizer);
 
-  const bars = document.querySelectorAll('.vis-bar');
+  if (!cachedBars || cachedBars.length === 0) {
+    cachedBars = document.querySelectorAll('.vis-bar');
+  }
+  const bars = cachedBars;
   if (!bars.length) return;
 
   if (mp.audio.paused) {
+    let allAtMin = true;
     bars.forEach((bar, idx) => {
       smoothedBars[idx] = Math.max(2, smoothedBars[idx] - 3);
       bar.style.height = smoothedBars[idx] + 'px';
+      if (smoothedBars[idx] > 2) {
+        allAtMin = false;
+      }
     });
+    if (allAtMin) {
+      visualizerActive = false; // Stop the animation loop
+    }
     return;
   }
 
@@ -351,6 +362,11 @@ mp.audio.addEventListener('play', () => {
     audioCtx.resume();
   } else if (!audioCtx) {
     initVisualizer();
+  }
+
+  if (!visualizerActive) {
+    visualizerActive = true;
+    updateVisualizer();
   }
 
   const icon = mpEl('music-play-icon');
@@ -428,6 +444,7 @@ document.addEventListener('keydown', (e) => {
     const vis = mpEl('music-visualizer');
     if (vis) {
       vis.innerHTML = '';
+      cachedBars = null;
       const BAR_COUNT = 60;
       for (let i = 0; i < BAR_COUNT; i++) {
         const bar = document.createElement('div');
