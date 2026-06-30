@@ -140,7 +140,7 @@
         } else {
             if (emptyMessage) emptyMessage.style.display = 'none';
             if (paginationControls) paginationControls.style.display = 'flex';
-            paginated.forEach(c => {
+            paginated.forEach((c, index) => {
                 const el = ELEMENT_MAP[c.element];
                 const tr = document.createElement('tr');
 
@@ -162,7 +162,7 @@
                 if (imgSrc) imgSrc = imgSrc.replace(/^\/?icon\//, 'images/icon/');
 
                 tr.innerHTML = `
-                    <td class="text-center" style="color: var(--text-dim)">${c.id}</td>
+                    <td class="text-center" style="color: var(--text-dim)">${start + index + 1}</td>
                     <td class="text-center">
                         ${imgSrc ? `<img src="${imgSrc}" alt="${c.name}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">` : ''}
                     </td>

@@ -108,7 +108,7 @@
         } else {
             if (emptyMessage) emptyMessage.style.display = 'none';
             if (paginationControls) paginationControls.style.display = 'flex';
-            paginated.forEach(w => {
+            paginated.forEach((w, index) => {
                 const tr = document.createElement('tr');
 
                 let rCells = '';
@@ -129,7 +129,7 @@
                 const imgPath = w.imagebig || w.image || 'images/weapons/placeholder.png';
 
                 tr.innerHTML = `
-                    <td class="text-center" style="color: var(--text-dim)">${w.id}</td>
+                    <td class="text-center" style="color: var(--text-dim)">${start + index + 1}</td>
                     <td class="text-center">
                         <div class="wp-img-preview" style="background-image: url('${imgPath}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 4px; margin: 0 auto; background-color: #222;"></div>
                     </td>
