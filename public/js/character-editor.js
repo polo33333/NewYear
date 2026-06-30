@@ -6,7 +6,7 @@
         3: { name: "Electro", color: "#b98fff", bg: "#1e1040" },
         4: { name: "Aero", color: "#7affd4", bg: "#0a2a22" },
         5: { name: "Spectro", color: "#ffe168", bg: "#2a2400" },
-        6: { name: "Havoc", color: "#e05cff", bg: "#250a2a" },
+        6: { name: "Havoc", color: "#d33986", bg: "#250a2a" },
     };
 
     const WEAPON_MAP = {
@@ -171,7 +171,7 @@
                         <span class="rank${c.rank}">${c.rank}★</span>
                     </td>
                     <td>
-                        <span class="element-badge" style="background: ${el.bg}; color: ${el.color}; border-color: ${el.color}44">
+                        <span class="element-badge element-${el.name.toLowerCase()}" style="background: ${el.bg}; color: ${el.color}; border-color: ${el.color}44">
                             ${el.name}
                         </span>
                     </td>
@@ -309,7 +309,7 @@
             }
         };
     }
- 
+
     if (exportBtn) {
         exportBtn.onclick = () => {
             const blob = new Blob([JSON.stringify(characters, null, 2)], { type: "application/json" });

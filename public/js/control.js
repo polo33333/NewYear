@@ -883,7 +883,7 @@ window.openSelectionModal = function (targetId, type) {
   }
   currentFilters = { rank: '', element: '', weapon: type === 'weapon' ? 'smart' : '' };
 
-  document.getElementById('modal-title').innerText = type === 'character' ? 'Select Characters (Max 3)' : 'Select Weapons (Max 3)';
+  document.getElementById('modal-title').innerText = type === 'character' ? 'Chọn Nhân Vật (Tối đa 3)' : 'Chọn Vũ Khí (Tối đa 3)';
   document.getElementById('modal-search').value = '';
 
   // Reset CSS cho các nhóm filter

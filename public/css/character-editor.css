@@ -177,6 +177,8 @@ div#char-editor-container {
     letter-spacing: 1px;
     color: var(--text-dim);
     font-weight: 600;
+    white-space: nowrap;
+    width: auto !important;
 }
 
 .filter-btn {

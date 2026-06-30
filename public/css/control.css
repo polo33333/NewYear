@@ -164,6 +164,22 @@ textarea {
   transition: border-color 0.2s;
 }
 
+input::selection,
+textarea::selection {
+  background: rgba(0, 245, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+/* Override Chrome/Safari autofill colors in dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0e172a inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
 input:focus,
 textarea:focus {
   border-color: var(--accent);
@@ -626,7 +642,7 @@ input[type=number] {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.7;
+  opacity: 0.9;
   padding: 6px 0px 6px;
   margin: 5px 0px;
   display: flex;
@@ -950,7 +966,7 @@ input[type=number] {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.8;
+  opacity: 0.9;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -1002,7 +1018,7 @@ input[type=number] {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.8;
+  opacity: 0.9;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -1408,12 +1424,14 @@ input[type=number] {
   flex-direction: row !important;
   align-items: stretch !important;
   justify-content: space-between !important;
-  padding: 8px 12px 18px 12px !important; /* Add bottom padding for x-axis */
+  padding: 8px 12px 18px 12px !important;
+  /* Add bottom padding for x-axis */
   background: var(--panel) !important;
   border: 1px solid rgba(128, 128, 128, 0.2) !important;
   border-radius: 8px !important;
   gap: 16px;
-  height: 65px; /* Slightly taller to fit x-axis */
+  height: 65px;
+  /* Slightly taller to fit x-axis */
 }
 
 /* Left Section: Icon & Info */
@@ -1472,9 +1490,11 @@ input[type=number] {
   flex: 1;
   display: flex;
   align-items: stretch;
-  padding: 0 35px 15px 10px; /* space for Y right, X bottom, and left margin */
+  padding: 0 35px 15px 10px;
+  /* space for Y right, X bottom, and left margin */
   position: relative;
-  min-width: 200px; /* ensure chart doesn't collapse to 0 */
+  min-width: 200px;
+  /* ensure chart doesn't collapse to 0 */
   height: 100%;
 }
 
@@ -1501,7 +1521,8 @@ input[type=number] {
   flex-direction: column;
   justify-content: space-between;
   color: var(--text-dim);
-  font-size: 8px; /* Even smaller */
+  font-size: 8px;
+  /* Even smaller */
   font-family: 'Inter', sans-serif;
   pointer-events: none;
   text-align: left;
@@ -1516,7 +1537,8 @@ input[type=number] {
   display: flex;
   justify-content: space-between;
   color: var(--text-dim);
-  font-size: 8px; /* Even smaller */
+  font-size: 8px;
+  /* Even smaller */
   font-family: 'Inter', sans-serif;
   pointer-events: none;
   white-space: nowrap;
@@ -1526,8 +1548,14 @@ input[type=number] {
   flex: 1;
   text-align: center;
 }
-.sn-x-axis span:first-child { text-align: left; }
-.sn-x-axis span:last-child { text-align: right; }
+
+.sn-x-axis span:first-child {
+  text-align: left;
+}
+
+.sn-x-axis span:last-child {
+  text-align: right;
+}
 
 /* Right Section: Value & Trend */
 .sn-h-right {
@@ -1740,7 +1768,7 @@ input[type=number] {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.8;
+  opacity: 0.9;
   display: flex;
   align-items: center;
   gap: 5px;

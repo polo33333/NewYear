@@ -150,6 +150,21 @@ body[data-ui-mode="light"] .mcb-name-input {
     color: var(--text);
 }
 
+body[data-ui-mode="light"] input:-webkit-autofill,
+body[data-ui-mode="light"] input:-webkit-autofill:hover, 
+body[data-ui-mode="light"] input:-webkit-autofill:focus, 
+body[data-ui-mode="light"] input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #f7f8fc inset !important;
+    -webkit-text-fill-color: #1e2340 !important;
+    transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
+body[data-ui-mode="light"] input::selection,
+body[data-ui-mode="light"] textarea::selection {
+    background: rgba(91, 106, 240, 0.2) !important;
+    color: #1e2340 !important;
+}
+
 body[data-ui-mode="light"] input::placeholder,
 body[data-ui-mode="light"] textarea::placeholder {
     color: var(--text-placeholder);
@@ -824,10 +839,46 @@ body[data-ui-mode="light"] .rc-input.has-value:focus {
     border-color: var(--success) !important;
 }
 
-body[data-ui-mode="light"] .element-badge {
-    background: var(--accent-soft) !important;
-    color: var(--accent) !important;
-    border-color: rgba(91, 106, 240, 0.2) !important;
+body[data-ui-mode="light"] .element-badge.element-glacio {
+    background: #e3f2fd !important;
+    color: #0288d1 !important;
+    border-color: rgba(2, 136, 209, 0.25) !important;
+}
+
+body[data-ui-mode="light"] .element-badge.element-fusion {
+    background: #fbe9e7 !important;
+    color: #d84315 !important;
+    border-color: rgba(216, 67, 21, 0.25) !important;
+}
+
+body[data-ui-mode="light"] .element-badge.element-electro {
+    background: #f3e5f5 !important;
+    color: #6a1b9a !important;
+    border-color: rgba(106, 27, 154, 0.25) !important;
+}
+
+body[data-ui-mode="light"] .element-badge.element-aero {
+    background: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    border-color: rgba(46, 125, 50, 0.25) !important;
+}
+
+body[data-ui-mode="light"] .element-badge.element-spectro {
+    background: #fffde7 !important;
+    color: #b78103 !important;
+    border-color: rgba(183, 129, 3, 0.25) !important;
+}
+
+body[data-ui-mode="light"] .element-badge.element-havoc {
+    background: #fce4ec !important;
+    color: #c2185b !important;
+    border-color: rgba(194, 24, 91, 0.25) !important;
+}
+
+body[data-ui-mode="light"] .element-badge.element-multi {
+    background: linear-gradient(90deg, #e0f2f1 0%, #ffffff 50%, #f3e5f5 100%) !important;
+    color: #37474f !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
 }
 
 body[data-ui-mode="light"] .search-box input {
@@ -874,10 +925,20 @@ body[data-ui-mode="light"] .filter-btn.active.rank5 {
     border-color: rgba(245, 158, 11, 0.4) !important;
 }
 
+body[data-ui-mode="light"] .filter-btn.rank5:not(.active) {
+    color: #b45309 !important;
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+
 body[data-ui-mode="light"] .filter-btn.active.rank4 {
     background: rgba(167, 139, 250, 0.15) !important;
     color: #7c3aed !important;
     border-color: rgba(167, 139, 250, 0.4) !important;
+}
+
+body[data-ui-mode="light"] .filter-btn.rank4:not(.active) {
+    color: #6d28d9 !important;
+    border-color: rgba(167, 139, 250, 0.2) !important;
 }
 
 body[data-ui-mode="light"] .filter-btn.active.rank3 {
@@ -886,16 +947,31 @@ body[data-ui-mode="light"] .filter-btn.active.rank3 {
     border-color: rgba(59, 130, 246, 0.4) !important;
 }
 
+body[data-ui-mode="light"] .filter-btn.rank3:not(.active) {
+    color: #1d4ed8 !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
 body[data-ui-mode="light"] .filter-btn.active.rank2 {
     background: rgba(16, 185, 129, 0.12) !important;
     color: #059669 !important;
     border-color: rgba(16, 185, 129, 0.4) !important;
 }
 
+body[data-ui-mode="light"] .filter-btn.rank2:not(.active) {
+    color: #047857 !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
 body[data-ui-mode="light"] .filter-btn.active.rank1 {
     background: rgba(100, 116, 139, 0.12) !important;
     color: #475569 !important;
     border-color: rgba(100, 116, 139, 0.4) !important;
+}
+
+body[data-ui-mode="light"] .filter-btn.rank1:not(.active) {
+    color: #4b5563 !important;
+    border-color: rgba(100, 116, 139, 0.2) !important;
 }
 
 body[data-ui-mode="light"] .page-btn {
