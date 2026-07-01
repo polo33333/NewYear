@@ -51,12 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Customize overlay background and spinner for the incoming mode
-            overlay.style.background = newMode === 'light' ? '#f0f2f7' : '#060a16';
-            const loader = overlay.querySelector('.nexus-loader');
-            if (loader) {
-                loader.style.borderColor = newMode === 'light' ? '#e2e6ef' : 'rgba(0, 245, 255, 0.1)';
-            }
-            overlay.classList.remove('fade-out');
+            overlay.classList.remove('fade-out', 'theme-light', 'theme-dark');
+            overlay.classList.add(newMode === 'light' ? 'theme-light' : 'theme-dark');
 
             // 2. Perform switch after a tiny delay for smooth animation
             setTimeout(() => {

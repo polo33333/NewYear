@@ -1656,3 +1656,17 @@ body[data-ui-mode="light"] .synced-tab-tag {
     border-color: rgba(10, 185, 129, 0.3) !important;
     color: #0ea874 !important;
 }
+
+body[data-ui-mode="light"] .score-sign-equal {
+    color: var(--text);
+}
+
+body[data-ui-mode="light"] .mcb-vs-badge {
+    color: var(--text-dim);
+    border-color: var(--border);
+    background: var(--border-subtle);
+}
+
+body[data-ui-mode="light"] #roundsA-container {
+    border-right-color: var(--border);
+}

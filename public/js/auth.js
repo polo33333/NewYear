@@ -12,7 +12,6 @@ overlayStyle.innerHTML = `
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: ${savedUIMode === 'light' ? '#f0f2f7' : '#060a16'};
     z-index: 100000;
     display: flex;
     justify-content: center;
@@ -21,6 +20,12 @@ overlayStyle.innerHTML = `
     transition: opacity 0.3s ease, visibility 0.3s;
     visibility: visible;
 }
+#theme-loading-overlay.theme-dark {
+    background: #060a16;
+}
+#theme-loading-overlay.theme-light {
+    background: #f0f2f7;
+}
 #theme-loading-overlay.fade-out {
     opacity: 0;
     visibility: hidden;
@@ -28,12 +33,17 @@ overlayStyle.innerHTML = `
 .nexus-loader {
     width: 48px;
     height: 48px;
-    border: 3px solid ${savedUIMode === 'light' ? '#e2e6ef' : 'rgba(0, 245, 255, 0.1)'};
     border-radius: 50%;
     display: inline-block;
     position: relative;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
+}
+#theme-loading-overlay.theme-dark .nexus-loader {
+    border: 3px solid rgba(0, 245, 255, 0.1);
+}
+#theme-loading-overlay.theme-light .nexus-loader {
+    border: 3px solid #e2e6ef;
 }
 .nexus-loader::after {
     content: '';  
@@ -46,7 +56,12 @@ overlayStyle.innerHTML = `
     height: 40px;
     border-radius: 50%;
     border: 3px solid transparent;
-    border-bottom-color: ${savedUIMode === 'light' ? '#5b6af0' : '#00f5ff'};
+}
+#theme-loading-overlay.theme-dark .nexus-loader::after {
+    border-bottom-color: #00f5ff;
+}
+#theme-loading-overlay.theme-light .nexus-loader::after {
+    border-bottom-color: #5b6af0;
 }
 @keyframes rotation {
     0% { transform: rotate(0deg); }
@@ -62,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create overlay element
     const overlay = document.createElement('div');
     overlay.id = 'theme-loading-overlay';
+    overlay.classList.add(savedUIMode === 'light' ? 'theme-light' : 'theme-dark');
     overlay.innerHTML = '<span class="nexus-loader"></span>';
     document.body.appendChild(overlay);
 

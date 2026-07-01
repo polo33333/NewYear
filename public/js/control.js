@@ -477,7 +477,7 @@ function copyUrl(id, btn) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
     const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ SAO CHÉP';
+    btn.innerHTML = '<i class="fas fa-check"></i>';
     btn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
     btn.style.color = '#10b981';
     setTimeout(() => {

@@ -3,7 +3,7 @@
   --panel: rgba(15, 23, 42, 0.85);
   --accent: #00f5ff;
   --text: #e2e8f0;
-  --text-dim: #585b70;
+  --text-dim: #b7c0ce;
   --success: #10b981;
   --danger: #ef4444;
 }
@@ -94,8 +94,8 @@ header {
 main {
   display: grid;
   grid-template-columns: 280px 1fr;
-  gap: 10px;
-  padding: 10px;
+  gap: 5px;
+  padding: 5px;
   flex: 1;
   overflow: hidden;
   width: 100%;
@@ -1903,10 +1903,16 @@ input[type=number] {
 
 .roster-rounds-container {
   flex: 1;
-  display: flex;
-  gap: 15px;
-  padding: 8px 12px 12px 12px;
   overflow-y: auto;
+}
+
+.roster-rounds-inner {
+  display: flex;
+  min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;
+  gap: 0;
 }
 
 .rounds-col {
@@ -1914,6 +1920,16 @@ input[type=number] {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 8px 0 12px 0;
+}
+
+#roundsA-container {
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding-right: 10px;
+}
+
+#roundsB-container {
+  padding-left: 10px;
 }
 
 /* Modal Styles */
