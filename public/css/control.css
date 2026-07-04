@@ -2243,6 +2243,23 @@ input[type=number] {
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.modal-item-fallback {
+  width: 100%;
+  height: 100%;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  box-sizing: border-box;
+  word-break: break-word;
+  z-index: 1;
+  line-height: 1.2;
+}
+
 .modal-item-card:hover .modal-item-avatar {
   transform: scale(1.12);
 }
@@ -2665,11 +2682,50 @@ input[type=number] {
 /* Responsive layout adjustments for screens larger than 1920px (2K, 4K, Ultra-wide) */
 @media (min-width: 1921px) {
   main {
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 380px 1fr;
+    gap: 12px;
+    padding: 12px;
   }
 
   .scenes-panel {
-    width: 320px;
+    width: 380px;
+    padding: 16px;
+  }
+
+  .sp-section {
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+  }
+
+  .sp-section-title {
+    margin: 8px 0;
+    letter-spacing: 2px;
+  }
+
+  .scene-btn {
+    padding: 16px 10px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .scene-btn i {
+    font-size: 18px;
+  }
+
+  .btn-pick-folder {
+    padding: 12px;
+  }
+
+  .music-now-playing {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .music-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 15px;
   }
 }
 

@@ -164,7 +164,7 @@
                 tr.innerHTML = `
                     <td class="text-center" style="color: var(--text-dim)">${start + index + 1}</td>
                     <td class="text-center">
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${c.name}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">` : ''}
+                        ${imgSrc ? `<img src="${imgSrc}" alt="" onerror="this.style.display='none';" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">` : ''}
                     </td>
                     <td style="font-weight: 600">${c.name}</td>
                     <td class="text-center">

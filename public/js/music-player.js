@@ -27,7 +27,7 @@ window.musicPlayerLoadFiles = function (files) {
   mp.playlist = [];
   mp.currentIndex = -1;
 
-  const audioExts = /\.(mp3|wav|ogg|flac|m4a|aac|opus|weba)$/i;
+  const audioExts = /\.(mp3|wav|ogg|flac|m4a|aac|opus|weba|mp4)$/i;
   const tracks = Array.from(files).filter(f => audioExts.test(f.name));
 
   if (!tracks.length) {

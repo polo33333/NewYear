@@ -998,9 +998,7 @@ window.filterModalItems = function () {
 
 window.renderModalItems = function (items) {
   const grid = document.getElementById('modal-grid');
-  grid.innerHTML = '';
-
-  // Vị trí bắt đầu luôn là 1 để quản lý cả 3 ô
+  const fragment = document.createDocumentFragment();
   const maxAllowed = 3;
 
   // Cập nhật text nút confirm
@@ -1012,13 +1010,14 @@ window.renderModalItems = function (items) {
   items.forEach(item => {
     if (!item.name) return;
     const el = document.createElement('div');
+    el.dataset.name = item.name;
+    const isDisabled = item._disabled;
+    el.dataset.disabled = isDisabled ? 'true' : 'false';
 
     // Kiểm tra có trong mảng chọn không
     const selIndex = multiSelection.indexOf(item.name);
     const isSelected = selIndex !== -1;
 
-    // Cấu hình CSS nếu bị disable (hết energy)
-    const isDisabled = item._disabled;
     el.className = `modal-item-card rank-${item.rank}` + (isSelected ? ' is-selected' : '');
 
     // Áp dụng các thuộc tính style động
@@ -1046,7 +1045,7 @@ window.renderModalItems = function (items) {
     // Tùy theo cấu trúc JSON mà lấy ảnh. Character JSON dùng icon, Weapon ưu tiên imagebig
     let imgSrc = currentSelectionType === 'weapon' ? (item.imagebig || item.image) : (item.icon || item.image);
     if (imgSrc && currentSelectionType === 'weapon') {
-      imgSrc = imgSrc.replace(/^\/?images\/weapons?\//, 'images/weapon/'); // Đảm bảo đúng đường dẫn nãy tải
+      imgSrc = imgSrc.replace(/^\/?images\/weapons?\//, 'images/weapon/');
     } else if (imgSrc && currentSelectionType === 'character') {
       imgSrc = imgSrc.replace(/^\/?icon\//, 'images/icon/');
     }
@@ -1055,13 +1054,71 @@ window.renderModalItems = function (items) {
       ${badgeHtml}
       ${energyHtml}
       <div class="modal-item-image">
-        ${imgSrc ? `<img src="${imgSrc}" class="modal-item-avatar" alt="${item.name}" loading="lazy">` : ''}
+        ${imgSrc ? `<img src="${imgSrc}" class="modal-item-avatar" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">` : ''}
+        <div class="modal-item-fallback" style="${imgSrc ? 'display: none;' : 'display: flex;'}">${item.name}</div>
         <div class="modal-item-stars">${'★'.repeat(item.rank)}</div>
       </div>
       <div class="modal-item-name">${item.name}</div>
     `;
 
-    grid.appendChild(el);
+    fragment.appendChild(el);
+  });
+
+  grid.innerHTML = '';
+  grid.appendChild(fragment);
+};
+
+window.updateModalSelectionUI = function () {
+  const maxAllowed = 3;
+
+  // Cập nhật text nút confirm
+  const confirmBtn = document.querySelector('#selection-modal button[onclick="confirmMultiSelection()"]');
+  if (confirmBtn) {
+    confirmBtn.innerText = `XÁC NHẬN (${multiSelection.length}/${maxAllowed})`;
+  }
+
+  const grid = document.getElementById('modal-grid');
+  const cards = grid.querySelectorAll('.modal-item-card');
+  cards.forEach(card => {
+    const name = card.dataset.name;
+    if (!name) return;
+
+    const selIndex = multiSelection.indexOf(name);
+    const isSelected = selIndex !== -1;
+
+    // Toggle selected class
+    if (isSelected) {
+      card.classList.add('is-selected');
+    } else {
+      card.classList.remove('is-selected');
+    }
+
+    // Update opacity/cursor if disabled
+    const isDisabled = card.dataset.disabled === 'true';
+    card.style.opacity = (isDisabled && !isSelected) ? '0.3' : '1';
+    card.style.cursor = (isDisabled && !isSelected) ? 'not-allowed' : 'pointer';
+
+    if (isDisabled && !isSelected) {
+      card.onclick = null;
+    } else {
+      card.onclick = () => handleItemClick(name);
+    }
+
+    // Update badge in-place
+    let badge = card.querySelector('.modal-item-badge');
+    if (isSelected) {
+      const displayNum = 1 + selIndex;
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.className = 'modal-item-badge';
+        card.insertBefore(badge, card.firstChild);
+      }
+      badge.textContent = displayNum;
+    } else {
+      if (badge) {
+        badge.remove();
+      }
+    }
   });
 };
 
@@ -1076,7 +1133,7 @@ window.handleItemClick = function (name) {
       multiSelection.push(name); // Thêm chọn
     }
   }
-  filterModalItems(); // Render lại để hiện số
+  updateModalSelectionUI(); // Cập nhật UI trực tiếp mà không dựng lại toàn bộ DOM
 };
 
 window.clearSquare = function () {
