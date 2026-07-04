@@ -305,7 +305,10 @@ router.post('/reset-state', (req, res) => {
 
     if (states[roomId]) {
       states[roomId].scene = 'end';
+      states[roomId].overlays.scoreboard = false;
+      states[roomId].overlays.show_song = false;
       broadcast({ type: 'scene', value: 'end' }, roomId);
+      broadcast({ type: 'overlays', data: states[roomId].overlays }, roomId);
     }
 
     if (isSync) {

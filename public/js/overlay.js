@@ -474,12 +474,8 @@ function switchScene(scene, instant = false) {
 
   // Update background transparency
   document.body.style.transition = 'background 0.5s ease';
-  if (scene === 'end') {
-    document.body.style.background = 'rgba(255, 0, 0, 1)'; // Solid red background for End scene
-  } else {
-    const needsBg = ['break', 'stats'].includes(scene);
-    document.body.style.background = needsBg ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)';
-  }
+  const needsBg = ['break', 'stats'].includes(scene);
+  document.body.style.background = needsBg ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)';
 
 
   if (scene === 'stats' && stats) stats.classList.add('visible');

@@ -10,7 +10,7 @@ function createDefaultState() {
     isLive: false,
     scene: 'end',         // gameplay | bracket | stats | break | end
     overlays: {
-      scoreboard: true,
+      scoreboard: false,
       scoreboard2: false,
       ticker: false,
       rosterA: false,
