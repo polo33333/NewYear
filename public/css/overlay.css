@@ -663,32 +663,126 @@ body {
 }
 
 /* LEFT WAVEFORM: 1 is furthest from logo (left), 12 is closest (right) */
-.vct-waveform.left .vct-wave-bars span:nth-child(1) { height: 2px; opacity: 0.05; }
-.vct-waveform.left .vct-wave-bars span:nth-child(2) { height: 6px; opacity: 0.1; }
-.vct-waveform.left .vct-wave-bars span:nth-child(3) { height: 4px; opacity: 0.15; }
-.vct-waveform.left .vct-wave-bars span:nth-child(4) { height: 12px; opacity: 0.25; }
-.vct-waveform.left .vct-wave-bars span:nth-child(5) { height: 8px; opacity: 0.35; }
-.vct-waveform.left .vct-wave-bars span:nth-child(6) { height: 16px; opacity: 0.45; }
-.vct-waveform.left .vct-wave-bars span:nth-child(7) { height: 22px; opacity: 0.55; }
-.vct-waveform.left .vct-wave-bars span:nth-child(8) { height: 12px; opacity: 0.7; }
-.vct-waveform.left .vct-wave-bars span:nth-child(9) { height: 26px; opacity: 0.8; }
-.vct-waveform.left .vct-wave-bars span:nth-child(10) { height: 20px; opacity: 0.9; }
-.vct-waveform.left .vct-wave-bars span:nth-child(11) { height: 30px; opacity: 0.95; }
-.vct-waveform.left .vct-wave-bars span:nth-child(12) { height: 14px; opacity: 1.0; }
+.vct-waveform.left .vct-wave-bars span:nth-child(1) {
+  height: 2px;
+  opacity: 0.05;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(2) {
+  height: 6px;
+  opacity: 0.1;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(3) {
+  height: 4px;
+  opacity: 0.15;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(4) {
+  height: 12px;
+  opacity: 0.25;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(5) {
+  height: 8px;
+  opacity: 0.35;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(6) {
+  height: 16px;
+  opacity: 0.45;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(7) {
+  height: 22px;
+  opacity: 0.55;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(8) {
+  height: 12px;
+  opacity: 0.7;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(9) {
+  height: 26px;
+  opacity: 0.8;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(10) {
+  height: 20px;
+  opacity: 0.9;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(11) {
+  height: 30px;
+  opacity: 0.95;
+}
+
+.vct-waveform.left .vct-wave-bars span:nth-child(12) {
+  height: 14px;
+  opacity: 1.0;
+}
 
 /* RIGHT WAVEFORM: 1 is closest to logo (left), 12 is furthest (right) */
-.vct-waveform.right .vct-wave-bars span:nth-child(1) { height: 14px; opacity: 1.0; }
-.vct-waveform.right .vct-wave-bars span:nth-child(2) { height: 30px; opacity: 0.95; }
-.vct-waveform.right .vct-wave-bars span:nth-child(3) { height: 20px; opacity: 0.9; }
-.vct-waveform.right .vct-wave-bars span:nth-child(4) { height: 26px; opacity: 0.8; }
-.vct-waveform.right .vct-wave-bars span:nth-child(5) { height: 12px; opacity: 0.7; }
-.vct-waveform.right .vct-wave-bars span:nth-child(6) { height: 22px; opacity: 0.55; }
-.vct-waveform.right .vct-wave-bars span:nth-child(7) { height: 16px; opacity: 0.45; }
-.vct-waveform.right .vct-wave-bars span:nth-child(8) { height: 8px; opacity: 0.35; }
-.vct-waveform.right .vct-wave-bars span:nth-child(9) { height: 12px; opacity: 0.25; }
-.vct-waveform.right .vct-wave-bars span:nth-child(10) { height: 4px; opacity: 0.15; }
-.vct-waveform.right .vct-wave-bars span:nth-child(11) { height: 6px; opacity: 0.1; }
-.vct-waveform.right .vct-wave-bars span:nth-child(12) { height: 2px; opacity: 0.05; }
+.vct-waveform.right .vct-wave-bars span:nth-child(1) {
+  height: 14px;
+  opacity: 1.0;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(2) {
+  height: 30px;
+  opacity: 0.95;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(3) {
+  height: 20px;
+  opacity: 0.9;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(4) {
+  height: 26px;
+  opacity: 0.8;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(5) {
+  height: 12px;
+  opacity: 0.7;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(6) {
+  height: 22px;
+  opacity: 0.55;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(7) {
+  height: 16px;
+  opacity: 0.45;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(8) {
+  height: 8px;
+  opacity: 0.35;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(9) {
+  height: 12px;
+  opacity: 0.25;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(10) {
+  height: 4px;
+  opacity: 0.15;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(11) {
+  height: 6px;
+  opacity: 0.1;
+}
+
+.vct-waveform.right .vct-wave-bars span:nth-child(12) {
+  height: 2px;
+  opacity: 0.05;
+}
 
 
 
@@ -973,6 +1067,7 @@ body {
 }
 
 .stats-team-label {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 32px;
   font-weight: 900;
   text-transform: uppercase;
@@ -981,6 +1076,14 @@ body {
   color: #fff;
   position: relative;
   z-index: 1;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stats-team-label {
+  max-width: 450px;
 }
 
 .stats-team-score-big {
