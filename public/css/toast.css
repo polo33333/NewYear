@@ -197,6 +197,9 @@
     box-shadow: 0 2px 10px rgba(0, 245, 255, 0.2);
 }
 .nexus-modal-btn-ok:hover {
+    background: linear-gradient(135deg, #00f5ff 0%, #0096c7 100%);
+    border: none;
+    color: #04080f;
     filter: brightness(1.1);
     box-shadow: 0 4px 16px rgba(0, 245, 255, 0.35);
     transform: translateY(-1px);
