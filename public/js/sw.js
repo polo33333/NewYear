@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kdstream-v3';
+const CACHE_NAME = 'kdstream-v4';
 const ASSETS = [
   '/',
   '/css/control.css?v=15',
@@ -8,11 +8,16 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS).catch(err => console.log('PWA cache error:', err));
     })
   );
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('fetch', (e) => {

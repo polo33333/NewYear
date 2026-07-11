@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 // Serve Service Worker with root scope permissions even though it's inside public/js/
 app.get('/js/sw.js', (req, res) => {
   res.setHeader('Service-Worker-Allowed', '/');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, 'public/js/sw.js'));
 });
 
