@@ -21,13 +21,14 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Bypass API requests, hot reloading, and sockets
+  // Bypass API requests, hot reloading, sockets, and static images
   if (
     e.request.url.includes('/api/') || 
     e.request.url.includes('/socket') || 
     e.request.url.includes('socket.io') || 
     e.request.url.includes('browser-sync') ||
-    e.request.url.includes('/live-reload')
+    e.request.url.includes('/live-reload') ||
+    e.request.url.includes('/images/')
   ) {
     return;
   }
