@@ -158,7 +158,7 @@ window.logout = async function () {
 };
 
 window.updateUserWelcome = function () {
-  const username = localStorage.getItem('matrix_username') || 'ADMIN';
+  const username = localStorage.getItem('kdone_username') || 'ADMIN';
   const headerRights = document.querySelectorAll('.header-right');
 
   headerRights.forEach(headerRight => {
