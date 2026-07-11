@@ -119,7 +119,7 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(to right, #0c93d7 0%, rgba(15, 23, 42, 0.9) 60%, rgba(0, 0, 0, 0) 100%),
-              url('../images/other/teal-bg.png') center/cover no-repeat;
+              url('../images/other/teal-bg.webp') center/cover no-repeat;
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   z-index: 1;
@@ -133,7 +133,7 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(to left, #dd3838 0%, rgba(15, 23, 42, 0.9) 60%, rgba(0, 0, 0, 0) 100%),
-              url('../images/other/red-bg.png') center/cover no-repeat;
+              url('../images/other/red-bg.webp') center/cover no-repeat;
   mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   z-index: 1;
@@ -568,7 +568,7 @@ body {
   padding-right: 120px;
   /* clip-path: polygon(0% 0%, 100% 0%, 93% 100%, 0% 100%); */
   background: linear-gradient(135deg, rgba(0, 245, 255, 0.08) 0%, rgba(3, 5, 12, 0.98) 100%),
-    url('../images/other/teal-bg.png') center/cover no-repeat;
+    url('../images/other/teal-bg.webp') center/cover no-repeat;
   border-top: 2px solid rgba(0, 245, 255, 0.3);
   border-bottom: 2px solid rgba(0, 245, 255, 0.3);
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
@@ -580,7 +580,7 @@ body {
   padding-left: 120px;
   /* clip-path: polygon(7% 0%, 100% 0%, 100% 100%, 0% 100%); */
   background: linear-gradient(135deg, rgba(255, 68, 68, 0.08) 0%, rgba(3, 5, 12, 0.98) 100%),
-    url('../images/other/red-bg.png') center/cover no-repeat;
+    url('../images/other/red-bg.webp') center/cover no-repeat;
   border-top: 2px solid rgba(255, 68, 68, 0.3);
   border-bottom: 2px solid rgba(255, 68, 68, 0.3);
   mask-image: linear-gradient(to left, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
@@ -1151,13 +1151,13 @@ body {
 
 .stats-team-block.teamA {
   background: linear-gradient(90deg, rgba(0, 245, 255, 0.15) 0%, rgba(5, 9, 20, 0.95) 100%),
-    url('../images/other/teal-bg.png') center/cover no-repeat;
+    url('../images/other/teal-bg.webp') center/cover no-repeat;
   border-right: 3px solid var(--color, #00f5ff);
 }
 
 .stats-team-block.teamB {
   background: linear-gradient(90deg, rgba(255, 68, 68, 0.35) 0%, rgba(5, 9, 20, 0.95) 100%),
-    url('../images/other/red-bg.png') -50px center/cover no-repeat;
+    url('../images/other/red-bg.webp') -50px center/cover no-repeat;
   border-right: 3px solid var(--color, #ff4444);
 }
 
@@ -1636,8 +1636,8 @@ body[data-template="classic"] .sb-container {
   height: 52px;
   background: 
     linear-gradient(to right, rgba(10, 12, 22, 0.5) 0%, rgba(10, 12, 22, 0.98) 40%, rgba(10, 12, 22, 0.98) 60%, rgba(10, 12, 22, 0.5) 100%),
-    url('../images/other/teal-bg.png') left center/50% no-repeat,
-    url('../images/other/red-bg.png') right center/50% no-repeat;
+    url('../images/other/teal-bg.webp') left center/50% no-repeat,
+    url('../images/other/red-bg.webp') right center/50% no-repeat;
   background-color: rgba(10, 12, 22, 0.98);
   border-radius: 6px;
   overflow: hidden;
