@@ -2934,8 +2934,8 @@ input[type=number] {
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-dim);
   border-radius: 6px;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
