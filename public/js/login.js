@@ -167,7 +167,7 @@ const slidesData = [
 ];
 
 let currentSlide = 0;
-const slideDuration = 6000; // 6 seconds per slide
+const slideDuration = 7000; // 7 seconds per slide
 let lastTime = Date.now();
 let animFrameId = null;
 let isPaused = false;
@@ -303,7 +303,7 @@ if (locSubtitle && locTitle && locDesc && slidesData[0]) {
       const isLight = document.body.getAttribute('data-ui-mode') === 'light';
       // Soft cyan-green for dark mode, soft blue-green for light mode
       const baseColor = isLight ? 'rgba(59, 130, 246, ' : 'rgba(0, 255, 231, ';
-      
+
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.rotation);

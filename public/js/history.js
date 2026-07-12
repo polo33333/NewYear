@@ -72,7 +72,7 @@
     }
 
     // ── View State ──
-    let currentHistoryView = 'card'; // 'table' | 'card'
+    let currentHistoryView = 'table'; // 'table' | 'card'
 
     // Set view mode (table vs card)
     window.setHistoryView = function (view) {
@@ -429,7 +429,7 @@
             const teamBScore = save.score?.teamB?.score ?? 0;
 
             const syncedTabs = save.syncedTabs || [];
-            let syncedTabsHTML = '<span style="color: rgba(255,255,255,0.15); font-size: 11px;">Chưa đồng bộ</span>';
+            let syncedTabsHTML = '<span class="unsynced-status-text">Chưa đồng bộ</span>';
             if (syncedTabs.length > 0) {
                 syncedTabsHTML = `
                     <div class="hist-card-synced-tabs" style="margin-top: 0;">
@@ -458,19 +458,17 @@
                     <td class="col-matchup" data-label="Đối Đầu">
                         <div class="matchup-display">
                             <div class="matchup-team team-a ${isTeamAWinner ? 'winner' : ''}">
-                                <div class="matchup-team-avatars">${teamAAvatarsHTML}</div>
                                 <span class="matchup-team-name" title="${teamAName}">${teamAName}</span>
                             </div>
                             
                             <div class="matchup-score-pill">
                                 <span class="score-a">${teamAScore}</span>
-                                <span class="divider">:</span>
+                                <span class="divider">VS</span>
                                 <span class="score-b">${teamBScore}</span>
                             </div>
                             
                             <div class="matchup-team team-b ${isTeamBWinner ? 'winner' : ''}">
                                 <span class="matchup-team-name" title="${teamBName}">${teamBName}</span>
-                                <div class="matchup-team-avatars">${teamBAvatarsHTML}</div>
                             </div>
                         </div>
                     </td>

@@ -1423,10 +1423,12 @@ function generateRounds() {
          <span class="score-sign-minus">&minus;</span>
          <input type="number" id="t${team}r${r}d" placeholder="0" readonly class="score-deduct-input" title="Điểm trừ RC và R">
        </div>
-       <div class="score-input-row">
-         <span class="score-sign-minus" style="color: #ff9f43;">&minus;</span>
-         <input type="number" id="t${team}r${r}buy" placeholder="0" onchange="updateRosterLocal()" oninput="window.markRowDirty('${team}', ${r})" class="score-buy-input" title="Điểm mua lượt">
-       </div>
+        <div class="score-input-row" style="position: relative; display: flex; align-items: center;">
+          <span class="score-sign-minus" style="color: #ff9f43;">&minus;</span>
+          <button type="button" class="buy-step-btn" onclick="adjustBuyPoints('${team}', ${r}, -1000)" style="background: rgba(255, 159, 67, 0.15); border: 1px solid rgba(255, 159, 67, 0.3); color: #ff9f43; border-radius: 4px; padding: 1px 6px; font-size: 11px; cursor: pointer; font-weight: bold; margin-left: 4px; height: 20px; display: flex; align-items: center; justify-content: center; outline: none; transition: 0.2s;">-</button>
+          <input type="number" id="t${team}r${r}buy" placeholder="0" onchange="updateRosterLocal()" oninput="window.markRowDirty('${team}', ${r})" class="score-buy-input" title="Điểm mua lượt" style="width: 54px; margin: 0 4px; padding: 0 2px;">
+          <button type="button" class="buy-step-btn" onclick="adjustBuyPoints('${team}', ${r}, 1000)" style="background: rgba(255, 159, 67, 0.15); border: 1px solid rgba(255, 159, 67, 0.3); color: #ff9f43; border-radius: 4px; padding: 1px 6px; font-size: 11px; cursor: pointer; font-weight: bold; height: 20px; display: flex; align-items: center; justify-content: center; outline: none; transition: 0.2s;">+</button>
+        </div>
      </div>
      <div class="score-net-wrapper">
        <span class="score-sign-equal">=</span>
@@ -1454,6 +1456,19 @@ window.markRowDirty = function (teamCode, r) {
   if (btn) {
     btn.disabled = false;
     btn.classList.remove('disabled');
+  }
+};
+
+window.adjustBuyPoints = function (teamCode, r, amount) {
+  const input = document.getElementById(`t${teamCode}r${r}buy`);
+  if (input) {
+    let val = parseInt(input.value, 10) || 0;
+    val = Math.max(0, val + amount);
+    input.value = val;
+    if (window.updateRosterLocal) {
+      window.updateRosterLocal();
+    }
+    window.markRowDirty(teamCode, r);
   }
 };
 

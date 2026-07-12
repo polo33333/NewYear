@@ -277,6 +277,7 @@ div#char-editor-container {
 
 /* Table */
 .table-container {
+    position: relative;
     overflow-x: auto;
     overflow-y: auto;
     max-height: calc(100vh - 290px);
@@ -289,7 +290,8 @@ div#char-editor-container {
 table {
     width: 100%;
     background: rgba(255, 255, 255, 0.02);
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 13px;
 }
 
@@ -309,6 +311,13 @@ th {
     border-bottom: 2px solid var(--border-color);
     z-index: 10;
 }
+
+#char-table th:nth-child(2),
+#wp-table th:nth-child(2) {
+    width: 50px;
+}
+
+
 
 td {
     padding: 12px;

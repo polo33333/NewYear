@@ -151,8 +151,8 @@ body[data-ui-mode="light"] .mcb-name-input {
 }
 
 body[data-ui-mode="light"] input:-webkit-autofill,
-body[data-ui-mode="light"] input:-webkit-autofill:hover, 
-body[data-ui-mode="light"] input:-webkit-autofill:focus, 
+body[data-ui-mode="light"] input:-webkit-autofill:hover,
+body[data-ui-mode="light"] input:-webkit-autofill:focus,
 body[data-ui-mode="light"] input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 1000px #f7f8fc inset !important;
     -webkit-text-fill-color: #1e2340 !important;
@@ -343,6 +343,46 @@ body[data-ui-mode="light"] .history-table .bracket-badge {
     color: var(--accent);
     box-shadow: none;
 }
+
+body[data-ui-mode="light"] .history-table .matchup-team-name {
+    color: #1e293b;
+}
+
+body[data-ui-mode="light"] .history-table .matchup-team.team-a.winner .matchup-team-name {
+    color: #0284c7;
+    text-shadow: none;
+}
+
+body[data-ui-mode="light"] .history-table .matchup-team.team-b.winner .matchup-team-name {
+    color: #16a34a;
+    text-shadow: none;
+}
+
+body[data-ui-mode="light"] .history-table .matchup-score-pill {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    box-shadow: none;
+}
+
+body[data-ui-mode="light"] .history-table .matchup-score-pill .score-a {
+    color: #0284c7;
+    text-shadow: none;
+}
+
+body[data-ui-mode="light"] .history-table .matchup-score-pill .score-b {
+    color: #16a34a;
+    text-shadow: none;
+}
+
+body[data-ui-mode="light"] .history-table .matchup-score-pill .divider {
+    color: #64748b;
+}
+
+body[data-ui-mode="light"] .history-table .unsynced-status-text {
+    color: #94a3b8;
+}
+
+
 
 /* 14. OBS Links & sp-link-row */
 body[data-ui-mode="light"] .sp-link-row {

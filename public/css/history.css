@@ -76,7 +76,7 @@
 
 /* ── COL BRACKET ── */
 .history-table .col-bracket {
-    width: 220px;
+    width: 280px;
 }
 
 .history-table .bracket-badge {
@@ -93,7 +93,7 @@
     text-transform: uppercase;
     letter-spacing: 0.8px;
     white-space: nowrap;
-    max-width: 190px;
+    max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -121,7 +121,6 @@
 .history-table .matchup-team.team-a {
     justify-content: flex-end;
     text-align: right;
-    flex-direction: row-reverse;
 }
 
 .history-table .matchup-team.team-b {
@@ -194,6 +193,11 @@
     width: 150px;
 }
 
+.history-table .unsynced-status-text {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 11px;
+}
+
 /* ── COL ACTIONS ── */
 .history-table .col-actions {
     width: 290px;
@@ -235,7 +239,6 @@
     background: linear-gradient(135deg, #00f5ff 0%, #0096c7 100%);
     border: none;
     color: #060b18;
-    font-weight: 800;
     letter-spacing: 0.2px;
     box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
 }
