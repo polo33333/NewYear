@@ -7,35 +7,56 @@
   <title>MATRIX HUD — Scoreboard Overlay</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/scoreboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/overlay.css">
+  <style>
+    body {
+      background: transparent !important;
+      margin: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
 </head>
 
 <body>
 
   <div id="scoreboard" class="hidden">
-    <div class="sb-main-bar">
-      <div class="sb-team left" id="teamA" style="--color:#00aaff">
-        <div class="sb-info">
-          <div class="sb-name" id="nameA">DRAGONS</div>
-          <div class="sb-label">TEAM A</div>
+    <div class="sb-container">
+
+      <!-- TEAM A (LEFT - GREEN/RED) -->
+      <div class="sb-side left" id="teamA">
+        <div class="sb-bar-row">
+          <div class="sb-pill-container left-pill">
+            <div class="sb-pill-score" id="scoreA">0</div>
+          </div>
+          <span class="sb-team-name" id="nameA">DRAGONS</span>
+          <span class="sb-pill-net" id="netPointsA"></span>
         </div>
-        <div class="sb-diff" id="scoreDiffA"></div>
       </div>
-      <div class="sb-center">
-        <div class="sb-scores">
-          <span class="sb-score-a" id="scoreA">0</span>
-          <span class="sb-sep">:</span>
-          <span class="sb-score-b" id="scoreB">0</span>
+
+      <!-- TEAM B (RIGHT - BLUE) -->
+      <div class="sb-side right" id="teamB">
+        <div class="sb-bar-row">
+          <span class="sb-pill-net" id="netPointsB"></span>
+          <span class="sb-team-name" id="nameB">PHANTOMS</span>
+          <div class="sb-pill-container right-pill">
+            <div class="sb-pill-score" id="scoreB">0</div>
+          </div>
         </div>
-        <div class="sb-timer" id="matchTimer">12:47</div>
       </div>
-      <div class="sb-team right" id="teamB" style="--color:#ff4444">
-        <div class="sb-info">
-          <div class="sb-name" id="nameB">PHANTOMS</div>
-          <div class="sb-label">TEAM B</div>
-        </div>
-        <div class="sb-diff" id="scoreDiffB"></div>
-      </div>
+
+    </div>
+  </div>
+
+  <div id="scoreboard2" class="hidden">
+    <div class="sb2-container">
+      <div class="sb2-score-left" id="scoreA2">0</div>
+      <div class="sb2-team-name-left" id="nameA2">DRAGONS</div>
+      <div class="sb2-diff-pill" id="scoreDiff">0</div>
+      <div class="sb2-team-name-right" id="nameB2">PHANTOMS</div>
+      <div class="sb2-score-right" id="scoreB2">0</div>
     </div>
   </div>
 
