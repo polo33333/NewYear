@@ -721,6 +721,55 @@ function measurePing() {
 // --- INITIALIZATION ---
 // Generate the round input DOM elements first
 generateRounds();
+
+window.scrollRounds = function(direction) {
+  const container = document.querySelector('.roster-rounds-container');
+  if (!container) return;
+  const scrollAmount = 150;
+  if (direction === 'up') {
+    container.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+  } else {
+    container.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+  }
+};
+
+window.updateRoundsScrollButtons = function() {
+  const container = document.querySelector('.roster-rounds-container');
+  const btnUp = document.getElementById('rounds-scroll-up');
+  const btnDown = document.getElementById('rounds-scroll-down');
+  if (!container || !btnUp || !btnDown) return;
+
+  const isScrollable = container.scrollHeight > container.clientHeight;
+
+  if (isScrollable) {
+    const scrollTop = container.scrollTop;
+    const maxScroll = container.scrollHeight - container.clientHeight;
+
+    if (scrollTop > 5) {
+      btnUp.style.display = 'flex';
+    } else {
+      btnUp.style.display = 'none';
+    }
+
+    if (scrollTop < maxScroll - 5) {
+      btnDown.style.display = 'flex';
+    } else {
+      btnDown.style.display = 'none';
+    }
+  } else {
+    btnUp.style.display = 'none';
+    btnDown.style.display = 'none';
+  }
+};
+
+// Bind scroll event to rounds container
+const roundsContainer = document.querySelector('.roster-rounds-container');
+if (roundsContainer) {
+  roundsContainer.addEventListener('scroll', window.updateRoundsScrollButtons);
+  // Initial check
+  setTimeout(window.updateRoundsScrollButtons, 500);
+}
+
 measurePing();
 setInterval(measurePing, 5000);
 initClientTelemetry();
@@ -731,6 +780,7 @@ window.addEventListener('resize', () => {
   resizeTimeout = setTimeout(() => {
     resizePreview();
     if (typeof drawPingChart === 'function') drawPingChart();
+    window.updateRoundsScrollButtons();
   }, 100);
 }); const previewIframe = document.getElementById('preview-iframe');
 if (previewIframe) {

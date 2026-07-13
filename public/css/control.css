@@ -1921,6 +1921,73 @@ input[type=number] {
   overflow-y: auto;
 }
 
+.rounds-scroll-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(0, 245, 255, 0.3);
+  color: var(--accent);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+@keyframes rounds-btn-bounce-up {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -4px);
+    border-color: rgba(0, 245, 255, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 245, 255, 0.5);
+  }
+}
+
+@keyframes rounds-btn-bounce-down {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 4px);
+    border-color: rgba(0, 245, 255, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 245, 255, 0.5);
+  }
+}
+
+.rounds-scroll-btn:hover {
+  background: var(--accent);
+  color: #060a16;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  animation: none;
+}
+
+.rounds-scroll-btn:hover.scroll-up {
+  transform: translate(-50%, -2px);
+}
+
+.rounds-scroll-btn:hover.scroll-down {
+  transform: translate(-50%, 2px);
+}
+
+.rounds-scroll-btn.scroll-up {
+  top: 8px;
+  animation: rounds-btn-bounce-up 2s infinite ease-in-out;
+}
+
+.rounds-scroll-btn.scroll-down {
+  bottom: 8px;
+  animation: rounds-btn-bounce-down 2s infinite ease-in-out;
+}
+
 .roster-rounds-inner {
   display: flex;
   min-height: 100%;

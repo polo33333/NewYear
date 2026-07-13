@@ -419,11 +419,19 @@
                 </div>
 
                 <!-- Rounds (Scrollable) -->
-                <div class="roster-rounds-container custom-scroll">
-                  <div class="roster-rounds-inner">
-                    <div class="rounds-col" id="roundsA-container"></div>
-                    <div class="rounds-col" id="roundsB-container"></div>
+                <div class="roster-rounds-outer" style="position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;">
+                  <button id="rounds-scroll-up" class="rounds-scroll-btn scroll-up" onclick="scrollRounds('up')">
+                    <i class="fas fa-chevron-up"></i>
+                  </button>
+                  <div class="roster-rounds-container custom-scroll">
+                    <div class="roster-rounds-inner">
+                      <div class="rounds-col" id="roundsA-container"></div>
+                      <div class="rounds-col" id="roundsB-container"></div>
+                    </div>
                   </div>
+                  <button id="rounds-scroll-down" class="rounds-scroll-btn scroll-down" onclick="scrollRounds('down')">
+                    <i class="fas fa-chevron-down"></i>
+                  </button>
                 </div>
               </div>
             </div>
