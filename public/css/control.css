@@ -3538,3 +3538,130 @@ span#music-duration {
     height: 48px !important;
   }
 }
+
+/* Custom Score Numpad Keypad */
+.score-numpad {
+  position: absolute;
+  z-index: 10000;
+  background: rgba(18, 18, 24, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 245, 255, 0.25);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 245, 255, 0.15);
+  border-radius: 10px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 170px;
+  user-select: none;
+  font-family: 'Inter', sans-serif;
+  animation: numpadFadeIn 0.15s ease-out;
+}
+
+@keyframes numpadFadeIn {
+  from { opacity: 0; transform: translateY(5px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.score-numpad-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  border-radius: 6px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-numpad-btn:hover {
+  background: rgba(0, 245, 255, 0.15);
+  border-color: rgba(0, 245, 255, 0.6);
+  color: #00f5ff;
+  box-shadow: 0 0 8px rgba(0, 245, 255, 0.3);
+}
+
+.score-numpad-btn:active {
+  transform: scale(0.92);
+}
+
+.score-numpad-btn.btn-clear {
+  color: #ff5252;
+  border-color: rgba(255, 82, 82, 0.2);
+  background: rgba(255, 82, 82, 0.05);
+}
+
+.score-numpad-btn.btn-clear:hover {
+  background: rgba(255, 82, 82, 0.2);
+  border-color: #ff5252;
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255, 82, 82, 0.4);
+}
+
+.score-numpad-btn.btn-backspace {
+  color: #ffb13b;
+  border-color: rgba(255, 177, 59, 0.2);
+  background: rgba(255, 177, 59, 0.05);
+}
+
+.score-numpad-btn.btn-backspace:hover {
+  background: rgba(255, 177, 59, 0.2);
+  border-color: #ffb13b;
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255, 177, 59, 0.4);
+}
+
+.score-numpad-btn.btn-ok {
+  grid-column: span 3;
+  background: linear-gradient(135deg, #00f5ff, #00b5d0);
+  border: none;
+  color: #0c0d14;
+  font-weight: 800;
+  padding: 8px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-numpad-btn.btn-ok:hover {
+  background: linear-gradient(135deg, #33f7ff, #00d2f3);
+  color: #000;
+  box-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
+}
+
+/* Buy step button styling and hover effects */
+.buy-step-btn {
+  background: rgba(255, 159, 67, 0.15);
+  border: 1px solid rgba(255, 159, 67, 0.3);
+  color: #ff9f43;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: bold;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.buy-step-btn:hover {
+  background: rgba(255, 159, 67, 0.35);
+  border-color: rgba(255, 159, 67, 0.8);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255, 159, 67, 0.5);
+  transform: translateY(-1px);
+}
+
+.buy-step-btn:active {
+  transform: scale(0.9) translateY(0);
+}

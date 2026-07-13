@@ -240,7 +240,11 @@ window.mpSelectRow = function (index) {
 
 function highlightRow(index) {
   document.querySelectorAll('.mp-row').forEach((r, i) => {
-    r.classList.toggle('mp-row-active', i === index);
+    const isActive = i === index;
+    r.classList.toggle('mp-row-active', isActive);
+    if (isActive) {
+      r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   });
 }
 

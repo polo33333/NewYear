@@ -1425,9 +1425,9 @@ function generateRounds() {
        </div>
         <div class="score-input-row" style="position: relative; display: flex; align-items: center;">
           <span class="score-sign-minus" style="color: #ff9f43;">&minus;</span>
-          <button type="button" class="buy-step-btn" onclick="adjustBuyPoints('${team}', ${r}, -1000)" style="background: rgba(255, 159, 67, 0.15); border: 1px solid rgba(255, 159, 67, 0.3); color: #ff9f43; border-radius: 4px; padding: 1px 6px; font-size: 11px; cursor: pointer; font-weight: bold; margin-left: 4px; height: 20px; display: flex; align-items: center; justify-content: center; outline: none; transition: 0.2s;">-</button>
+          <button type="button" class="buy-step-btn" onclick="adjustBuyPoints('${team}', ${r}, -1000)" style="margin-left: 4px;">-</button>
           <input type="number" id="t${team}r${r}buy" placeholder="0" onchange="updateRosterLocal()" oninput="window.markRowDirty('${team}', ${r})" class="score-buy-input" title="Điểm mua lượt" style="width: 54px; margin: 0 4px; padding: 0 2px;">
-          <button type="button" class="buy-step-btn" onclick="adjustBuyPoints('${team}', ${r}, 1000)" style="background: rgba(255, 159, 67, 0.15); border: 1px solid rgba(255, 159, 67, 0.3); color: #ff9f43; border-radius: 4px; padding: 1px 6px; font-size: 11px; cursor: pointer; font-weight: bold; height: 20px; display: flex; align-items: center; justify-content: center; outline: none; transition: 0.2s;">+</button>
+          <button type="button" class="buy-step-btn" onclick="adjustBuyPoints('${team}', ${r}, 1000)">+</button>
         </div>
      </div>
      <div class="score-net-wrapper">
@@ -1599,4 +1599,174 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('ServiceWorker error:', err));
   });
 }
+
+// Custom Score Numpad Keyboard implementation
+(function() {
+  let activeInput = null;
+  let numpadDiv = null;
+
+  function createNumpad() {
+    if (numpadDiv) return;
+    numpadDiv = document.createElement('div');
+    numpadDiv.className = 'score-numpad';
+    numpadDiv.style.display = 'none';
+    
+    // Create buttons: 1-9
+    for (let i = 1; i <= 9; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'score-numpad-btn';
+      btn.textContent = i;
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        handleInput(i.toString());
+      };
+      numpadDiv.appendChild(btn);
+    }
+    
+    // Clear button (C)
+    const btnClear = document.createElement('button');
+    btnClear.type = 'button';
+    btnClear.className = 'score-numpad-btn btn-clear';
+    btnClear.innerHTML = '<i class="fas fa-trash-can"></i>';
+    btnClear.title = 'Xóa hết';
+    btnClear.onclick = (e) => {
+      e.stopPropagation();
+      handleClear();
+    };
+    numpadDiv.appendChild(btnClear);
+    
+    // 0 button
+    const btn0 = document.createElement('button');
+    btn0.type = 'button';
+    btn0.className = 'score-numpad-btn';
+    btn0.textContent = '0';
+    btn0.onclick = (e) => {
+      e.stopPropagation();
+      handleInput('0');
+    };
+    numpadDiv.appendChild(btn0);
+    
+    // Backspace button (⌫)
+    const btnBS = document.createElement('button');
+    btnBS.type = 'button';
+    btnBS.className = 'score-numpad-btn btn-backspace';
+    btnBS.innerHTML = '<i class="fas fa-backspace"></i>';
+    btnBS.title = 'Xóa số cuối';
+    btnBS.onclick = (e) => {
+      e.stopPropagation();
+      handleBackspace();
+    };
+    numpadDiv.appendChild(btnBS);
+    
+    // OK / Close button
+    const btnOk = document.createElement('button');
+    btnOk.type = 'button';
+    btnOk.className = 'score-numpad-btn btn-ok';
+    btnOk.textContent = 'Xong';
+    btnOk.onclick = (e) => {
+      e.stopPropagation();
+      hideNumpad();
+    };
+    numpadDiv.appendChild(btnOk);
+
+    document.body.appendChild(numpadDiv);
+  }
+
+  function handleInput(val) {
+    if (!activeInput) return;
+    const currentVal = activeInput.value;
+    if (currentVal === '0' || currentVal === '') {
+      activeInput.value = val;
+    } else {
+      activeInput.value = currentVal + val;
+    }
+    triggerInputEvents();
+  }
+
+  function handleBackspace() {
+    if (!activeInput) return;
+    const currentVal = activeInput.value;
+    if (currentVal.length > 0) {
+      activeInput.value = currentVal.slice(0, -1);
+    }
+    triggerInputEvents();
+  }
+
+  function handleClear() {
+    if (!activeInput) return;
+    activeInput.value = '';
+    triggerInputEvents();
+  }
+
+  function triggerInputEvents() {
+    if (!activeInput) return;
+    activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    activeInput.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function showNumpad(input) {
+    activeInput = input;
+    createNumpad();
+    
+    const rect = input.getBoundingClientRect();
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    
+    numpadDiv.style.display = 'grid';
+    
+    let top = rect.bottom + scrollY + 5;
+    let left = rect.left + scrollX;
+    
+    if (top + 220 > window.innerHeight + scrollY) {
+      top = rect.top + scrollY - 220 - 5;
+    }
+    if (left + 170 > window.innerWidth + scrollX) {
+      left = window.innerWidth + scrollX - 170 - 10;
+    }
+    
+    numpadDiv.style.top = top + 'px';
+    numpadDiv.style.left = left + 'px';
+  }
+
+  function hideNumpad() {
+    if (numpadDiv) {
+      numpadDiv.style.display = 'none';
+    }
+    activeInput = null;
+  }
+
+  document.addEventListener('click', function(e) {
+    const target = e.target;
+    if (target && (target.classList.contains('score-pt-input') || target.classList.contains('score-buy-input'))) {
+      e.stopPropagation();
+      showNumpad(target);
+    } else if (numpadDiv && numpadDiv.style.display !== 'none') {
+      if (!numpadDiv.contains(target) && target !== activeInput) {
+        hideNumpad();
+      }
+    }
+  });
+
+  window.addEventListener('resize', hideNumpad);
+  window.addEventListener('scroll', hideNumpad, { passive: true });
+
+  // Warning when points entered are too large (> 50,000)
+  document.addEventListener('input', function(e) {
+    const target = e.target;
+    if (target && (target.classList.contains('score-pt-input') || target.classList.contains('score-buy-input'))) {
+      const val = parseInt(target.value, 10) || 0;
+      if (val > 50000) {
+        if (!target.dataset.warnedLargeValue || target.dataset.warnedLargeValue !== target.value) {
+          target.dataset.warnedLargeValue = target.value;
+          if (typeof showToast === 'function') {
+            showToast(`Lưu ý: Số điểm nhập ở "${target.title || 'ô điểm'}" khá lớn (${val.toLocaleString('vi-VN')} điểm)!`, 'warning');
+          }
+        }
+      } else {
+        delete target.dataset.warnedLargeValue;
+      }
+    }
+  });
+})();
 
