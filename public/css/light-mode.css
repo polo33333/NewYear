@@ -1710,3 +1710,9 @@ body[data-ui-mode="light"] .mcb-vs-badge {
 body[data-ui-mode="light"] #roundsA-container {
     border-right-color: var(--border);
 }
+
+body[data-ui-mode="light"] .recommended-badge {
+    color: var(--accent) !important;
+    opacity: 0.9;
+    font-weight: 600;
+}

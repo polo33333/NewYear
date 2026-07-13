@@ -23,6 +23,7 @@
     .score-net-box {
       color: #fff !important;
     }
+
     .score-pt-input,
     .score-deduct-input {
       width: 110px !important;
@@ -143,7 +144,7 @@
               <div class="sp-section-title"><i class="fas fa-link"></i> OBS LINKS</div>
               <div class="sp-links">
                 <div class="sp-link-row">
-                  <span class="sp-link-name">Overlay: Full</span>
+                  <span class="sp-link-name">Overlay: Full <small class="recommended-badge">(Khuyên dùng)</small></span>
                   <code id="url-full" style="display: none;">...</code>
                   <button class="sp-copy-link-btn" onclick="copyUrl('url-full', this)"><i
                       class="fas fa-copy"></i></button>
@@ -249,7 +250,7 @@
                   <!-- Client Telemetry Monitor -->
                   <div class="system-monitor-box">
                     <div class="mcb-header">
-                      <span class="mcb-title"><i class="fas fa-desktop"></i> THÔNG TIN KẾT NỐI</span>
+                      <span class="mcb-title"><i class="fa-solid fa-earth-asia"></i> THÔNG TIN KẾT NỐI</span>
                     </div>
                     <div class="sys-stats-grid">
                       <!-- Network Latency Chart (Horizontal Full Width) -->
@@ -366,7 +367,7 @@
                         <div class="mcb-break-wrap">
                           <input type="number" id="break-duration" onchange="updateMatch()"
                             class="mcb-meta-input text-center">
-                          <span class="mcb-break-unit">min</span>
+                          <span class="mcb-break-unit">phút</span>
                         </div>
                       </div>
                     </div>

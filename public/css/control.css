@@ -3665,3 +3665,11 @@ span#music-duration {
 .buy-step-btn:active {
   transform: scale(0.9) translateY(0);
 }
+
+.recommended-badge {
+  font-size: 10px;
+  color: #00f5ff;
+  opacity: 0.8;
+  font-weight: normal;
+  margin-left: 4px;
+}
