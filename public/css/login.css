@@ -51,7 +51,7 @@ body {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: center 20%; /* Đưa hình lên một chút để thấy nhiều chi tiết hơn thay vì bị cắt mất */
   opacity: 0;
   transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
   transform: scale(1.05);
@@ -66,7 +66,7 @@ body {
 .left-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(4, 6, 15, 0.45) 0%, rgba(4, 6, 15, 0.25) 50%, rgba(4, 6, 15, 0.85) 100%),
+  background: linear-gradient(to bottom, rgba(4, 6, 15, 0.95) 0%, rgba(4, 6, 15, 0.3) 30%, rgba(4, 6, 15, 0.2) 70%, rgba(4, 6, 15, 0.9) 100%),
     radial-gradient(circle at center, transparent 20%, rgba(4, 6, 15, 0.65) 100%);
   z-index: 1;
   pointer-events: none;
