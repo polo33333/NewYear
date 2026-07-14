@@ -24,7 +24,7 @@ function connect() {
   ws = new WebSocket(`${protocol}//${location.host}/ws/control?token=${currentToken}&roomId=${currentRoomId}`);
   ws.onopen = () => {
     document.querySelectorAll('.conn-dot, #conn-dot').forEach(el => el.className = 'conn-dot status-dot online');
-    document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'CONNECTED');
+    document.querySelectorAll('.conn-text, #conn-text').forEach(el => el.textContent = 'ONLINE');
 
     if (typeof mp !== 'undefined' && mp.audio) {
       const isPlaying = !mp.audio.paused;
@@ -243,10 +243,11 @@ async function resetMatch() {
   if (!confirmed) return;
   const nA = 'TEAM A';
   const nB = 'TEAM B';
-  const defSubtitle = 'GRAND FINALS — 2026';
+  const defSubtitle = 'MATRIX LEAGUE — 2026';
   document.getElementById('nameA').value = nA;
   document.getElementById('nameB').value = nB;
   document.getElementById('bracket-label').value = defSubtitle;
+  document.getElementById('bracket-subtitle').value = '';
   document.getElementById('break-duration').value = 5;
 
   // Update rp-team-bar names instantly
@@ -722,7 +723,7 @@ function measurePing() {
 // Generate the round input DOM elements first
 generateRounds();
 
-window.scrollRounds = function(direction) {
+window.scrollRounds = function (direction) {
   const container = document.querySelector('.roster-rounds-container');
   if (!container) return;
   const scrollAmount = 150;
@@ -733,7 +734,7 @@ window.scrollRounds = function(direction) {
   }
 };
 
-window.updateRoundsScrollButtons = function() {
+window.updateRoundsScrollButtons = function () {
   const container = document.querySelector('.roster-rounds-container');
   const btnUp = document.getElementById('rounds-scroll-up');
   const btnDown = document.getElementById('rounds-scroll-down');
@@ -1651,7 +1652,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // Custom Score Numpad Keyboard implementation
-(function() {
+(function () {
   let activeInput = null;
   let numpadDiv = null;
 
@@ -1660,7 +1661,7 @@ if ('serviceWorker' in navigator) {
     numpadDiv = document.createElement('div');
     numpadDiv.className = 'score-numpad';
     numpadDiv.style.display = 'none';
-    
+
     // Create buttons: 1-9
     for (let i = 1; i <= 9; i++) {
       const btn = document.createElement('button');
@@ -1673,7 +1674,7 @@ if ('serviceWorker' in navigator) {
       };
       numpadDiv.appendChild(btn);
     }
-    
+
     // Clear button (C)
     const btnClear = document.createElement('button');
     btnClear.type = 'button';
@@ -1685,7 +1686,7 @@ if ('serviceWorker' in navigator) {
       handleClear();
     };
     numpadDiv.appendChild(btnClear);
-    
+
     // 0 button
     const btn0 = document.createElement('button');
     btn0.type = 'button';
@@ -1696,7 +1697,7 @@ if ('serviceWorker' in navigator) {
       handleInput('0');
     };
     numpadDiv.appendChild(btn0);
-    
+
     // Backspace button (⌫)
     const btnBS = document.createElement('button');
     btnBS.type = 'button';
@@ -1708,7 +1709,7 @@ if ('serviceWorker' in navigator) {
       handleBackspace();
     };
     numpadDiv.appendChild(btnBS);
-    
+
     // OK / Close button
     const btnOk = document.createElement('button');
     btnOk.type = 'button';
@@ -1758,23 +1759,23 @@ if ('serviceWorker' in navigator) {
   function showNumpad(input) {
     activeInput = input;
     createNumpad();
-    
+
     const rect = input.getBoundingClientRect();
     const scrollX = window.scrollX || window.pageXOffset;
     const scrollY = window.scrollY || window.pageYOffset;
-    
+
     numpadDiv.style.display = 'grid';
-    
+
     let top = rect.bottom + scrollY + 5;
     let left = rect.left + scrollX;
-    
+
     if (top + 220 > window.innerHeight + scrollY) {
       top = rect.top + scrollY - 220 - 5;
     }
     if (left + 170 > window.innerWidth + scrollX) {
       left = window.innerWidth + scrollX - 170 - 10;
     }
-    
+
     numpadDiv.style.top = top + 'px';
     numpadDiv.style.left = left + 'px';
   }
@@ -1786,7 +1787,7 @@ if ('serviceWorker' in navigator) {
     activeInput = null;
   }
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     const target = e.target;
     if (target && (target.classList.contains('score-pt-input') || target.classList.contains('score-buy-input'))) {
       e.stopPropagation();
@@ -1802,7 +1803,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('scroll', hideNumpad, { passive: true });
 
   // Warning when points entered are too large (> 50,000)
-  document.addEventListener('input', function(e) {
+  document.addEventListener('input', function (e) {
     const target = e.target;
     if (target && (target.classList.contains('score-pt-input') || target.classList.contains('score-buy-input'))) {
       const val = parseInt(target.value, 10) || 0;

@@ -71,29 +71,29 @@ overlayStyle.innerHTML = `
 document.head.appendChild(overlayStyle);
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.body.setAttribute('data-ui-mode', savedUIMode);
-    document.documentElement.style.backgroundColor = '';
+  document.body.setAttribute('data-ui-mode', savedUIMode);
+  document.documentElement.style.backgroundColor = '';
 
-    // Create overlay element
-    const overlay = document.createElement('div');
-    overlay.id = 'theme-loading-overlay';
-    overlay.classList.add(savedUIMode === 'light' ? 'theme-light' : 'theme-dark');
-    overlay.innerHTML = '<span class="nexus-loader"></span>';
-    document.body.appendChild(overlay);
+  // Create overlay element
+  const overlay = document.createElement('div');
+  overlay.id = 'theme-loading-overlay';
+  overlay.classList.add(savedUIMode === 'light' ? 'theme-light' : 'theme-dark');
+  overlay.innerHTML = '<span class="nexus-loader"></span>';
+  document.body.appendChild(overlay);
 
-    // Hide overlay when page is fully loaded
-    const hideOverlay = () => {
-        setTimeout(() => {
-            overlay.classList.add('fade-out');
-            setTimeout(() => overlay.remove(), 300);
-        }, 150);
-    };
+  // Hide overlay when page is fully loaded
+  const hideOverlay = () => {
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      setTimeout(() => overlay.remove(), 300);
+    }, 150);
+  };
 
-    if (document.readyState === 'complete') {
-        hideOverlay();
-    } else {
-        window.addEventListener('load', hideOverlay);
-    }
+  if (document.readyState === 'complete') {
+    hideOverlay();
+  } else {
+    window.addEventListener('load', hideOverlay);
+  }
 });
 
 const token = localStorage.getItem('kdone_auth_token');
@@ -176,7 +176,7 @@ window.updateUserWelcome = function () {
       welcomeSpan.style.display = 'inline-flex';
       welcomeSpan.style.alignItems = 'center';
       welcomeSpan.innerHTML = `WELCOME, <span style="font-weight: 900; color: var(--accent); margin-left: 4px;">${username.toUpperCase()}</span>`;
-      
+
       // Try to insert before status dot, or if no status dot, at the beginning of header-right
       if (statusGroup) {
         welcomeSpan.style.marginRight = '0';
