@@ -333,3 +333,12 @@ if (locSubtitle && locTitle && locDesc && slidesData[0]) {
 
   animate();
 })();
+
+// Register Service Worker for PWA (Open as App) support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/js/sw.js', { scope: '/' })
+      .then(reg => console.log('ServiceWorker registered:', reg.scope))
+      .catch(err => console.log('ServiceWorker error:', err));
+  });
+}
