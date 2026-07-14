@@ -30,7 +30,9 @@ body {
   user-select: none;
 }
 
-input, textarea, [contenteditable="true"] {
+input,
+textarea,
+[contenteditable="true"] {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
@@ -420,12 +422,12 @@ input[type=number] {
 }
 
 .char-square:hover {
-  background: rgba(255, 255, 255, 0.1);
+  /* background: rgba(255, 255, 255, 0.1); */
   border-color: var(--accent);
 }
 
 .char-square.filled {
-  background: rgba(var(--accent-rgb, 0, 245, 255), 0.1);
+  /* background: rgba(var(--accent-rgb, 0, 245, 255), 0.1); */
   border-color: var(--accent);
   color: #fff;
 }
@@ -1941,9 +1943,12 @@ input[type=number] {
 }
 
 @keyframes rounds-btn-bounce-up {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(-50%, 0);
   }
+
   50% {
     transform: translate(-50%, -4px);
     border-color: rgba(0, 245, 255, 0.8);
@@ -1952,9 +1957,12 @@ input[type=number] {
 }
 
 @keyframes rounds-btn-bounce-down {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(-50%, 0);
   }
+
   50% {
     transform: translate(-50%, 4px);
     border-color: rgba(0, 245, 255, 0.8);
@@ -3638,8 +3646,15 @@ span#music-duration {
 }
 
 @keyframes numpadFadeIn {
-  from { opacity: 0; transform: translateY(5px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .score-numpad-btn {
