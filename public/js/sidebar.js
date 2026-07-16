@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const controlDot = document.querySelector('#tab-control .conn-dot');
                             const isOnline = controlDot && controlDot.classList.contains('online');
                             targetTab.querySelectorAll('.conn-dot').forEach(el => el.className = 'conn-dot status-dot ' + (isOnline ? 'online' : ''));
-                            targetTab.querySelectorAll('.conn-text').forEach(el => el.textContent = isOnline ? 'CONNECTED' : 'OFFLINE');
+                            targetTab.querySelectorAll('.conn-text').forEach(el => el.textContent = isOnline ? 'ONLINE' : 'OFFLINE');
                         } else {
                             targetTab.innerHTML = htmlText;
                         }

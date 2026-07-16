@@ -2440,9 +2440,6 @@ input[type=number] {
   /* Fix răng cưa và tràn ảnh ở góc bo tròn */
   overflow: hidden;
   background-clip: padding-box;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .char-square:hover,
