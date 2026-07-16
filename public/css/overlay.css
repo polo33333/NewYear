@@ -62,7 +62,7 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-width: 500px;
+  max-width: 560px;
 }
 
 .sb-side.left {
@@ -75,7 +75,8 @@ body {
 
 /* Team Name styling inside container */
 .sb-team-name {
-  font-size: 24px;
+  font-family: system-ui;
+  font-size: 22px;
   font-weight: 900;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -488,7 +489,7 @@ body {
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.9);
   margin-top: 8px;
   display: flex;
   align-items: center;
@@ -613,13 +614,14 @@ body {
 }
 
 .vct-team-content {
+  font-family: system-ui;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 20px;
-  width: 420px;
+  width: 560px;
 }
 
 .vct-team.left .vct-team-content {
@@ -1634,7 +1636,7 @@ body[data-template="classic"] .sb-container {
 .sb2-container {
   display: flex;
   align-items: center;
-  width: 750px;
+  width: 820px;
   height: 52px;
   background:
     linear-gradient(to right, rgba(10, 12, 22, 0.5) 0%, rgba(10, 12, 22, 0.98) 40%, rgba(10, 12, 22, 0.98) 60%, rgba(10, 12, 22, 0.5) 100%),
@@ -1662,9 +1664,10 @@ body[data-template="classic"] .sb-container {
 }
 
 .sb2-team-name-left {
+  font-family: system-ui;
   flex: 1;
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -1688,9 +1691,10 @@ body[data-template="classic"] .sb-container {
 }
 
 .sb2-team-name-right {
+  font-family: system-ui;
   flex: 1;
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
