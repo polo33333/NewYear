@@ -171,7 +171,7 @@ body {
   align-items: center;
   justify-content: center;
   line-height: 1;
-  font-variant-numeric: tabular-nums;
+  /* font-variant-numeric: tabular-nums; */
   letter-spacing: 1px;
 }
 
@@ -1659,7 +1659,7 @@ body[data-template="classic"] .sb-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-variant-numeric: tabular-nums;
+  /* font-variant-numeric: tabular-nums; */
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -1713,6 +1713,6 @@ body[data-template="classic"] .sb-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-variant-numeric: tabular-nums;
+  /* font-variant-numeric: tabular-nums; */
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
