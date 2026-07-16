@@ -125,8 +125,8 @@ function syncScoreUI() {
   document.getElementById('scoreB').value = sB;
   const displayA = document.getElementById('scoreA-display');
   const displayB = document.getElementById('scoreB-display');
-  if (displayA) displayA.textContent = sA;
-  if (displayB) displayB.textContent = sB;
+  if (displayA) displayA.textContent = Number(sA || 0).toLocaleString('en-US');
+  if (displayB) displayB.textContent = Number(sB || 0).toLocaleString('en-US');
 }
 
 function syncRosterUI() {
