@@ -591,6 +591,7 @@ body {
 }
 
 .vct-team-name {
+  font-family: system-ui;
   font-size: 42px;
   font-weight: 900;
   letter-spacing: 5px;
