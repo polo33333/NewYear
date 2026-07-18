@@ -3040,8 +3040,8 @@ input[type=number] {
 }
 
 .music-btn-play {
-  width: 34px;
-  height: 34px;
+  width: 26px;
+  height: 26px;
   font-size: 13px;
   background: rgba(0, 245, 255, 0.12);
   border-color: rgba(0, 245, 255, 0.35);
