@@ -69,6 +69,21 @@ function buildShuffleOrder() {
   }
 }
 
+// Helper to parse track name into artist and title
+function parseTrackMetadata(trackName) {
+  const parts = trackName.split(/\s*-\s*/);
+  if (parts.length > 1) {
+    return {
+      artist: parts[0].trim(),
+      title: parts.slice(1).join(' - ').trim()
+    };
+  }
+  return {
+    artist: 'Unknown Artist',
+    title: trackName
+  };
+}
+
 // ── Load a track by playlist index ───────────────────────────────────────────
 function mpLoad(index) {
   if (!mp.playlist.length) return;
@@ -80,9 +95,11 @@ function mpLoad(index) {
   mp.audio.volume = (parseInt(localStorage.getItem('music-player-volume') ?? '80', 10)) / 100;
   mp.audio.load();
 
+  const meta = parseTrackMetadata(track.name);
+
   const nameEl = mpEl('music-track-name');
   if (nameEl) {
-    nameEl.textContent = track.name;
+    nameEl.textContent = track.name; // Keep full name on main player
     nameEl.classList.remove('marquee-active');
     requestAnimationFrame(() => {
       if (nameEl.scrollWidth > nameEl.clientWidth) {
@@ -93,13 +110,28 @@ function mpLoad(index) {
 
   const miniName = mpEl('mini-track-name');
   if (miniName) {
-    miniName.textContent = track.name;
+    miniName.textContent = meta.title;
     miniName.classList.remove('marquee-active');
     requestAnimationFrame(() => {
       if (miniName.scrollWidth > miniName.clientWidth) {
         miniName.classList.add('marquee-active');
       }
     });
+  }
+
+  const miniArtist = mpEl('mini-artist-name');
+  if (miniArtist) {
+    miniArtist.textContent = meta.artist;
+  }
+
+  const miniProgress = mpEl('mini-music-progress-bar');
+  if (miniProgress) {
+    miniProgress.style.width = '0%';
+  }
+
+  const miniTime = mpEl('mini-time-info');
+  if (miniTime) {
+    miniTime.textContent = '0:00 / 0:00';
   }
 
   mpEl('music-progress').value = 0;
@@ -255,9 +287,11 @@ let gainNode = null;
 let dataArray = null;
 let visualizerActive = false;
 let cachedBars = null;
+let cachedMiniBars = null;
 
 // Smoothing buffer để tránh giật
 const smoothedBars = new Float32Array(60).fill(2);
+const smoothedMiniBars = new Float32Array(16).fill(2);
 
 function initVisualizer() {
   if (audioCtx) return;
@@ -296,18 +330,34 @@ function updateVisualizer() {
   if (!cachedBars || cachedBars.length === 0) {
     cachedBars = document.querySelectorAll('.vis-bar');
   }
+  if (!cachedMiniBars || cachedMiniBars.length === 0) {
+    cachedMiniBars = document.querySelectorAll('.mini-vis-bar');
+  }
+
   const bars = cachedBars;
-  if (!bars.length) return;
+  const miniBars = cachedMiniBars;
+  if (!bars.length && !miniBars.length) return;
 
   if (mp.audio.paused) {
     let allAtMin = true;
-    bars.forEach((bar, idx) => {
-      smoothedBars[idx] = Math.max(2, smoothedBars[idx] - 3);
-      bar.style.height = smoothedBars[idx] + 'px';
-      if (smoothedBars[idx] > 2) {
-        allAtMin = false;
-      }
-    });
+    if (bars.length) {
+      bars.forEach((bar, idx) => {
+        smoothedBars[idx] = Math.max(2, smoothedBars[idx] - 3);
+        bar.style.height = smoothedBars[idx] + 'px';
+        if (smoothedBars[idx] > 2) {
+          allAtMin = false;
+        }
+      });
+    }
+    if (miniBars.length) {
+      miniBars.forEach((bar, idx) => {
+        smoothedMiniBars[idx] = Math.max(2, smoothedMiniBars[idx] - 2);
+        bar.style.height = smoothedMiniBars[idx] + 'px';
+        if (smoothedMiniBars[idx] > 2) {
+          allAtMin = false;
+        }
+      });
+    }
     if (allAtMin) {
       visualizerActive = false; // Stop the animation loop
     }
@@ -317,24 +367,45 @@ function updateVisualizer() {
   if (analyser && dataArray) {
     analyser.getByteFrequencyData(dataArray);
 
-    bars.forEach((bar, idx) => {
-      const binIdx = Math.floor(2 + (idx / 60) * 80);
-      const val = dataArray[binIdx] || 0;
+    if (bars.length) {
+      bars.forEach((bar, idx) => {
+        const binIdx = Math.floor(2 + (idx / 60) * 80);
+        const val = dataArray[binIdx] || 0;
 
-      // Raw signal — không phụ thuộc volume, luôn phản ánh đúng nhịp nhạc
-      const normalized = val / 255;
-      const boosted = Math.pow(normalized, 0.35);
-      const target = Math.max(2, Math.min(boosted * 32 + 2, 32));
+        // Raw signal — không phụ thuộc volume, luôn phản ánh đúng nhịp nhạc
+        const normalized = val / 255;
+        const boosted = Math.pow(normalized, 0.35);
+        const target = Math.max(2, Math.min(boosted * 32 + 2, 32));
 
-      // Smoothing: lên nhanh, xuống chậm
-      if (target > smoothedBars[idx]) {
-        smoothedBars[idx] = smoothedBars[idx] * 0.3 + target * 0.7;
-      } else {
-        smoothedBars[idx] = smoothedBars[idx] * 0.75 + target * 0.25;
-      }
+        // Smoothing: lên nhanh, xuống chậm
+        if (target > smoothedBars[idx]) {
+          smoothedBars[idx] = smoothedBars[idx] * 0.3 + target * 0.7;
+        } else {
+          smoothedBars[idx] = smoothedBars[idx] * 0.75 + target * 0.25;
+        }
 
-      bar.style.height = smoothedBars[idx] + 'px';
-    });
+        bar.style.height = smoothedBars[idx] + 'px';
+      });
+    }
+
+    if (miniBars.length) {
+      miniBars.forEach((bar, idx) => {
+        const binIdx = Math.floor(2 + (idx / 16) * 80);
+        const val = dataArray[binIdx] || 0;
+
+        const normalized = val / 255;
+        const boosted = Math.pow(normalized, 0.35);
+        const target = Math.max(2, Math.min(boosted * 24 + 2, 24)); // max 24px height
+
+        if (target > smoothedMiniBars[idx]) {
+          smoothedMiniBars[idx] = smoothedMiniBars[idx] * 0.3 + target * 0.7;
+        } else {
+          smoothedMiniBars[idx] = smoothedMiniBars[idx] * 0.75 + target * 0.25;
+        }
+
+        bar.style.height = smoothedMiniBars[idx] + 'px';
+      });
+    }
   }
 }
 
@@ -346,6 +417,17 @@ mp.audio.addEventListener('timeupdate', () => {
     prog.value = mp.audio.currentTime;
   }
   if (cur) cur.textContent = mpFmt(mp.audio.currentTime);
+
+  const miniProgBar = mpEl('mini-music-progress-bar');
+  if (miniProgBar && isFinite(mp.audio.duration)) {
+    const pct = (mp.audio.currentTime / mp.audio.duration) * 100;
+    miniProgBar.style.width = pct + '%';
+  }
+
+  const miniTime = mpEl('mini-time-info');
+  if (miniTime && isFinite(mp.audio.duration)) {
+    miniTime.textContent = `${mpFmt(mp.audio.currentTime)} / ${mpFmt(mp.audio.duration)}`;
+  }
 });
 
 mp.audio.addEventListener('loadedmetadata', () => {
@@ -459,6 +541,18 @@ document.addEventListener('keydown', (e) => {
         bar.style.background = color;
         bar.style.boxShadow = `0 0 6px ${color}, 0 0 12px ${color}40`;
         vis.appendChild(bar);
+      }
+    }
+
+    const miniVis = mpEl('mini-music-visualizer');
+    if (miniVis) {
+      miniVis.innerHTML = '';
+      cachedMiniBars = null;
+      const MINI_BAR_COUNT = 16;
+      for (let i = 0; i < MINI_BAR_COUNT; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'mini-vis-bar';
+        miniVis.appendChild(bar);
       }
     }
 

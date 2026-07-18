@@ -462,18 +462,33 @@
           </div>
         </div>
         <div class="mini-music-info">
-          <div class="mini-music-marquee">
-            <span id="mini-track-name">Chưa phát nhạc</span>
+          <div class="mini-music-title-row">
+            <span class="mini-track-name" id="mini-track-name">Chưa phát nhạc</span>
           </div>
-          <div class="mini-music-status">Đang phát</div>
+          <div class="mini-music-meta-row">
+            <span class="mini-time-info" id="mini-time-info">0:00 / 0:00</span>
+          </div>
+          <div class="mini-music-progress-wrap">
+            <div class="mini-music-progress-bar" id="mini-music-progress-bar" style="width: 0%;"></div>
+          </div>
         </div>
         <div class="mini-music-controls" onclick="event.stopPropagation()">
-          <button onclick="musicPlayerPrev()" class="mini-control-btn"><i class="fas fa-backward-step"></i></button>
-          <button id="mini-play-btn" onclick="musicPlayerToggle()" class="mini-control-btn play-btn">
+          <button onclick="musicPlayerPrev()" class="mini-control-btn btn-prev" title="Bài trước">
+            <i class="fas fa-backward-step"></i>
+          </button>
+          <button id="mini-play-btn" onclick="musicPlayerToggle()" class="mini-control-btn play-btn" title="Play/Pause">
             <i class="fas fa-play" id="mini-play-icon"></i>
           </button>
-          <button onclick="musicPlayerNext()" class="mini-control-btn"><i class="fas fa-forward-step"></i></button>
+          <button onclick="musicPlayerNext()" class="mini-control-btn btn-next" title="Bài tiếp">
+            <i class="fas fa-forward-step"></i>
+          </button>
         </div>
+        <div class="mini-music-visualizer" id="mini-music-visualizer">
+          <!-- Dynamically populated via JS -->
+        </div>
+        <button class="mini-more-btn" onclick="event.stopPropagation(); window.switchTab('control')" title="More">
+          <i class="fas fa-ellipsis"></i>
+        </button>
       </div>
 
       <!-- Modal Chọn Character / Weapon (Global) -->

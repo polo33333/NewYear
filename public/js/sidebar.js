@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const miniPlayer = document.getElementById('mini-music-player');
         if (!miniPlayer) return;
         
-        const isPlaying = miniPlayer.classList.contains('playing');
         const isControlTab = window.currentTab === 'control';
+        const hasTrack = typeof mp !== 'undefined' && mp.playlist && mp.playlist.length > 0 && mp.currentIndex >= 0;
         
         if (isControlTab) {
             miniPlayer.style.display = 'none';
         } else {
-            miniPlayer.style.display = isPlaying ? 'flex' : 'none';
+            miniPlayer.style.display = hasTrack ? 'flex' : 'none';
         }
     };
 
