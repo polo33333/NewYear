@@ -2769,50 +2769,52 @@ input[type=number] {
 /* Responsive layout adjustments for screens larger than 1920px (2K, 4K, Ultra-wide) */
 @media (min-width: 1921px) {
   main {
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: 308px 1fr;
     gap: 12px;
     padding: 12px;
   }
 
   .scenes-panel {
-    width: 380px;
-    padding: 16px;
+    width: 308px;
+    padding: 9px;
   }
 
   .sp-section {
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 10px;
+    padding: 9px;
+    margin-bottom: 5px;
+    border-radius: 7px;
   }
 
   .sp-section-title {
-    margin: 8px 0;
-    letter-spacing: 2px;
+    margin: 6px 0;
+    font-size: 10px;
+    letter-spacing: 1.6px;
   }
 
   .scene-btn {
-    padding: 16px 10px;
-    gap: 8px;
-    border-radius: 10px;
+    padding: 11px 7px;
+    gap: 6px;
+    border-radius: 9px;
+    font-size: 11px;
   }
 
   .scene-btn i {
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .btn-pick-folder {
-    padding: 12px;
+    padding: 8px 11px;
+    font-size: 12px;
   }
 
   .music-now-playing {
-    padding: 16px;
-    gap: 12px;
+    padding: 9px;
   }
 
   .music-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 15px;
+    width: 35px;
+    height: 35px;
+    font-size: 12px;
   }
 }
 
