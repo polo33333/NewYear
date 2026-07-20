@@ -1300,8 +1300,18 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 6px 20px;
+  padding: 6px;
   gap: 6px;
+  /* background: var(--color, #fff); */
+  border-radius: 5px;
+}
+
+.stats-team-group.teamA {
+  background: #0e2435;
+}
+
+.stats-team-group.teamB {
+  background: #2b1717;
 }
 
 .stats-row {
@@ -1321,7 +1331,7 @@ body {
 }
 
 .stats-team-group .stats-row:first-child {
-  border-top: 3px solid var(--color, #fff);
+  /* border-top: 3px solid var(--color, #fff); */
   /* background: rgba(40, 40, 45, 0.8); */
 }
 
@@ -1371,7 +1381,7 @@ body {
 .stats-lbl-rc,
 .stats-lbl-r {
   font-size: 11px;
-  font-weight: 800;
+  /* font-weight: 800; */
   color: rgba(255, 255, 255, 0.9);
   background: rgba(0, 0, 0, 0.6);
   padding: 0 4px;
@@ -1382,13 +1392,13 @@ body {
   width: auto;
   text-align: center;
   font-size: 18px;
-  font-weight: 900;
+  /* font-weight: 900; */
   font-family: 'Outfit', sans-serif;
   color: rgba(255, 255, 255, 0.85);
 }
 
 .stats-val.net {
-  font-weight: 900;
+  /* font-weight: 900; */
   color: rgba(255, 255, 255, 0.85);
 }
 
