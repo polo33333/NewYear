@@ -120,8 +120,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, #0c93d7 0%, rgba(15, 23, 42, 0.9) 60%, rgba(0, 0, 0, 0) 100%),
-    url('../images/other/teal-bg.webp') center/cover no-repeat;
+  background: linear-gradient(to right, rgba(12, 147, 215, 1) 0%, rgba(12, 147, 215, 0.8) 50%, rgba(12, 147, 215, 0) 100%);
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   z-index: 1;
@@ -135,8 +134,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to left, #dd3838 0%, rgba(15, 23, 42, 0.9) 60%, rgba(0, 0, 0, 0) 100%),
-    url('../images/other/red-bg.webp') center/cover no-repeat;
+  background: linear-gradient(to left, rgba(221, 56, 56, 1) 0%, rgba(221, 56, 56, 0.8) 50%, rgba(221, 56, 56, 0) 100%);
   mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
   z-index: 1;
@@ -1639,10 +1637,7 @@ body[data-template="classic"] .sb-container {
   align-items: center;
   width: 820px;
   height: 52px;
-  background:
-    linear-gradient(to right, rgba(10, 12, 22, 0.5) 0%, rgba(10, 12, 22, 0.98) 40%, rgba(10, 12, 22, 0.98) 60%, rgba(10, 12, 22, 0.5) 100%),
-    url('../images/other/teal-bg.webp') left center/50% no-repeat,
-    url('../images/other/red-bg.webp') right center/50% no-repeat;
+  background: linear-gradient(to right, rgba(10, 12, 22, 0.5) 0%, rgba(10, 12, 22, 0.98) 40%, rgba(10, 12, 22, 0.98) 60%, rgba(10, 12, 22, 0.5) 100%);
   background-color: rgba(10, 12, 22, 0.98);
   border-radius: 6px;
   overflow: hidden;

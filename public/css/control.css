@@ -3060,6 +3060,24 @@ input[type=number] {
   background: rgba(0, 245, 255, 0.1);
 }
 
+.music-btn:focus:not(.mp-active):not(.music-btn-play) {
+  color: var(--text-dim);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+}
+
+.music-btn-play:focus {
+  color: var(--accent);
+  border-color: rgba(0, 245, 255, 0.35);
+  background: rgba(0, 245, 255, 0.12);
+  outline: none;
+}
+
+.music-btn:focus {
+  outline: none;
+}
+
 /* Volume */
 .music-volume-wrap {
   display: flex;

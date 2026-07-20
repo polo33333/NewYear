@@ -771,8 +771,11 @@ if (roundsContainer) {
   setTimeout(window.updateRoundsScrollButtons, 500);
 }
 
-measurePing();
-setInterval(measurePing, 5000);
+// Đợi 3 giây đầu để trang tải xong và ổn định kết nối rồi mới bắt đầu đo ping
+setTimeout(() => {
+  measurePing();
+  setInterval(measurePing, 5000);
+}, 3000);
 initClientTelemetry();
 
 let resizeTimeout;

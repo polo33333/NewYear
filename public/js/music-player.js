@@ -139,7 +139,7 @@ function mpLoad(index) {
   mpEl('music-duration').textContent = '0:00';
 
   highlightRow(index);
-  
+
   if (typeof send === 'function' && mp.playlist[mp.currentIndex]) {
     send({ type: 'song', data: { name: mp.playlist[mp.currentIndex].name, isPlaying: !mp.audio.paused } });
   }
