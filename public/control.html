@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="/css/history.css">
   <link rel="stylesheet" href="/css/settings.css">
   <link rel="stylesheet" href="/css/toast.css?v=4">
+  <link rel="stylesheet" href="/css/tour.css">
   <link rel="icon" type="image/x-icon" href="/images/other/favicon.ico">
   <link rel="manifest" href="/manifest.json">
   <script src="/js/auth.js"></script>
@@ -82,6 +83,7 @@
                   class="conn-text">OFFLINE</span>
               </div>
             </div>
+            <button class="btn-help" onclick="startControlTour()" title="Hướng dẫn sử dụng"><i class="fas fa-circle-question"></i></button>
             <button class="btn-logout" onclick="logout()" title="Logout"><i class="fas fa-power-off"></i></button>
           </div>
         </header>
@@ -171,7 +173,7 @@
             </div>
             <div class="divider"></div>
             <!-- MUSIC PLAYER -->
-            <div class="sp-section">
+            <div class="sp-section" id="sp-music-section">
               <div class="sp-section-title" id="sp-music-title">
                 <span><i class="fas fa-music"></i> TRÌNH PHÁT NHẠC</span>
               </div>
@@ -577,6 +579,7 @@
       <script src="/js/toast.js?v=3"></script>
       <script src="/js/music-player.js?v=4"></script>
       <script src="/js/sidebar.js?v=4"></script>
+      <script src="/js/tour.js"></script>
 
       <!-- Tab Modules (Properly scoped inside IIFEs) -->
       <script src="/js/control.js?v=5"></script>

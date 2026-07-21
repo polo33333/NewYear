@@ -1822,5 +1822,9 @@ if ('serviceWorker' in navigator) {
       }
     }
   });
+  // Auto trigger Onboarding Tour for first-time users
+  if (typeof window.initControlTourAuto === 'function') {
+    window.initControlTourAuto();
+  }
 })();
 
