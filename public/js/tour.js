@@ -316,10 +316,15 @@
   };
 
   window.initControlTourAuto = function () {
-    if (!localStorage.getItem(STORAGE_KEY)) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceTour = urlParams.get('startTour') === 'true';
+    if (forceTour || !localStorage.getItem(STORAGE_KEY)) {
+      if (forceTour) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
       setTimeout(() => {
-        tourInstance.start(false);
-      }, 1000);
+        tourInstance.start(forceTour);
+      }, 800);
     }
   };
 })();

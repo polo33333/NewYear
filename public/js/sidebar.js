@@ -8,15 +8,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Dynamic Theme Toggle Button
+    // Dynamic Help & Theme Toggle Buttons
     if (sidebar) {
+        // 1. Dynamic Help Button (placed above Theme Toggle at bottom of sidebar)
+        const helpToggle = document.createElement('div');
+        helpToggle.className = 'nav-link help-toggle-btn';
+        helpToggle.style.cursor = 'pointer';
+        helpToggle.style.marginTop = 'auto'; // Push help & theme toggle to bottom
+        helpToggle.style.marginBottom = '4px';
+        helpToggle.style.borderRadius = '0';
+        helpToggle.style.marginLeft = '10px';
+        helpToggle.style.marginRight = '10px';
+        helpToggle.setAttribute('title', 'Hướng dẫn sử dụng');
+        helpToggle.innerHTML = `
+            <span class="nav-icon"><i class="fas fa-circle-question"></i></span>
+            <span class="nav-text" style="font-size: 13px;">Hướng dẫn</span>
+        `;
+        helpToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof window.startControlTour === 'function') {
+                window.startControlTour(true);
+            } else if (typeof window.switchTab === 'function') {
+                window.switchTab('control');
+                setTimeout(() => {
+                    if (typeof window.startControlTour === 'function') window.startControlTour(true);
+                }, 300);
+            } else {
+                window.location.href = '/?startTour=true';
+            }
+        });
+
+        // 2. Dynamic Theme Toggle Button
         const themeToggle = document.createElement('div');
         themeToggle.className = 'nav-link theme-toggle-btn';
         themeToggle.style.cursor = 'pointer';
-        themeToggle.style.marginTop = 'auto'; // Push to the bottom of the flex nav
+        themeToggle.style.marginTop = '0';
         themeToggle.style.marginBottom = '15px';
         themeToggle.style.borderTop = '1px solid rgba(255, 255, 255, 0.05)';
-        themeToggle.style.paddingTop = '15px';
+        themeToggle.style.paddingTop = '12px';
         themeToggle.style.borderRadius = '0';
         themeToggle.style.marginLeft = '10px';
         themeToggle.style.marginRight = '10px';
@@ -33,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nav.style.display = 'flex';
             nav.style.flexDirection = 'column';
             nav.style.flex = '1';
+            nav.appendChild(helpToggle);
             nav.appendChild(themeToggle);
         }
 
@@ -40,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             e.stopPropagation();
             const newMode = (localStorage.getItem('uiMode') || 'dark') === 'light' ? 'dark' : 'light';
-            
+
             // 1. Show loading overlay
             let overlay = document.getElementById('theme-loading-overlay');
             if (!overlay) {
@@ -49,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 overlay.innerHTML = '<span class="nexus-loader"></span>';
                 document.body.appendChild(overlay);
             }
-            
+
             // Customize overlay background and spinner for the incoming mode
             overlay.classList.remove('fade-out', 'theme-light', 'theme-dark');
             overlay.classList.add(newMode === 'light' ? 'theme-light' : 'theme-dark');
@@ -82,13 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Global helper to update mini player visibility based on tab and play state
     window.currentTab = 'control';
-    window.updateMiniPlayerVisibility = function() {
+    window.updateMiniPlayerVisibility = function () {
         const miniPlayer = document.getElementById('mini-music-player');
         if (!miniPlayer) return;
-        
+
         const isControlTab = window.currentTab === 'control';
         const hasTrack = typeof mp !== 'undefined' && mp.playlist && mp.playlist.length > 0 && mp.currentIndex >= 0;
-        
+
         if (isControlTab) {
             miniPlayer.style.display = 'none';
         } else {
@@ -97,11 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // SPA Tab Switcher
-    window.switchTab = function(tabName) {
+    window.switchTab = function (tabName) {
         window.currentTab = tabName;
 
         let targetTab = document.getElementById('tab-' + tabName);
-        
+
         // 1. If tab container doesn't exist, create it dynamically
         if (!targetTab) {
             targetTab = document.createElement('div');
@@ -128,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Check if we need to load this tab dynamically
         if (targetTab) {
-            
+
             // Check if we need to load this tab dynamically
             if (tabName !== 'control' && targetTab.innerHTML.trim() === '') {
                 // Show loading spinner
@@ -138,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="font-family: 'Outfit', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8;">Đang tải trang...</span>
                     </div>
                 `;
-                
+
                 // Fetch the static HTML page directly (with cache buster)
                 fetch('/templates/' + tabName + '?t=' + new Date().getTime())
                     .then(response => {
@@ -149,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(htmlText, 'text/html');
                         const mainContent = doc.querySelector('.main-content');
-                        
+
                         let scriptSrc = '/js/' + tabName + '.js';
                         if (mainContent) {
                             // Find original script source to preserve cache busting (e.g. ?v=2)
@@ -160,17 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                     scriptSrc = '/' + scriptSrc;
                                 }
                             }
-                            
+
                             // Strip any inner scripts from being executed immediately in HTML
                             mainContent.querySelectorAll('script').forEach(s => s.remove());
                             targetTab.innerHTML = mainContent.innerHTML;
-                            
+
                             // After injecting HTML:
                             // 1. Update Welcome text across all headers
                             if (typeof window.updateUserWelcome === 'function') {
                                 window.updateUserWelcome();
                             }
-                            
+
                             // 2. Sync connection status from control tab
                             const controlDot = document.querySelector('#tab-control .conn-dot');
                             const isOnline = controlDot && controlDot.classList.contains('online');
@@ -184,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (typeof window.updateUserWelcome === 'function') {
                             window.updateUserWelcome();
                         }
-                        
+
                         // Dynamically append the scoped module script
                         const scriptId = 'script-' + tabName;
                         if (!document.getElementById(scriptId)) {
@@ -204,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                     });
             }
-            
+
             // Re-trigger layout adjustments for specific tab contents if necessary
             if (tabName === 'control' && typeof window.resizePreview === 'function') {
                 window.resizePreview();
@@ -257,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (path === '/history') tabName = 'history';
         else if (path === '/settings') tabName = 'settings';
         else if (path === '/bracket') tabName = 'bracket';
-        
+
         window.switchTab(tabName);
     });
 

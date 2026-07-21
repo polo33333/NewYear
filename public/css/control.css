@@ -2641,6 +2641,7 @@ input[type=number] {
   justify-content: center;
 }
 
+.btn-lock-row,
 .btn-submit-row,
 .btn-clear-row {
   height: 24px;
@@ -2653,6 +2654,59 @@ input[type=number] {
   font-size: 11px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.btn-lock-row {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.btn-lock-row.is-locked {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.btn-lock-row.is-locked:hover {
+  background: rgba(239, 68, 68, 0.28);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+}
+
+.btn-lock-row.is-unlocked {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+
+.btn-lock-row.is-unlocked:hover {
+  background: rgba(16, 185, 129, 0.28);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+/* Lock Row Disabled Interaction State */
+.round-row.is-locked .char-square,
+.round-row.is-locked .weapon-square {
+  pointer-events: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.round-row.is-locked .step-btn,
+.round-row.is-locked .buy-step-btn,
+.round-row.is-locked input,
+.round-row.is-locked .btn-submit-row,
+.round-row.is-locked .btn-clear-row {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%);
+}
+
+.round-row.is-locked .btn-lock-row {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 .btn-submit-row {

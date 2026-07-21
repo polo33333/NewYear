@@ -65,7 +65,9 @@ body[data-ui-mode="light"] .theme-toggle-btn {
 /* 3. Header */
 body[data-ui-mode="light"] header,
 body[data-ui-mode="light"] .hist-page-header {
-    background: #b8fffc;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
 }
@@ -1396,53 +1398,67 @@ body[data-ui-mode="light"] .mini-music-player {
     border: 1px solid rgba(91, 106, 240, 0.15) !important;
     box-shadow: 0 12px 40px rgba(30, 35, 64, 0.15), 0 0 20px rgba(91, 106, 240, 0.05) !important;
 }
+
 body[data-ui-mode="light"] .mini-music-player:hover {
     border-color: rgba(91, 106, 240, 0.3) !important;
     box-shadow: 0 16px 45px rgba(30, 35, 64, 0.2), 0 0 25px rgba(91, 106, 240, 0.1) !important;
 }
+
 body[data-ui-mode="light"] .mini-music-disc {
     background: rgba(91, 106, 240, 0.05) !important;
     color: var(--accent) !important;
 }
+
 body[data-ui-mode="light"] .mini-music-disc::before {
     border-color: rgba(91, 106, 240, 0.2) !important;
     border-top-color: var(--accent) !important;
     border-bottom-color: var(--accent) !important;
 }
+
 body[data-ui-mode="light"] .mini-track-name {
     color: #1e293b !important;
 }
+
 body[data-ui-mode="light"] .mini-artist-name {
     color: var(--accent) !important;
 }
+
 body[data-ui-mode="light"] .mini-time-info {
     color: #64748b !important;
 }
+
 body[data-ui-mode="light"] .mini-control-btn {
     color: #64748b !important;
 }
+
 body[data-ui-mode="light"] .mini-control-btn:hover {
     color: var(--accent) !important;
 }
+
 body[data-ui-mode="light"] .mini-control-btn.play-btn {
     border-color: var(--accent) !important;
     color: var(--accent) !important;
     background: transparent !important;
     box-shadow: 0 0 10px rgba(91, 106, 240, 0.15), inset 0 0 8px rgba(91, 106, 240, 0.05) !important;
 }
+
 body[data-ui-mode="light"] .mini-control-btn.play-btn:hover {
     background: rgba(91, 106, 240, 0.1) !important;
 }
+
 body[data-ui-mode="light"] .mini-vis-bar {
     background: var(--accent) !important;
     box-shadow: 0 0 4px rgba(91, 106, 240, 0.3) !important;
 }
+
 body[data-ui-mode="light"] .mini-more-btn {
     color: #64748b !important;
 }
+
 body[data-ui-mode="light"] .mini-more-btn:hover {
     color: #1e293b !important;
 }
+
 body[data-ui-mode="light"] .btn-primary {
     background: var(--success) !important;
     color: #ffffff !important;
@@ -1714,4 +1730,16 @@ body[data-ui-mode="light"] .recommended-badge {
     color: var(--accent) !important;
     opacity: 0.9;
     font-weight: 600;
+}
+
+body[data-ui-mode="light"] .btn-lock-row.is-locked {
+    background: rgba(224, 52, 75, 0.08);
+    border-color: rgba(224, 52, 75, 0.3);
+    color: #e0344b;
+}
+
+body[data-ui-mode="light"] .btn-lock-row.is-unlocked {
+    background: rgba(14, 168, 116, 0.08);
+    border-color: rgba(14, 168, 116, 0.3);
+    color: #0ea874;
 }

@@ -201,6 +201,19 @@ function syncRosterUI() {
         netDiv.style.color = net < 0 ? '#ff4444' : (net > 0 ? '#00f5ff' : '#fff');
       }
 
+      // Automatically lock rounds that have data, unlock empty rounds
+      const hasHeroes = roundData.heroes && roundData.heroes.some(h => h && h.trim() !== '');
+      const hasWeapons = roundData.weapons && roundData.weapons.some(w => w && w.trim() !== '');
+      const hasPoints = roundData.points !== '' && roundData.points !== null && roundData.points !== undefined && Number(roundData.points) !== 0;
+      const hasBuy = roundData.buyPoints !== '' && roundData.buyPoints !== null && roundData.buyPoints !== undefined && Number(roundData.buyPoints) !== 0;
+      const hasData = hasHeroes || hasWeapons || hasPoints || hasBuy;
+
+      if (hasData) {
+        window.lockRow(teamCode, r);
+      } else {
+        window.unlockRow(teamCode, r);
+      }
+
       // Disable the submit button if the round is already synced/submitted on server
       const hasSyncedData = !!teamData['round' + r];
       const btnSubmit = document.getElementById(`btn-submit-${teamCode}r${r}`);
@@ -468,10 +481,84 @@ window.syncSingleRow = function (teamCode, r) {
   }
 };
 
+window.lockedRows = window.lockedRows || new Set();
+
+window.toggleRowLock = async function (teamCode, r, event) {
+  if (event) event.stopPropagation();
+  const rowId = `${teamCode}r${r}`;
+  if (window.lockedRows.has(rowId)) {
+    window.unlockRow(teamCode, r);
+  } else {
+    const dirtyKey = `${teamCode}-${r}`;
+    if (window.dirtyRows && window.dirtyRows.has(dirtyKey)) {
+      const confirmed = await showConfirm(
+        "Xác nhận khóa Round",
+        `Vòng ${r} (Team ${teamCode}) có thay đổi chưa đồng bộ. Bạn có muốn đồng bộ (Submit) trước khi khóa không?`
+      );
+      if (confirmed) {
+        window.syncSingleRow(teamCode, r);
+        showToast(`Đã đồng bộ và khóa Vòng ${r} của Team ${teamCode}!`, 'success');
+        window.lockRow(teamCode, r);
+      }
+      return;
+    }
+    window.lockRow(teamCode, r);
+  }
+};
+
+window.lockRow = function (teamCode, r) {
+  const rowId = `${teamCode}r${r}`;
+  window.lockedRows.add(rowId);
+  window.updateRowLockUI(teamCode, r, true);
+};
+
+window.unlockRow = function (teamCode, r) {
+  const rowId = `${teamCode}r${r}`;
+  window.lockedRows.delete(rowId);
+  window.updateRowLockUI(teamCode, r, false);
+};
+
+window.updateRowLockUI = function (teamCode, r, isLocked) {
+  const btnLock = document.getElementById(`btn-lock-${teamCode}r${r}`);
+  const inputElem = document.getElementById(`t${teamCode}r${r}p`);
+  const rowElem = inputElem ? inputElem.closest('.round-row') : null;
+
+  if (rowElem) {
+    if (isLocked) {
+      rowElem.classList.add('is-locked');
+    } else {
+      rowElem.classList.remove('is-locked');
+    }
+  }
+
+  if (btnLock) {
+    if (isLocked) {
+      btnLock.innerHTML = '<i class="fas fa-lock"></i>';
+      btnLock.setAttribute('title', 'Đã khóa - Bấm để mở khóa chỉnh sửa');
+      btnLock.classList.add('is-locked');
+      btnLock.classList.remove('is-unlocked');
+    } else {
+      btnLock.innerHTML = '<i class="fas fa-lock-open"></i>';
+      btnLock.setAttribute('title', 'Đang mở khóa - Bấm để khóa');
+      btnLock.classList.remove('is-locked');
+      btnLock.classList.add('is-unlocked');
+    }
+  }
+};
+
 window.submitRow = function (teamCode, r, event) {
   if (event) event.stopPropagation();
+  const rowId = `${teamCode}r${r}`;
+  if (window.lockedRows && window.lockedRows.has(rowId)) {
+    showToast(`Vòng ${r} (Team ${teamCode}) đang bị khóa. Vui lòng mở khóa trước khi đồng bộ!`, 'warning');
+    return;
+  }
+
   window.syncSingleRow(teamCode, r);
   showToast(`Đã cập nhật và đồng bộ kết quả Vòng ${r} của Team ${teamCode}!`, 'success');
+
+  // Submit thì auto khóa
+  window.lockRow(teamCode, r);
 };
 
 function copyUrl(id, btn) {
@@ -919,6 +1006,16 @@ Promise.all([
 }).catch(console.error);
 
 window.openSelectionModal = function (targetId, type) {
+  const rowMatch = targetId.match(/^([AB])r(\d+)/);
+  if (rowMatch) {
+    const teamCode = rowMatch[1];
+    const r = rowMatch[2];
+    if (window.lockedRows && window.lockedRows.has(`${teamCode}r${r}`)) {
+      showToast(`Round ${r} (Team ${teamCode}) đang bị khóa. Vui lòng mở khóa để chỉnh sửa!`, 'warning');
+      return;
+    }
+  }
+
   currentSelectionTarget = targetId; // 'Ar1h1' etc.
   currentSelectionType = type;
   multiSelection = []; // Reset lựa chọn mỗi khi mở modal
@@ -1428,7 +1525,16 @@ window.selectItem = function (name) {
 function generateRounds() {
   const containerA = document.getElementById('roundsA-container');
   const containerB = document.getElementById('roundsB-container');
+  if (!containerA || !containerB) return;
+  containerA.innerHTML = '';
+  containerB.innerHTML = '';
+
+  window.lockedRows = window.lockedRows || new Set();
+
   const createRow = (team, r) => {
+    const rowId = `${team}r${r}`;
+    window.lockedRows.delete(rowId);
+
     const row = document.createElement('div');
     row.className = 'round-row';
     row.addEventListener('click', function () {
@@ -1489,6 +1595,7 @@ function generateRounds() {
        <div id="t${team}r${r}net" class="score-net-box" title="Tổng điểm">0</div>
      </div>
      <div class="score-actions-col">
+        <button class="btn-lock-row is-unlocked" id="btn-lock-${team}r${r}" onclick="toggleRowLock('${team}', ${r}, event)" title="Đang mở khóa - Bấm để khóa"><i class="fas fa-lock-open"></i></button>
         <button class="btn-submit-row" id="btn-submit-${team}r${r}" onclick="submitRow('${team}', ${r}, event)" title="Đồng bộ Round ${r}"><i class="fas fa-paper-plane"></i></button>
         <button class="btn-clear-row" onclick="clearRow('${team}', ${r}, event)" title="Clear Round ${r}"><i class="fas fa-arrow-rotate-right"></i></button>
       </div>
@@ -1514,6 +1621,10 @@ window.markRowDirty = function (teamCode, r) {
 };
 
 window.adjustBuyPoints = function (teamCode, r, amount) {
+  if (window.lockedRows && window.lockedRows.has(`${teamCode}r${r}`)) {
+    showToast(`Vòng ${r} đang bị khóa. Vui lòng mở khóa để chỉnh sửa!`, 'warning');
+    return;
+  }
   const input = document.getElementById(`t${teamCode}r${r}buy`);
   if (input) {
     let val = parseInt(input.value, 10) || 0;
@@ -1527,6 +1638,10 @@ window.adjustBuyPoints = function (teamCode, r, amount) {
 };
 
 window.stepValue = function (id, delta, min, max, team, r) {
+  if (team && r && window.lockedRows && window.lockedRows.has(`${team}r${r}`)) {
+    showToast(`Vòng ${r} đang bị khóa. Vui lòng mở khóa để chỉnh sửa!`, 'warning');
+    return;
+  }
   const input = document.getElementById(id);
   const lbl = document.getElementById('lbl-' + id);
   if (!input || !lbl) return;
@@ -1583,6 +1698,10 @@ window.clearRoster = async function () {
 
 window.clearRow = async function (teamCode, r, event) {
   if (event) event.stopPropagation();
+  if (window.lockedRows && window.lockedRows.has(`${teamCode}r${r}`)) {
+    showToast(`Vòng ${r} đang bị khóa. Vui lòng mở khóa trước khi xóa!`, 'warning');
+    return;
+  }
   const confirmed = await showConfirm("Xoá Vòng Đấu", `Xóa dữ liệu Vòng ${r} — Team ${teamCode}?`);
   if (!confirmed) return;
 
@@ -1614,6 +1733,7 @@ window.clearRow = async function (teamCode, r, event) {
     window.syncSingleRow(teamCode, r);
   }
   window.markRowDirty(teamCode, r);
+  window.unlockRow(teamCode, r);
 };
 
 window.saveRoster = async function () {
