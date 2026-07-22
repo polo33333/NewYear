@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kdstream-v4';
+const CACHE_NAME = 'kdstream-v5';
 const ASSETS = [
   '/',
   '/css/control.css?v=15',
@@ -17,7 +17,17 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(self.clients.claim());
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', (e) => {
@@ -26,9 +36,10 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Bypass API requests, hot reloading, sockets, and static images
+  // Bypass API requests, hot reloading, sockets, static images, and dynamic templates
   if (
     e.request.url.includes('/api/') || 
+    e.request.url.includes('/templates/') ||
     e.request.url.includes('/socket') || 
     e.request.url.includes('socket.io') || 
     e.request.url.includes('browser-sync') ||
@@ -38,18 +49,19 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // For HTML navigation requests (e.g. /settings, /history, /character-editor)
+  if (e.request.mode === 'navigate' || e.request.headers.get('accept')?.includes('text/html')) {
+    e.respondWith(
+      fetch(e.request).catch(() => {
+        return caches.match('/').then((response) => response || caches.match(e.request));
+      })
+    );
+    return;
+  }
+
+  // For static assets, try network first, fallback to cache
   e.respondWith(
-    fetch(e.request).catch(() => {
-      return caches.match(e.request).then((response) => {
-        if (response) {
-          return response;
-        }
-        // Return a basic offline fallback or let it fail gracefully without uncaught rejection
-        return new Response('Network error occurred', {
-          status: 488,
-          statusText: 'Network Connection Failed'
-        });
-      });
-    })
+    fetch(e.request).catch(() => caches.match(e.request))
   );
 });
+

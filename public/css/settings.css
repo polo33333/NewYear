@@ -85,6 +85,45 @@
     box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.15);
 }
 
+#sett-btn-toggle-token {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+#sett-btn-toggle-token:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#sett-btn-generate {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0 20px;
+    height: 40px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+#sett-btn-generate:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 .form-desc {
     margin-top: 8px;
     font-size: 12px;

@@ -1756,3 +1756,24 @@ body[data-ui-mode="light"] .btn-lock-row.is-unlocked {
     border-color: rgba(14, 168, 116, 0.3);
     color: #0ea874;
 }
+
+/* Settings Generate & Token Toggle Buttons */
+body[data-ui-mode="light"] #sett-btn-generate {
+    background: var(--surface, #f7f8fc);
+    border: 1px solid var(--border, #e2e6ef);
+    color: var(--text, #1e2340);
+}
+
+body[data-ui-mode="light"] #sett-btn-generate:hover {
+    background: var(--accent-soft, rgba(91, 106, 240, 0.10));
+    border-color: var(--accent, #5b6af0);
+    color: var(--accent, #5b6af0);
+}
+
+body[data-ui-mode="light"] #sett-btn-toggle-token {
+    color: var(--text-dim, #6e7a9a);
+}
+
+body[data-ui-mode="light"] #sett-btn-toggle-token:hover {
+    color: var(--text, #1e2340);
+}
