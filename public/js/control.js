@@ -321,6 +321,37 @@ function updateSq(id) {
   }
 }
 
+// Fast Map-based indexing for character and weapon lookups (O(1) complexity)
+let charNameMapCache = null;
+let weaponNameMapCache = null;
+
+function getCharByName(name) {
+  if (typeof allCharacters === 'undefined' || !Array.isArray(allCharacters)) return null;
+  if (!charNameMapCache || charNameMapCache.size !== allCharacters.length) {
+    charNameMapCache = new Map(allCharacters.map(c => [c.name, c]));
+  }
+  return charNameMapCache.get(name);
+}
+
+function getWeaponByName(name) {
+  if (typeof allWeapons === 'undefined' || !Array.isArray(allWeapons)) return null;
+  if (!weaponNameMapCache || weaponNameMapCache.size !== allWeapons.length) {
+    weaponNameMapCache = new Map(allWeapons.map(w => [w.name, w]));
+  }
+  return weaponNameMapCache.get(name);
+}
+
+// Fast DOM Element Caching for Roster Grid
+const rosterDomCache = new Map();
+function getRosterDom(id) {
+  let el = rosterDomCache.get(id);
+  if (!el || !el.isConnected) {
+    el = document.getElementById(id);
+    if (el) rosterDomCache.set(id, el);
+  }
+  return el;
+}
+
 window.calculateAllDeductions = function (team) {
   const usedChars = new Set();
   const usedWeapons = new Set();
@@ -330,13 +361,13 @@ window.calculateAllDeductions = function (team) {
 
     // Tướng (h1 -> h3)
     for (let i = 1; i <= 3; i++) {
-      const nameInput = document.getElementById(`t${team}r${r}h${i}`);
-      const rcInput = document.getElementById(`sl${team}r${r}h${i}`);
+      const nameInput = getRosterDom(`t${team}r${r}h${i}`);
+      const rcInput = getRosterDom(`sl${team}r${r}h${i}`);
       if (nameInput && nameInput.value) {
         const charName = nameInput.value;
-        const char = allCharacters.find(c => c.name === charName);
+        const char = getCharByName(charName);
         if (char && rcInput && !usedChars.has(charName)) {
-          const val = parseInt(rcInput.value, 10);
+          const val = parseInt(rcInput.value, 10) || 0;
           roundDeduction += (char[`rc${val}`] || 0);
           usedChars.add(charName); // Chỉ trừ điểm lần đầu tiên
         }
@@ -345,20 +376,20 @@ window.calculateAllDeductions = function (team) {
 
     // Vũ khí (w1 -> w3)
     for (let i = 1; i <= 3; i++) {
-      const nameInput = document.getElementById(`t${team}r${r}w${i}`);
-      const rInput = document.getElementById(`sl${team}r${r}w${i}`);
+      const nameInput = getRosterDom(`t${team}r${r}w${i}`);
+      const rInput = getRosterDom(`sl${team}r${r}w${i}`);
       if (nameInput && nameInput.value) {
         const wpName = nameInput.value;
-        const wp = allWeapons.find(w => w.name === wpName);
+        const wp = getWeaponByName(wpName);
         if (wp && rInput && !usedWeapons.has(wpName)) {
-          const val = parseInt(rInput.value, 10);
+          const val = parseInt(rInput.value, 10) || 0;
           roundDeduction += (wp[`r${val}`] || 0);
           usedWeapons.add(wpName); // Chỉ trừ điểm lần đầu tiên
         }
       }
     }
 
-    const dInput = document.getElementById(`t${team}r${r}d`);
+    const dInput = getRosterDom(`t${team}r${r}d`);
     if (dInput) {
       dInput.value = roundDeduction;
     }
@@ -370,11 +401,11 @@ function updateRoster() {
 
   for (let r = 1; r <= 6; r++) {
     ['A', 'B'].forEach(teamCode => {
-      const p = parseInt(document.getElementById(`t${teamCode}r${r}p`)?.value) || 0;
-      const d = parseInt(document.getElementById(`t${teamCode}r${r}d`)?.value) || 0;
-      const buy = parseInt(document.getElementById(`t${teamCode}r${r}buy`)?.value) || 0;
+      const p = parseInt(getRosterDom(`t${teamCode}r${r}p`)?.value) || 0;
+      const d = parseInt(getRosterDom(`t${teamCode}r${r}d`)?.value) || 0;
+      const buy = parseInt(getRosterDom(`t${teamCode}r${r}buy`)?.value) || 0;
       const net = p - d - buy;
-      const netDiv = document.getElementById(`t${teamCode}r${r}net`);
+      const netDiv = getRosterDom(`t${teamCode}r${r}net`);
       if (netDiv) {
         netDiv.innerText = net;
         netDiv.style.color = net < 0 ? '#ff4444' : (net > 0 ? '#00f5ff' : '#fff');
@@ -383,24 +414,24 @@ function updateRoster() {
       const teamKey = 'team' + teamCode;
       rosterData[teamKey]['round' + r] = {
         heroes: [
-          document.getElementById(`t${teamCode}r${r}h1`)?.value || '',
-          document.getElementById(`t${teamCode}r${r}h2`)?.value || '',
-          document.getElementById(`t${teamCode}r${r}h3`)?.value || ''
+          getRosterDom(`t${teamCode}r${r}h1`)?.value || '',
+          getRosterDom(`t${teamCode}r${r}h2`)?.value || '',
+          getRosterDom(`t${teamCode}r${r}h3`)?.value || ''
         ],
         heroRcs: [
-          document.getElementById(`sl${teamCode}r${r}h1`)?.value || '0',
-          document.getElementById(`sl${teamCode}r${r}h2`)?.value || '0',
-          document.getElementById(`sl${teamCode}r${r}h3`)?.value || '0'
+          getRosterDom(`sl${teamCode}r${r}h1`)?.value || '0',
+          getRosterDom(`sl${teamCode}r${r}h2`)?.value || '0',
+          getRosterDom(`sl${teamCode}r${r}h3`)?.value || '0'
         ],
         weapons: [
-          document.getElementById(`t${teamCode}r${r}w1`)?.value || '',
-          document.getElementById(`t${teamCode}r${r}w2`)?.value || '',
-          document.getElementById(`t${teamCode}r${r}w3`)?.value || ''
+          getRosterDom(`t${teamCode}r${r}w1`)?.value || '',
+          getRosterDom(`t${teamCode}r${r}w2`)?.value || '',
+          getRosterDom(`t${teamCode}r${r}w3`)?.value || ''
         ],
         weaponRs: [
-          document.getElementById(`sl${teamCode}r${r}w1`)?.value || '1',
-          document.getElementById(`sl${teamCode}r${r}w2`)?.value || '1',
-          document.getElementById(`sl${teamCode}r${r}w3`)?.value || '1'
+          getRosterDom(`sl${teamCode}r${r}w1`)?.value || '1',
+          getRosterDom(`sl${teamCode}r${r}w2`)?.value || '1',
+          getRosterDom(`sl${teamCode}r${r}w3`)?.value || '1'
         ],
         points: p,
         deduction: d,
@@ -412,31 +443,42 @@ function updateRoster() {
   send({ type: 'update_roster', data: rosterData });
 }
 
-window.updateRosterLocal = function () {
+let updateRosterLocalScheduled = false;
+
+function performRosterLocalUpdate() {
   for (let r = 1; r <= 6; r++) {
     ['A', 'B'].forEach(teamCode => {
-      const p = parseInt(document.getElementById(`t${teamCode}r${r}p`)?.value) || 0;
-      const d = parseInt(document.getElementById(`t${teamCode}r${r}d`)?.value) || 0;
-      const buy = parseInt(document.getElementById(`t${teamCode}r${r}buy`)?.value) || 0;
+      const p = parseInt(getRosterDom(`t${teamCode}r${r}p`)?.value) || 0;
+      const d = parseInt(getRosterDom(`t${teamCode}r${r}d`)?.value) || 0;
+      const buy = parseInt(getRosterDom(`t${teamCode}r${r}buy`)?.value) || 0;
       const net = p - d - buy;
-      const netDiv = document.getElementById(`t${teamCode}r${r}net`);
+      const netDiv = getRosterDom(`t${teamCode}r${r}net`);
       if (netDiv) {
         netDiv.innerText = net;
         netDiv.style.color = net < 0 ? '#ff4444' : (net > 0 ? '#00f5ff' : '#fff');
       }
     });
   }
+}
+
+window.updateRosterLocal = function () {
+  if (updateRosterLocalScheduled) return;
+  updateRosterLocalScheduled = true;
+  requestAnimationFrame(() => {
+    updateRosterLocalScheduled = false;
+    performRosterLocalUpdate();
+  });
 };
 
 window.syncSingleRow = function (teamCode, r) {
   if (window.dirtyRows) {
     window.dirtyRows.delete(`${teamCode}-${r}`);
   }
-  const p = parseInt(document.getElementById(`t${teamCode}r${r}p`)?.value) || 0;
-  const d = parseInt(document.getElementById(`t${teamCode}r${r}d`)?.value) || 0;
-  const buy = parseInt(document.getElementById(`t${teamCode}r${r}buy`)?.value) || 0;
+  const p = parseInt(getRosterDom(`t${teamCode}r${r}p`)?.value) || 0;
+  const d = parseInt(getRosterDom(`t${teamCode}r${r}d`)?.value) || 0;
+  const buy = parseInt(getRosterDom(`t${teamCode}r${r}buy`)?.value) || 0;
   const net = p - d - buy;
-  const netDiv = document.getElementById(`t${teamCode}r${r}net`);
+  const netDiv = getRosterDom(`t${teamCode}r${r}net`);
   if (netDiv) {
     netDiv.innerText = net;
     netDiv.style.color = net < 0 ? '#ff4444' : (net > 0 ? '#00f5ff' : '#fff');
@@ -447,24 +489,24 @@ window.syncSingleRow = function (teamCode, r) {
   singleRosterData[teamKey] = {};
   singleRosterData[teamKey]['round' + r] = {
     heroes: [
-      document.getElementById(`t${teamCode}r${r}h1`)?.value || '',
-      document.getElementById(`t${teamCode}r${r}h2`)?.value || '',
-      document.getElementById(`t${teamCode}r${r}h3`)?.value || ''
+      getRosterDom(`t${teamCode}r${r}h1`)?.value || '',
+      getRosterDom(`t${teamCode}r${r}h2`)?.value || '',
+      getRosterDom(`t${teamCode}r${r}h3`)?.value || ''
     ],
     heroRcs: [
-      document.getElementById(`sl${teamCode}r${r}h1`)?.value || '0',
-      document.getElementById(`sl${teamCode}r${r}h2`)?.value || '0',
-      document.getElementById(`sl${teamCode}r${r}h3`)?.value || '0'
+      getRosterDom(`sl${teamCode}r${r}h1`)?.value || '0',
+      getRosterDom(`sl${teamCode}r${r}h2`)?.value || '0',
+      getRosterDom(`sl${teamCode}r${r}h3`)?.value || '0'
     ],
     weapons: [
-      document.getElementById(`t${teamCode}r${r}w1`)?.value || '',
-      document.getElementById(`t${teamCode}r${r}w2`)?.value || '',
-      document.getElementById(`t${teamCode}r${r}w3`)?.value || ''
+      getRosterDom(`t${teamCode}r${r}w1`)?.value || '',
+      getRosterDom(`t${teamCode}r${r}w2`)?.value || '',
+      getRosterDom(`t${teamCode}r${r}w3`)?.value || ''
     ],
     weaponRs: [
-      document.getElementById(`sl${teamCode}r${r}w1`)?.value || '1',
-      document.getElementById(`sl${teamCode}r${r}w2`)?.value || '1',
-      document.getElementById(`sl${teamCode}r${r}w3`)?.value || '1'
+      getRosterDom(`sl${teamCode}r${r}w1`)?.value || '1',
+      getRosterDom(`sl${teamCode}r${r}w2`)?.value || '1',
+      getRosterDom(`sl${teamCode}r${r}w3`)?.value || '1'
     ],
     points: p,
     deduction: d,
@@ -474,7 +516,7 @@ window.syncSingleRow = function (teamCode, r) {
   send({ type: 'update_roster', data: singleRosterData });
 
   // Disable the submit button immediately upon successful sync
-  const btn = document.getElementById(`btn-submit-${teamCode}r${r}`);
+  const btn = getRosterDom(`btn-submit-${teamCode}r${r}`);
   if (btn) {
     btn.disabled = true;
     btn.classList.add('disabled');
@@ -1542,7 +1584,12 @@ function generateRounds() {
       this.classList.add('active');
     });
     row.innerHTML = `
-  <div class="round-label">R${r}</div>
+  <div class="round-header-col">
+    <div class="round-label-wrap">
+      <div class="round-label">R${r}</div>
+    </div>
+    <button class="btn-lock-row is-unlocked" id="btn-lock-${team}r${r}" onclick="toggleRowLock('${team}', ${r}, event)" title="Đang mở khóa - Bấm để khóa"><i class="fas fa-lock-open"></i></button>
+  </div>
   <div class="round-heroes-container">
     ${[1, 2, 3].map(i => `
       <div class="char-col">
@@ -1595,9 +1642,8 @@ function generateRounds() {
        <div id="t${team}r${r}net" class="score-net-box" title="Tổng điểm">0</div>
      </div>
      <div class="score-actions-col">
-        <button class="btn-lock-row is-unlocked" id="btn-lock-${team}r${r}" onclick="toggleRowLock('${team}', ${r}, event)" title="Đang mở khóa - Bấm để khóa"><i class="fas fa-lock-open"></i></button>
         <button class="btn-submit-row" id="btn-submit-${team}r${r}" onclick="submitRow('${team}', ${r}, event)" title="Đồng bộ Round ${r}"><i class="fas fa-paper-plane"></i></button>
-        <button class="btn-clear-row" onclick="clearRow('${team}', ${r}, event)" title="Clear Round ${r}"><i class="fas fa-arrow-rotate-right"></i></button>
+        <button class="btn-clear-row" onclick="clearRow('${team}', ${r}, event)" title="Xóa dữ liệu Round ${r}"><i class="fas fa-arrow-rotate-right"></i></button>
       </div>
   </div>
 `;
@@ -1665,6 +1711,7 @@ window.clearRoster = async function () {
   if (!confirmed) return;
   for (let r = 1; r <= 6; r++) {
     ['A', 'B'].forEach(teamCode => {
+      window.unlockRow(teamCode, r);
       const p = document.getElementById(`t${teamCode}r${r}p`);
       const d = document.getElementById(`t${teamCode}r${r}d`);
       const buy = document.getElementById(`t${teamCode}r${r}buy`);
@@ -1692,6 +1739,9 @@ window.clearRoster = async function () {
   }
   if (window.dirtyRows) {
     window.dirtyRows.clear();
+  }
+  if (window.lockedRows) {
+    window.lockedRows.clear();
   }
   updateRoster();
 };

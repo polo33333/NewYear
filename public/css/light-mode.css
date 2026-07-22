@@ -801,7 +801,7 @@ body[data-ui-mode="light"] .mp-row:hover {
 
 body[data-ui-mode="light"] .mp-row-active {
     background: var(--accent-soft) !important;
-    border-left: 2px solid var(--accent) !important;
+    /* border-left: 2px solid var(--accent) !important; */
 }
 
 body[data-ui-mode="light"] .mp-row-active .mp-row-name {
@@ -1255,9 +1255,25 @@ body[data-ui-mode="light"] img[src*="weapon-type"] {
     filter: invert(0.8) brightness(0.2) contrast(1.2) !important;
 }
 
-/* 33. Save Buttons Text Color in Light Mode */
-body[data-ui-mode="light"] .btn-save {
-    color: #000000 !important;
+/* 33. Save Buttons Text & Background Color in Light Mode (Settings Page Only) */
+body[data-ui-mode="light"] #tab-settings .btn-save,
+body[data-ui-mode="light"] .settings-card .btn-save,
+body[data-ui-mode="light"] #sett-btn-save-settings,
+body[data-ui-mode="light"] #sett-btn-save-sheets {
+    background: var(--success) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--success) !important;
+    font-weight: 700 !important;
+}
+
+body[data-ui-mode="light"] #tab-settings .btn-save:hover,
+body[data-ui-mode="light"] .settings-card .btn-save:hover,
+body[data-ui-mode="light"] #sett-btn-save-settings:hover,
+body[data-ui-mode="light"] #sett-btn-save-sheets:hover {
+    background: #0c9364 !important;
+    border-color: #0c9364 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(14, 168, 116, 0.25) !important;
 }
 
 /* 34. Fix Settings Card Inline White Text in Light Mode */
@@ -1446,10 +1462,7 @@ body[data-ui-mode="light"] .mini-control-btn.play-btn:hover {
     background: rgba(91, 106, 240, 0.1) !important;
 }
 
-body[data-ui-mode="light"] .mini-vis-bar {
-    background: var(--accent) !important;
-    box-shadow: 0 0 4px rgba(91, 106, 240, 0.3) !important;
-}
+
 
 body[data-ui-mode="light"] .mini-more-btn {
     color: #64748b !important;

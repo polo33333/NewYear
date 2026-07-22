@@ -2405,11 +2405,33 @@ input[type=number] {
   box-shadow: 0 0 8px rgba(0, 245, 255, 0.1);
 }
 
+.round-header-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 28px;
+  align-self: stretch;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.round-label-wrap {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .round-label {
   font-size: 9px;
-  opacity: 0.7;
-  font-weight: 700;
-  width: 15px;
+  /* font-weight: 800;
+  color: #00f5ff;
+  font-family: 'Outfit', sans-serif;
+  text-shadow: 0 0 8px rgba(0, 245, 255, 0.35); */
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-align: center;
 }
 
 .round-heroes-container {
@@ -2639,49 +2661,49 @@ input[type=number] {
   flex-direction: column;
   gap: 4px;
   justify-content: center;
+  margin-left: 6px;
 }
 
-.btn-lock-row,
-.btn-submit-row,
-.btn-clear-row {
-  height: 24px;
-  width: 24px;
+.btn-lock-row {
+  height: 20px;
+  width: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
-.btn-lock-row {
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #ef4444;
-}
-
-.btn-lock-row.is-locked {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #f87171;
-}
-
-.btn-lock-row.is-locked:hover {
-  background: rgba(239, 68, 68, 0.28);
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
-}
-
+/* Lock Button States: Unlocked is subtle neutral, Locked is vibrant amber */
 .btn-lock-row.is-unlocked {
-  background: rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #10b981;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .btn-lock-row.is-unlocked:hover {
-  background: rgba(16, 185, 129, 0.28);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+  background: rgba(0, 245, 255, 0.12);
+  border-color: rgba(0, 245, 255, 0.35);
+  color: #00f5ff;
+  box-shadow: 0 0 8px rgba(0, 245, 255, 0.25);
+  transform: scale(1.08);
+}
+
+.btn-lock-row.is-locked {
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+}
+
+.btn-lock-row.is-locked:hover {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+  transform: scale(1.08);
 }
 
 /* Lock Row Disabled Interaction State */
@@ -2709,17 +2731,29 @@ input[type=number] {
   filter: none !important;
 }
 
+/* Primary Action: Submit Button */
 .btn-submit-row {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  color: var(--success);
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
 }
 
 .btn-submit-row:hover {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
-  transform: translateY(-1px);
+  background: rgba(16, 185, 129, 0.28);
+  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+  transform: scale(1.08);
 }
 
 .btn-submit-row:disabled,
@@ -2733,18 +2767,30 @@ input[type=number] {
   opacity: 0.5;
 }
 
+/* Danger Action: Clear Button */
 .btn-clear-row {
-  background: rgba(239, 68, 68, 0.06);
-  border: 1px solid rgba(239, 68, 68, 0.45);
-  color: rgba(255, 255, 255, 0.6);
+  height: 22px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 4px;
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #ef4444;
 }
 
 .btn-clear-row:hover {
-  background: rgba(239, 68, 68, 0.18);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #fff;
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.15);
-  transform: translateY(-1px);
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ff6b6b;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+  transform: scale(1.08);
 }
 
 .step-val {
@@ -3039,7 +3085,7 @@ input[type=number] {
   align-items: center;
   gap: 6px;
   font-size: 9px;
-  color: var(--text-dim);
+  color: #aeb3d0;
 }
 
 .music-progress {
@@ -3225,7 +3271,7 @@ input[type=number] {
 
 .mp-row-active {
   background: rgba(0, 245, 255, 0.1) !important;
-  border-left: 2px solid var(--accent);
+  /* border-left: 2px solid var(--accent); */
 }
 
 .mp-row-active .mp-row-name {
@@ -3264,34 +3310,34 @@ input[type=number] {
 /* FLOATING MINI MUSIC PLAYER */
 .mini-music-player {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: rgba(10, 15, 26, 0.85);
+  bottom: 20px;
+  right: 20px;
+  background: rgba(10, 15, 26, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 245, 255, 0.15);
-  border-radius: 28px;
-  padding: 10px 18px;
+  border: 1px solid rgba(0, 245, 255, 0.18);
+  border-radius: 20px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 245, 255, 0.1);
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 245, 255, 0.1);
   z-index: 9999;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  width: 520px;
+  width: 380px;
   box-sizing: border-box;
 }
 
 .mini-music-player:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: rgba(0, 245, 255, 0.35);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 245, 255, 0.2);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 245, 255, 0.2);
 }
 
 .mini-music-disc-wrap {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -3308,8 +3354,8 @@ input[type=number] {
   align-items: center;
   justify-content: center;
   color: #00f5ff;
-  font-size: 16px;
-  box-shadow: 0 0 10px rgba(0, 245, 255, 0.15);
+  font-size: 13px;
+  box-shadow: 0 0 8px rgba(0, 245, 255, 0.15);
   transition: all 0.3s ease;
   box-sizing: border-box;
 }
@@ -3322,7 +3368,7 @@ input[type=number] {
   right: 0;
   bottom: 0;
   border-radius: 50%;
-  border: 3px solid rgba(0, 245, 255, 0.2);
+  border: 2px solid rgba(0, 245, 255, 0.2);
   border-top-color: #00f5ff;
   border-bottom-color: #00f5ff;
   box-sizing: border-box;
@@ -3351,6 +3397,7 @@ input[type=number] {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .mini-music-title-row {
@@ -3360,11 +3407,11 @@ input[type=number] {
 }
 
 .mini-track-name {
-  font-size: 13.5px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
   color: #fff;
   font-family: 'Outfit', sans-serif;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -3375,7 +3422,7 @@ input[type=number] {
   display: inline-block;
   padding-left: 100%;
   width: auto;
-  animation: miniMarquee 15s linear infinite;
+  animation: miniMarquee 12s linear infinite;
   text-overflow: clip;
   overflow: visible;
 }
@@ -3388,29 +3435,28 @@ input[type=number] {
 }
 
 .mini-artist-name {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   color: #00f5ff;
   font-family: 'Inter', sans-serif;
 }
 
 .mini-meta-dot {
-  font-size: 8px;
-  color: #5d6494;
+  font-size: 7px;
+  color: #aeb3d0;
 }
 
 .mini-time-info {
-  font-size: 10.5px;
-  color: #8288b5;
-  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  color: #f0f2ff;
 }
 
 .mini-music-progress-wrap {
   width: 100%;
-  height: 3px;
+  height: 2.5px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
-  margin-top: 6px;
+  margin-top: 4px;
   overflow: hidden;
 }
 
@@ -3420,13 +3466,13 @@ input[type=number] {
   width: 0%;
   border-radius: 2px;
   transition: width 0.1s linear;
-  box-shadow: 0 0 8px rgba(0, 245, 255, 0.7);
+  box-shadow: 0 0 6px rgba(0, 245, 255, 0.7);
 }
 
 .mini-music-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -3434,9 +3480,9 @@ input[type=number] {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 13px;
+  font-size: 11px;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -3449,51 +3495,29 @@ input[type=number] {
 }
 
 .mini-control-btn.play-btn {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  border: 2px solid #00f5ff;
+  border: 1.5px solid #00f5ff;
   color: #00f5ff;
   background: transparent;
-  box-shadow: 0 0 10px rgba(0, 245, 255, 0.3), inset 0 0 8px rgba(0, 245, 255, 0.15);
-  font-size: 12px;
+  box-shadow: 0 0 8px rgba(0, 245, 255, 0.25), inset 0 0 6px rgba(0, 245, 255, 0.15);
+  font-size: 10px;
 }
 
 .mini-control-btn.play-btn:hover {
   background: rgba(0, 245, 255, 0.1);
-  box-shadow: 0 0 15px rgba(0, 245, 255, 0.5), inset 0 0 10px rgba(0, 245, 255, 0.3);
-  transform: scale(1.05);
-}
-
-/* Visualizer in mini player */
-.mini-music-visualizer {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 24px;
-  width: 68px;
-  flex-shrink: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.mini-vis-bar {
-  flex: 1;
-  min-width: 2.5px;
-  height: 2px;
-  border-radius: 1px 1px 0 0;
-  background: #00f5ff;
-  box-shadow: 0 0 4px rgba(0, 245, 255, 0.5);
-  transition: height 0.05s ease;
+  box-shadow: 0 0 12px rgba(0, 245, 255, 0.4), inset 0 0 8px rgba(0, 245, 255, 0.25);
+  transform: scale(1.08);
 }
 
 .mini-more-btn {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 15px;
+  font-size: 13px;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -3723,10 +3747,10 @@ input[type=number] {
   .round-label {
     grid-area: label;
     align-self: center;
-    font-size: 13px !important;
-    font-weight: 900 !important;
+    font-size: 12px !important;
+    /* font-weight: 900 !important; */
     text-align: center;
-    color: var(--accent);
+    /* color: var(--accent); */
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     height: 100%;
     display: flex;

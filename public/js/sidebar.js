@@ -122,8 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isControlTab) {
             miniPlayer.style.display = 'none';
+            if (typeof window.checkMainTrackMarquee === 'function') {
+                window.checkMainTrackMarquee();
+            }
         } else {
             miniPlayer.style.display = hasTrack ? 'flex' : 'none';
+            if (hasTrack && typeof window.checkMiniTrackMarquee === 'function') {
+                window.checkMiniTrackMarquee();
+            }
         }
     };
 
@@ -237,8 +243,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Re-trigger layout adjustments for specific tab contents if necessary
-            if (tabName === 'control' && typeof window.resizePreview === 'function') {
-                window.resizePreview();
+            if (tabName === 'control') {
+                if (typeof window.resizePreview === 'function') {
+                    window.resizePreview();
+                }
+                if (typeof window.checkMainTrackMarquee === 'function') {
+                    window.checkMainTrackMarquee();
+                }
             }
 
             // Trigger refresh function for the tab if it has one and is already loaded

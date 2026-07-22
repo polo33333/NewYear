@@ -19,7 +19,15 @@ function mpFmt(sec) {
   return `${m}:${s}`;
 }
 
-function mpEl(id) { return document.getElementById(id); }
+const mpDomCache = new Map();
+function mpEl(id) {
+  let el = mpDomCache.get(id);
+  if (!el || !el.isConnected) {
+    el = document.getElementById(id);
+    if (el) mpDomCache.set(id, el);
+  }
+  return el;
+}
 
 // ── Load files from folder input ─────────────────────────────────────────────
 window.musicPlayerLoadFiles = function (files) {
@@ -84,6 +92,53 @@ function parseTrackMetadata(trackName) {
   };
 }
 
+let mainMarqueeScheduled = false;
+window.checkMainTrackMarquee = function () {
+  if (mainMarqueeScheduled) return;
+  mainMarqueeScheduled = true;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      mainMarqueeScheduled = false;
+      const nameEl = mpEl('music-track-name');
+      if (!nameEl) return;
+      const parent = nameEl.parentElement;
+      if (!parent) return;
+
+      nameEl.classList.remove('marquee-active');
+      const parentWidth = parent.clientWidth;
+      if (parentWidth > 0 && nameEl.scrollWidth > parentWidth) {
+        nameEl.classList.add('marquee-active');
+      }
+    });
+  });
+};
+
+let miniMarqueeScheduled = false;
+window.checkMiniTrackMarquee = function () {
+  if (miniMarqueeScheduled) return;
+  miniMarqueeScheduled = true;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      miniMarqueeScheduled = false;
+      const miniName = mpEl('mini-track-name');
+      if (!miniName) return;
+      const parent = miniName.parentElement;
+      if (!parent) return;
+
+      miniName.classList.remove('marquee-active');
+      const parentWidth = parent.clientWidth;
+      if (parentWidth > 0 && miniName.scrollWidth > parentWidth) {
+        miniName.classList.add('marquee-active');
+      }
+    });
+  });
+};
+
+window.addEventListener('resize', () => {
+  if (typeof window.checkMainTrackMarquee === 'function') window.checkMainTrackMarquee();
+  if (typeof window.checkMiniTrackMarquee === 'function') window.checkMiniTrackMarquee();
+});
+
 // ── Load a track by playlist index ───────────────────────────────────────────
 function mpLoad(index) {
   if (!mp.playlist.length) return;
@@ -100,23 +155,13 @@ function mpLoad(index) {
   const nameEl = mpEl('music-track-name');
   if (nameEl) {
     nameEl.textContent = track.name; // Keep full name on main player
-    nameEl.classList.remove('marquee-active');
-    requestAnimationFrame(() => {
-      if (nameEl.scrollWidth > nameEl.clientWidth) {
-        nameEl.classList.add('marquee-active');
-      }
-    });
+    window.checkMainTrackMarquee();
   }
 
   const miniName = mpEl('mini-track-name');
   if (miniName) {
     miniName.textContent = meta.title;
-    miniName.classList.remove('marquee-active');
-    requestAnimationFrame(() => {
-      if (miniName.scrollWidth > miniName.clientWidth) {
-        miniName.classList.add('marquee-active');
-      }
-    });
+    window.checkMiniTrackMarquee();
   }
 
   const miniArtist = mpEl('mini-artist-name');
@@ -287,11 +332,9 @@ let gainNode = null;
 let dataArray = null;
 let visualizerActive = false;
 let cachedBars = null;
-let cachedMiniBars = null;
 
 // Smoothing buffer để tránh giật
 const smoothedBars = new Float32Array(60).fill(2);
-const smoothedMiniBars = new Float32Array(16).fill(2);
 
 function initVisualizer() {
   if (audioCtx) return;
@@ -330,13 +373,8 @@ function updateVisualizer() {
   if (!cachedBars || cachedBars.length === 0) {
     cachedBars = document.querySelectorAll('.vis-bar');
   }
-  if (!cachedMiniBars || cachedMiniBars.length === 0) {
-    cachedMiniBars = document.querySelectorAll('.mini-vis-bar');
-  }
-
   const bars = cachedBars;
-  const miniBars = cachedMiniBars;
-  if (!bars.length && !miniBars.length) return;
+  if (!bars.length) return;
 
   if (mp.audio.paused) {
     let allAtMin = true;
@@ -349,15 +387,7 @@ function updateVisualizer() {
         }
       });
     }
-    if (miniBars.length) {
-      miniBars.forEach((bar, idx) => {
-        smoothedMiniBars[idx] = Math.max(2, smoothedMiniBars[idx] - 2);
-        bar.style.height = smoothedMiniBars[idx] + 'px';
-        if (smoothedMiniBars[idx] > 2) {
-          allAtMin = false;
-        }
-      });
-    }
+
     if (allAtMin) {
       visualizerActive = false; // Stop the animation loop
     }
@@ -388,45 +418,38 @@ function updateVisualizer() {
       });
     }
 
-    if (miniBars.length) {
-      miniBars.forEach((bar, idx) => {
-        const binIdx = Math.floor(2 + (idx / 16) * 80);
-        const val = dataArray[binIdx] || 0;
 
-        const normalized = val / 255;
-        const boosted = Math.pow(normalized, 0.35);
-        const target = Math.max(2, Math.min(boosted * 24 + 2, 24)); // max 24px height
-
-        if (target > smoothedMiniBars[idx]) {
-          smoothedMiniBars[idx] = smoothedMiniBars[idx] * 0.3 + target * 0.7;
-        } else {
-          smoothedMiniBars[idx] = smoothedMiniBars[idx] * 0.75 + target * 0.25;
-        }
-
-        bar.style.height = smoothedMiniBars[idx] + 'px';
-      });
-    }
   }
 }
 
+let lastPlaySecond = -1;
 mp.audio.addEventListener('timeupdate', () => {
+  const duration = mp.audio.duration;
+  const isValidDur = isFinite(duration);
+
   const prog = mpEl('music-progress');
-  const cur = mpEl('music-current-time');
-  if (prog && isFinite(mp.audio.duration)) {
-    prog.max = mp.audio.duration;
+  if (prog && isValidDur) {
+    prog.max = duration;
     prog.value = mp.audio.currentTime;
   }
-  if (cur) cur.textContent = mpFmt(mp.audio.currentTime);
 
   const miniProgBar = mpEl('mini-music-progress-bar');
-  if (miniProgBar && isFinite(mp.audio.duration)) {
-    const pct = (mp.audio.currentTime / mp.audio.duration) * 100;
-    miniProgBar.style.width = pct + '%';
+  if (miniProgBar && isValidDur) {
+    miniProgBar.style.width = ((mp.audio.currentTime / duration) * 100) + '%';
   }
 
-  const miniTime = mpEl('mini-time-info');
-  if (miniTime && isFinite(mp.audio.duration)) {
-    miniTime.textContent = `${mpFmt(mp.audio.currentTime)} / ${mpFmt(mp.audio.duration)}`;
+  const currentSec = Math.floor(mp.audio.currentTime);
+  if (currentSec !== lastPlaySecond) {
+    lastPlaySecond = currentSec;
+    const curTimeFormatted = mpFmt(mp.audio.currentTime);
+
+    const cur = mpEl('music-current-time');
+    if (cur) cur.textContent = curTimeFormatted;
+
+    const miniTime = mpEl('mini-time-info');
+    if (miniTime && isValidDur) {
+      miniTime.textContent = `${curTimeFormatted} / ${mpFmt(duration)}`;
+    }
   }
 });
 
@@ -544,17 +567,7 @@ document.addEventListener('keydown', (e) => {
       }
     }
 
-    const miniVis = mpEl('mini-music-visualizer');
-    if (miniVis) {
-      miniVis.innerHTML = '';
-      cachedMiniBars = null;
-      const MINI_BAR_COUNT = 16;
-      for (let i = 0; i < MINI_BAR_COUNT; i++) {
-        const bar = document.createElement('div');
-        bar.className = 'mini-vis-bar';
-        miniVis.appendChild(bar);
-      }
-    }
+
 
     document.querySelectorAll('#music-volume').forEach(el => { el.value = val; });
     document.querySelectorAll('#music-volume-pct').forEach(el => { el.textContent = val + '%'; });
