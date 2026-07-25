@@ -51,6 +51,7 @@ function handleMessage(msg) {
   else if (msg.type === 'score') { state.score = msg.data; syncScoreUI(); }
   else if (msg.type === 'scene') { state.scene = msg.value; syncSceneUI(); }
   else if (msg.type === 'overlays') { state.overlays = msg.data; syncOverlayUI(); }
+  else if (msg.type === 'stinger') { state.stinger = msg.data; syncStingerUI(); }
   else if (msg.type === 'rosters') {
     state.rosters = msg.data;
     if (msg.senderId !== clientId) {

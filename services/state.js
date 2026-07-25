@@ -12,6 +12,7 @@ function createDefaultState() {
     overlays: {
       scoreboard: false,
       scoreboard2: false,
+      stinger: true,
       ticker: false,
       rosterA: false,
       rosterB: false,
@@ -45,6 +46,10 @@ function createDefaultState() {
         '📡 Streaming LIVE on Twitch • YouTube • Facebook',
         '🔥 Join us next week for the grand prize ceremony',
       ]
+    },
+    stinger: {
+      enabled: true,
+      customTitle: ''
     }
   };
 }

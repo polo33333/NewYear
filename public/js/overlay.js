@@ -30,6 +30,8 @@ function handleMessage(msg) {
     case 'tournament': if (state) state.tournament = msg.data; if (document.getElementById('bracketLabel')) document.getElementById('bracketLabel').textContent = state.tournament.bracketLabel; if (document.getElementById('bracketSubtitle')) document.getElementById('bracketSubtitle').textContent = state.tournament.bracketSubtitle || ''; break;
     case 'break': if (state) state.break = msg.data; if (state.scene === 'break') { breakSeconds = (state.break && typeof state.break.duration === 'number') ? state.break.duration : 300; updateBreakTimer(); } break;
     case 'song': if (state) state.song = msg.data; updateSongDisplay(state.song); break;
+    case 'stinger': if (state) state.stinger = msg.data; break;
+    case 'trigger_stinger': triggerStingerAnimation(msg.targetScene || (state ? state.scene : 'gameplay'), msg.customTitle); break;
   }
 }
 
@@ -458,11 +460,49 @@ function updateTicker(ticker) {
   if (ti) ti.innerHTML = html;
 }
 
-function switchScene(scene, instant = false) {
+function triggerStingerAnimation(targetScene) {
+  const stingerEl = document.getElementById('stinger-transition');
+  if (!stingerEl) return;
+
+  const badgeEl = document.getElementById('stinger-badge');
+  const titleEl = document.getElementById('stinger-title');
+
+  // Update text dynamically
+  if (badgeEl) {
+    badgeEl.textContent = 'WUTHERING WAVES';
+  }
+
+  if (titleEl) {
+    const titleText = (state && state.tournament && (state.tournament.bracketLabel || state.tournament.name))
+      ? (state.tournament.bracketLabel || state.tournament.name)
+      : 'HOLOGRAPHIC OVERDRIVE 2026';
+    titleEl.textContent = titleText.toUpperCase();
+  }
+
+  // Animation lifecycle
+  stingerEl.classList.remove('exit');
+  stingerEl.classList.add('active');
+
+  // Peak point (450ms): apply DOM scene switch hidden behind stinger
+  setTimeout(() => {
+    applySceneDOM(targetScene);
+  }, 450);
+
+  // Transition out (850ms)
+  setTimeout(() => {
+    stingerEl.classList.add('exit');
+  }, 850);
+
+  // Finish reset (1300ms)
+  setTimeout(() => {
+    stingerEl.classList.remove('active', 'exit');
+  }, 1300);
+}
+
+function applySceneDOM(scene) {
   if (!state) return;
   state.scene = scene;
   syncUI();
-  if (!instant) { const o = document.getElementById('scene-overlay'); if (o) o.classList.add('flash'); setTimeout(() => { if (o) o.classList.remove('flash'); }, 300); }
 
   const brk = document.getElementById('break-scene');
   const stats = document.getElementById('stats-scene');
@@ -477,7 +517,6 @@ function switchScene(scene, instant = false) {
   const needsBg = ['break', 'stats'].includes(scene);
   document.body.style.background = needsBg ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)';
 
-
   if (scene === 'stats' && stats) stats.classList.add('visible');
   if (scene === 'break' && brk) {
     brk.classList.add('visible');
@@ -490,6 +529,22 @@ function switchScene(scene, instant = false) {
         clearInterval(breakInterval);
       }
     }, 1000);
+  }
+}
+
+function switchScene(scene, instant = false) {
+  if (!state) return;
+  const isStingerEnabled = state.overlays && state.overlays.stinger !== false;
+
+  if (!instant && isStingerEnabled) {
+    triggerStingerAnimation(scene);
+  } else {
+    if (!instant) { 
+      const o = document.getElementById('scene-overlay'); 
+      if (o) o.classList.add('flash'); 
+      setTimeout(() => { if (o) o.classList.remove('flash'); }, 300); 
+    }
+    applySceneDOM(scene);
   }
 }
 

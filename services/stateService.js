@@ -108,6 +108,16 @@ function handleWSMessage(msg, roomId) {
       stateChanged = true;
       break;
 
+    case 'update_stinger':
+      uState.stinger = { ...uState.stinger, ...msg.data };
+      broadcast({ type: 'stinger', data: uState.stinger, senderId: msg.senderId }, roomId);
+      stateChanged = true;
+      break;
+
+    case 'trigger_stinger':
+      broadcast({ type: 'trigger_stinger', customTitle: msg.customTitle, targetScene: msg.targetScene, senderId: msg.senderId }, roomId);
+      break;
+
     case 'update_roster':
       if (msg.data) {
         for (let teamKey in msg.data) {
