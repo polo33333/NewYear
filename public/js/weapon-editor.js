@@ -244,6 +244,9 @@
                 });
                 if (res.ok) {
                     showToast("✓ Đã lưu dữ liệu lên máy chủ!", "success");
+                    if (typeof window.loadCharactersAndWeapons === 'function') {
+                        window.loadCharactersAndWeapons();
+                    }
                 } else {
                     showToast("Không thể lưu dữ liệu lên máy chủ.", "error");
                 }

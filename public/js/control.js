@@ -1033,22 +1033,32 @@ function applyImageToSquare(sq, name, isWeapon) {
   sq.title = name;
 }
 
-Promise.all([
-  fetch('/api/characters').then(r => r.json()).then(data => {
-    allCharacters = data.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'vi'));
-  }),
-  fetch('/api/weapons').then(r => r.json()).then(data => {
-    allWeapons = data.sort((a, b) => {
-      const rankDiff = (b.rank || 0) - (a.rank || 0);
-      if (rankDiff !== 0) return rankDiff;
-      return (a.name || '').localeCompare(b.name || '', 'vi');
-    });
-  })
-]).then(() => {
-  if (state) syncRosterUI(); // Cập nhật lại UI khi đã có data hình ảnh
-}).catch(console.error);
+window.loadCharactersAndWeapons = function () {
+  return Promise.all([
+    fetch('/api/characters').then(r => r.json()).then(data => {
+      allCharacters = (data || []).sort((a, b) => (a.name || '').localeCompare(b.name || '', 'vi'));
+    }),
+    fetch('/api/weapons').then(r => r.json()).then(data => {
+      allWeapons = (data || []).sort((a, b) => {
+        const rankDiff = (b.rank || 0) - (a.rank || 0);
+        if (rankDiff !== 0) return rankDiff;
+        return (a.name || '').localeCompare(b.name || '', 'vi');
+      });
+    })
+  ]).then(() => {
+    charNameMapCache = null;
+    weaponNameMapCache = null;
+    if (state) syncRosterUI(); // Cập nhật lại UI khi đã có data hình ảnh
+  }).catch(console.error);
+};
 
-window.openSelectionModal = function (targetId, type) {
+window.refreshControl = function () {
+  return window.loadCharactersAndWeapons();
+};
+
+window.loadCharactersAndWeapons();
+
+window.openSelectionModal = async function (targetId, type) {
   const rowMatch = targetId.match(/^([AB])r(\d+)/);
   if (rowMatch) {
     const teamCode = rowMatch[1];
@@ -1058,6 +1068,9 @@ window.openSelectionModal = function (targetId, type) {
       return;
     }
   }
+
+  // Reload latest character and weapon data before rendering modal items
+  await window.loadCharactersAndWeapons();
 
   currentSelectionTarget = targetId; // 'Ar1h1' etc.
   currentSelectionType = type;
