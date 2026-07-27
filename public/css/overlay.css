@@ -1202,7 +1202,7 @@ body {
 }
 
 .stats-team-label {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui;
   font-size: 30px;
   font-weight: 900;
   text-transform: uppercase;
@@ -1769,24 +1769,58 @@ body[data-template="classic"] .sb-container {
   transform: translateY(0%);
 }
 
-.stinger-container.active .slat-1 { transition-delay: 0.00s; }
-.stinger-container.active .slat-2 { transition-delay: 0.04s; }
-.stinger-container.active .slat-3 { transition-delay: 0.08s; }
-.stinger-container.active .slat-4 { transition-delay: 0.12s; }
-.stinger-container.active .slat-5 { transition-delay: 0.16s; }
-.stinger-container.active .slat-6 { transition-delay: 0.20s; }
+.stinger-container.active .slat-1 {
+  transition-delay: 0.00s;
+}
+
+.stinger-container.active .slat-2 {
+  transition-delay: 0.04s;
+}
+
+.stinger-container.active .slat-3 {
+  transition-delay: 0.08s;
+}
+
+.stinger-container.active .slat-4 {
+  transition-delay: 0.12s;
+}
+
+.stinger-container.active .slat-5 {
+  transition-delay: 0.16s;
+}
+
+.stinger-container.active .slat-6 {
+  transition-delay: 0.20s;
+}
 
 /* Exit animation: slats slide down out of view */
 .stinger-container.exit .stinger-slat {
   transform: translateY(110%);
 }
 
-.stinger-container.exit .slat-1 { transition-delay: 0.00s; }
-.stinger-container.exit .slat-2 { transition-delay: 0.04s; }
-.stinger-container.exit .slat-3 { transition-delay: 0.08s; }
-.stinger-container.exit .slat-4 { transition-delay: 0.12s; }
-.stinger-container.exit .slat-5 { transition-delay: 0.16s; }
-.stinger-container.exit .slat-6 { transition-delay: 0.20s; }
+.stinger-container.exit .slat-1 {
+  transition-delay: 0.00s;
+}
+
+.stinger-container.exit .slat-2 {
+  transition-delay: 0.04s;
+}
+
+.stinger-container.exit .slat-3 {
+  transition-delay: 0.08s;
+}
+
+.stinger-container.exit .slat-4 {
+  transition-delay: 0.12s;
+}
+
+.stinger-container.exit .slat-5 {
+  transition-delay: 0.16s;
+}
+
+.stinger-container.exit .slat-6 {
+  transition-delay: 0.20s;
+}
 
 /* Background Wave & Center Glow */
 .stinger-bg-wave {
@@ -1807,9 +1841,17 @@ body[data-template="classic"] .sb-container {
 }
 
 @keyframes stingerWaveAnim {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.1); }
-  100% { transform: rotate(360deg) scale(1); }
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
 }
 
 .stinger-glow {
@@ -1898,9 +1940,17 @@ body[data-template="classic"] .sb-container {
 }
 
 @keyframes starSpin {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.25); }
-  100% { transform: rotate(360deg) scale(1); }
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.25);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
 }
 
 .stinger-title {
