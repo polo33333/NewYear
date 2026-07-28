@@ -54,16 +54,21 @@ document.addEventListener('DOMContentLoaded', () => {
         helpToggle.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (typeof window.startControlTour === 'function') {
-                window.startControlTour(true);
-            } else if (typeof window.switchTab === 'function') {
-                window.switchTab('control');
-                setTimeout(() => {
-                    if (typeof window.startControlTour === 'function') window.startControlTour(true);
-                }, 300);
-            } else {
-                window.location.href = '/?startTour=true';
+            if (sidebar) {
+                sidebar.classList.add('mini');
             }
+            setTimeout(() => {
+                if (typeof window.startControlTour === 'function') {
+                    window.startControlTour(true);
+                } else if (typeof window.switchTab === 'function') {
+                    window.switchTab('control');
+                    setTimeout(() => {
+                        if (typeof window.startControlTour === 'function') window.startControlTour(true);
+                    }, 300);
+                } else {
+                    window.location.href = '/?startTour=true';
+                }
+            }, 250);
         });
 
         // 2. Dynamic Theme Toggle Button
