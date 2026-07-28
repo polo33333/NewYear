@@ -2,9 +2,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('app-sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle');
 
+    // Tạo Backdrop Overlay mờ màn hình
+    let backdrop = document.querySelector('.sidebar-overlay-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'sidebar-overlay-backdrop';
+        document.body.appendChild(backdrop);
+    }
+
     if (sidebar && toggleBtn) {
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('mini');
+        });
+    }
+
+    // Click vào backdrop nền mờ -> Tự đóng Popup về mini
+    if (backdrop && sidebar) {
+        backdrop.addEventListener('click', () => {
+            sidebar.classList.add('mini');
+        });
+    }
+
+    // Click vào bất kỳ tab/link điều hướng nào -> Tự đóng Popup về mini
+    if (sidebar) {
+        const navLinks = sidebar.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1920) {
+                    sidebar.classList.add('mini');
+                }
+            });
         });
     }
 

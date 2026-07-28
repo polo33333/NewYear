@@ -21,6 +21,12 @@
     padding: 0;
 }
 
+.modal-overlay,
+.modal-container,
+.modal {
+    z-index: 50000 !important;
+}
+
 /* Hide number input spin arrows */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
