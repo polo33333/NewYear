@@ -43,31 +43,43 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
+  height: 56px;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
-  padding: 10px 24px;
+  padding: 0 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 
 .brand {
-  margin-left: 15px;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 5px 12px;
 }
 
 .brand h1 {
   font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--accent);
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--text, #ffffff);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .brand p {
-  color: var(--text-dim);
-  font-size: 13px;
+  display: none;
 }
 
 .logo {
@@ -76,6 +88,72 @@ header {
   font-size: 16px;
   color: var(--accent);
   letter-spacing: 2px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 5px 10px;
+  color: var(--text-dim, #94a3b8);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-search-bar:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.header-search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text, #ffffff);
+  font-size: 12px;
+  width: 130px;
+  cursor: pointer;
+}
+
+.header-search-bar kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 10px;
+  color: var(--text-dim, #94a3b8);
+  font-family: inherit;
+}
+
+.header-icon-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  color: var(--text-dim, #94a3b8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.header-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text, #ffffff);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .status-badge {
@@ -87,9 +165,8 @@ header {
 
 .header-status-group {
   display: flex;
-  align-items: flex-end;
-  gap: 24px;
-  margin-right: 8px;
+  align-items: center;
+  margin-right: 4px;
 }
 
 .status-dot {
@@ -1841,7 +1918,7 @@ input[type=number] {
 .rp-team-bar {
   display: flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: 8px 12px;
   flex-shrink: 0;
   gap: 0;
 }
@@ -1865,7 +1942,7 @@ input[type=number] {
 }
 
 .rp-team-tag {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -2695,8 +2772,8 @@ input[type=number] {
 
 .btn-lock-row.is-locked {
   background: rgba(245, 158, 11, 0.18);
-  border: 1px solid rgba(245, 158, 11, 0.45);
-  color: #fbbf24;
+  /* border: 1px solid rgba(245, 158, 11, 0.45); */
+  color: #2dcecf;
 }
 
 .btn-lock-row.is-locked:hover {

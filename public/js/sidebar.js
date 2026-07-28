@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const currentMode = localStorage.getItem('uiMode') || 'dark';
         themeToggle.innerHTML = `
-            <span class="nav-icon"><i class="fas ${currentMode === 'light' ? 'fa-sun' : 'fa-moon'}" style="color: ${currentMode === 'light' ? '#f59e0b' : '#a78bfa'}"></i></span>
+            <span class="nav-icon"><i class="fas ${currentMode === 'light' ? 'fa-sun' : 'fa-moon'}"></i></span>
             <span class="nav-text" style="font-size: 13px;">${currentMode === 'light' ? 'Giao diện: Sáng' : 'Giao diện: Tối'}</span>
         `;
 
@@ -96,7 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const text = themeToggle.querySelector('.nav-text');
                 if (icon) {
                     icon.className = `fas ${newMode === 'light' ? 'fa-sun' : 'fa-moon'}`;
-                    icon.style.color = newMode === 'light' ? '#f59e0b' : '#a78bfa';
+                    // icon.style.color = newMode === 'light' ? '#f59e0b' : '#a78bfa';
+                    // icon.style.color = newMode === 'light' ? '#f59e0b' : '#a78bfa';
                 }
                 if (text) {
                     text.textContent = newMode === 'light' ? 'Giao diện: Sáng' : 'Giao diện: Tối';
