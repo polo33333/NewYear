@@ -131,7 +131,7 @@
                 tr.innerHTML = `
                     <td class="text-center" style="color: var(--text-dim)">${start + index + 1}</td>
                     <td class="text-center">
-                        <div class="wp-img-preview" style="background-image: url('${imgPath}'); width: 32px; height: 32px; background-size: cover; background-position: center; border-radius: 4px; margin: 0 auto; background-color: #222;"></div>
+                        <div class="wp-img-preview" style="background-image: url('${imgPath}'); width: 32px; height: 32px; background-size: cover; background-position: center; border-radius: 4px; margin: 0 auto;"></div>
                     </td>
                     <td style="font-weight: 600">${w.name}</td>
                     <td class="text-center">
@@ -256,7 +256,7 @@
             }
         };
     }
- 
+
     if (exportBtn) {
         exportBtn.onclick = () => {
             const blob = new Blob([JSON.stringify(weapons, null, 2)], { type: "application/json" });

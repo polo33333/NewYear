@@ -236,11 +236,9 @@
 }
 
 .history-table .action-btn.btn-load {
-    background: linear-gradient(135deg, #00f5ff 0%, #0096c7 100%);
-    border: none;
-    color: #060b18;
-    letter-spacing: 0.2px;
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
+    background: rgba(16, 185, 129, 0.05);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.18);
 }
 
 .history-table .action-btn.btn-load:hover {
@@ -1330,10 +1328,6 @@ div#history-list-view {
 .node-port.port-out:hover {
     background-color: #fff;
     box-shadow: 0 0 8px var(--accent);
-}
-
-.node-port.port-out.winner-port {
-    /* Centered automatically within its row */
 }
 
 .node-port.port-out.loser-port {

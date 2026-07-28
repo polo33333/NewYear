@@ -52,8 +52,12 @@ self.addEventListener('fetch', (e) => {
   // For HTML navigation requests (e.g. /settings, /history, /character-editor)
   if (e.request.mode === 'navigate' || e.request.headers.get('accept')?.includes('text/html')) {
     e.respondWith(
-      fetch(e.request).catch(() => {
-        return caches.match('/').then((response) => response || caches.match(e.request));
+      fetch(e.request).catch(async () => {
+        const cachedRoot = await caches.match('/');
+        if (cachedRoot) return cachedRoot;
+        const cachedReq = await caches.match(e.request);
+        if (cachedReq) return cachedReq;
+        return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
       })
     );
     return;
@@ -61,7 +65,11 @@ self.addEventListener('fetch', (e) => {
 
   // For static assets, try network first, fallback to cache
   e.respondWith(
-    fetch(e.request).catch(() => caches.match(e.request))
+    fetch(e.request).catch(async () => {
+      const cached = await caches.match(e.request);
+      if (cached) return cached;
+      return new Response('Resource unavailable offline', { status: 503, statusText: 'Service Unavailable' });
+    })
   );
 });
 
