@@ -48,6 +48,7 @@ textarea,
     padding: 0 16px;
     margin-bottom: 0;
     box-sizing: border-box;
+    border-bottom: 1px solid rgb(91 86 86 / 17%);
 }
 
 .sidebar-logo {
